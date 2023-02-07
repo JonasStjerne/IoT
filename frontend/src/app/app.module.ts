@@ -8,10 +8,12 @@ import { AppComponent } from './app.component';
 
 import { ApiModule } from './_api/api.module';
 import { environment } from 'src/environments/environment';
+import { SignInComponent } from './_pages/sign-in/sign-in.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    SignInComponent,
   ],
   imports: [
     BrowserModule,
