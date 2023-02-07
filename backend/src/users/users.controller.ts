@@ -17,8 +17,11 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private userService: UsersService) {}
 
-  @Post()
+  @Post('create')
   async create(@Body() createUserDto: CreateUserDto) {
+    if (await this.userService.findOne(createUserDto.username)) {
+      throw new Error('User already exists');
+    }
     return await this.userService.create(createUserDto);
   }
 

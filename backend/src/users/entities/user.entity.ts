@@ -6,19 +6,14 @@ import {
   IsString,
   MinLength,
 } from 'class-validator';
-import { Exclude } from 'class-transformer';
+import { classToPlain, Exclude } from 'class-transformer';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   @IsNotEmpty()
   @IsNumberString()
   id: number;
-
-  @Column()
-  @IsNotEmpty()
-  @IsString()
-  name: string;
 
   @Column()
   @IsNotEmpty()
@@ -29,6 +24,6 @@ export class User {
   @IsNotEmpty()
   @IsString()
   @MinLength(5)
-  @Exclude()
+  @Exclude({ toPlainOnly: true })
   password: string;
 }
