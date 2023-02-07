@@ -23,6 +23,7 @@ services:
             HONEYBADGER_API_KEY: $HONEYBADGER_API_KEY
             JWT_SECRET:  $JWT_SECRET
             JWT_TTL: $JWT_TTL
+            JWT_SALT_ROUNDS: $JWT_SALT_ROUNDS
             RATE_LIMIT_TTL: $RATE_LIMIT_TTL
             RATE_LIMIT_MAX_REQUESTS: $RATE_LIMIT_MAX_REQUESTS
         ports:

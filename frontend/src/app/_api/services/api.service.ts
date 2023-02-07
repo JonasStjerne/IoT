@@ -174,7 +174,7 @@ export class ApiService extends BaseService {
   /**
    * Path part for operation usersControllerCreate
    */
-  static readonly UsersControllerCreatePath = '/users';
+  static readonly UsersControllerCreatePath = '/users/create';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

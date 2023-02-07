@@ -5,6 +5,7 @@ import {
   UseGuards,
   Request,
   Delete,
+  ConflictException,
 } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from 'src/auth/auth.service';
@@ -20,7 +21,7 @@ export class UsersController {
   @Post('create')
   async create(@Body() createUserDto: CreateUserDto) {
     if (await this.userService.findOne(createUserDto.username)) {
-      throw new Error('User already exists');
+      throw new ConflictException('User already exists');
     }
     return await this.userService.create(createUserDto);
   }
