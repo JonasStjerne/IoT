@@ -4,6 +4,7 @@ import { UsersService } from 'src/users/users.service';
 import { User } from '../users/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { UnprocessableEntityException } from '@nestjs/common/exceptions/unprocessable-entity.exception';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Injectable()
 export class AuthService {
@@ -29,11 +30,16 @@ export class AuthService {
     return null;
   }
 
-  async login(user: User) {
+  async login(user: User): Promise<LoginResponse> {
     const payload = { sub: user.id };
 
     return {
       access_token: this.jwtService.sign(payload),
     };
   }
+}
+
+export class LoginResponse {
+  @ApiProperty()
+  access_token: string;
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { LoginUserDto } from 'src/app/_api/models';
+import { LoginUserDto, User } from 'src/app/_api/models';
 import { ApiService } from 'src/app/_api/services';
+import { UserService } from 'src/app/_services/user.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -8,7 +9,10 @@ import { ApiService } from 'src/app/_api/services';
   styleUrls: ['./sign-in.component.css'],
 })
 export class SignInComponent implements OnInit {
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    private userService: UserService
+  ) {}
   username = '';
   password = '';
 
@@ -16,11 +20,15 @@ export class SignInComponent implements OnInit {
 
   signIn() {
     this.apiService
-      .appControllerLogin({
+      .authControllerLogin({
         body: { username: this.username, password: this.password },
       })
-      .subscribe((response) => {
-        console.log(response);
+      .subscribe({
+        next: (res) => {
+          this.userService.token = res.access_token;
+          console.log('logged in!');
+        },
+        error: (err) => console.error(err),
       });
   }
 }

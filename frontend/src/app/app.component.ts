@@ -1,4 +1,5 @@
-import { Component  } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
+import { UserService } from './_services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +9,14 @@ import { Component  } from '@angular/core';
 export class AppComponent {
   title = 'frontend';
 
-  constructor() {}
+  constructor(private userService: UserService) {}
+
+  @HostListener('window:unload')
+  private onUnload(): void {
+    this.userService.saveTokenToLocalStorage();
+  }
+
+  ngOnInit() {
+    this.userService.loadTokenFromLocalStorage();
+  }
 }

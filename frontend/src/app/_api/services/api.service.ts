@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 import { CreateUserDto } from '../models/create-user-dto';
+import { LoginResponse } from '../models/login-response';
 import { LoginUserDto } from '../models/login-user-dto';
 import { User } from '../models/user';
 
@@ -73,57 +74,6 @@ export class ApiService extends BaseService {
   }
 
   /**
-   * Path part for operation appControllerLogin
-   */
-  static readonly AppControllerLoginPath = '/auth/login';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `appControllerLogin()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  appControllerLogin$Response(params: {
-    context?: HttpContext
-    body: LoginUserDto
-  }
-): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ApiService.AppControllerLoginPath, 'post');
-    if (params) {
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
-  }
-
-  /**
-   * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `appControllerLogin$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  appControllerLogin(params: {
-    context?: HttpContext
-    body: LoginUserDto
-  }
-): Observable<void> {
-
-    return this.appControllerLogin$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
-    );
-  }
-
-  /**
    * Path part for operation appControllerProtected
    */
   static readonly AppControllerProtectedPath = '/protected';
@@ -168,6 +118,57 @@ export class ApiService extends BaseService {
 
     return this.appControllerProtected$Response(params).pipe(
       map((r: StrictHttpResponse<string>) => r.body as string)
+    );
+  }
+
+  /**
+   * Path part for operation authControllerLogin
+   */
+  static readonly AuthControllerLoginPath = '/auth/login';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `authControllerLogin()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  authControllerLogin$Response(params: {
+    context?: HttpContext
+    body: LoginUserDto
+  }
+): Observable<StrictHttpResponse<LoginResponse>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiService.AuthControllerLoginPath, 'post');
+    if (params) {
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<LoginResponse>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `authControllerLogin$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  authControllerLogin(params: {
+    context?: HttpContext
+    body: LoginUserDto
+  }
+): Observable<LoginResponse> {
+
+    return this.authControllerLogin$Response(params).pipe(
+      map((r: StrictHttpResponse<LoginResponse>) => r.body as LoginResponse)
     );
   }
 

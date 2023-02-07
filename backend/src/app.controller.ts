@@ -21,6 +21,10 @@ import { LocalAuthGuard } from './auth/local-auth.guard';
 import { LoginUserDto } from './users/dto/login-user.dto';
 import { User } from './users/entities/user.entity';
 
+class LoginResponse {
+  access_token: string;
+}
+
 @Controller()
 export class AppController {
   constructor(
@@ -33,14 +37,14 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @ApiBody({
-    type: LoginUserDto,
-  })
-  @UseGuards(LocalAuthGuard)
-  @Post('auth/login')
-  login(@Request() req) {
-    return this.authService.login(req.user);
-  }
+  // @ApiBody({
+  //   type: LoginUserDto,
+  // })
+  // @UseGuards(LocalAuthGuard)
+  // @Post('auth/login')
+  // async login(@Request() req) {
+  //   return await this.authService.login(req.user);
+  // }
 
   //Protected route
   @ApiBearerAuth()

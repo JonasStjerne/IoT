@@ -14,7 +14,7 @@ export class UsersService {
   async create(createUserDto: CreateUserDto): Promise<User> {
     const hash = await bcrypt.hash(
       createUserDto.password,
-      process.env.JWT_SALT_ROUNDS as unknown as number,
+      parseInt(process.env.JWT_SALT_ROUNDS),
     );
     createUserDto.password = hash;
     const newUser = this.usersRepository.create(createUserDto);
