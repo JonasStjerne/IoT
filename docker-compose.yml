@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+
+#Dev for Nest.js.
+    backend_dev:
+        container_name: api_dev
+        image: nestjs-api-dev:1.0.0
+        build:
+            context: ./backend
+            target: development
+            dockerfile: Dockerfile
+        depends_on:
+            - db
+        command: npm run start:dev
+        ports:
+            - 3000:3000
+            - 9229:9229
+        volumes:
+            - ./backend:/app
+            - /app/node_modules
+        restart: unless-stopped
+    frontend_dev:
+        container_name: frontend_dev
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+            target: development
+        command: npm start
+        restart: unless-stopped
+        ports:
+        - "4200:4200"
+        volumes:
+            - ./frontend:/app
+            - /app/node_modules
+    db:
+        container_name: db
+        image: mysql
+        restart: unless-stopped
+        command: --default-authentication-plugin=mysql_native_password
+        environment:
+            MYSQL_ROOT_PASSWORD: $DATABASE_PASSWORD
+            MYSQL_DATABASE: $DATABASE_NAME
+        ports:
+        - "3307:3306"
+        volumes:
+        - mysqldb:/var/lib/mysql
+    #Redis db cacheing
+    db_cache:
+        container_name: db_cache
+        image: redis:6.2-alpine
+        restart: unless-stopped
+        ports:
+        - '6378:6379'
+        depends_on:
+            - db
+        command: redis-server
+    adminer:
+        container_name: php_myadmin
+        image: adminer
+        restart: always
+        ports:
+        - 8080:8080
+        depends_on:
+            - db
+        
+volumes:
+    mysqldb:

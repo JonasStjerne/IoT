@@ -1,0 +1,75 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node CI
+
+on:
+  pull_request:
+    branches: ["workflow-test-branch"]
+
+jobs:
+  docker_staging:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+      DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
+      DATABASE_USER: ${{ secrets.DATABASE_USER }}
+      DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+      DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+      DATABASE_SYNCHRONIZE: ${{ secrets.DATABASE_SYNCHRONIZE }}
+      CACHE_HOST: ${{ secrets.CACHE_HOST }}
+      CACHE_PORT: ${{ secrets.CACHE_PORT }}
+      HONEYBADGER_API_KEY: ${{ secrets.HONEYBADGER_API_KEY }}
+    defaults:
+      run:
+        working-directory: ./_staging
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Start containers
+        run: docker-compose up -d --build
+        
+      - name: Test backend
+        run: docker exec backend npm run test:e2e
+      
+      - name: Stop containers
+        if: always()
+        run: docker-compose down
+
+  #   defaults:
+  #     run:
+  #       working-directory: ./frontend
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - name: Angular CI
+  #     uses: actions/setup-node@v3
+  #     with:
+  #       node-version: 14
+  #       cache: 'npm'
+  #       cache-dependency-path: frontend/package-lock.json
+  #   - run: |
+  #       npm ci
+  #       npm run build
+  #       npm run test
+
+  # Nest:
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: ./backend
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - name: Nest CI
+  #     uses: actions/setup-node@v3
+  #     with:
+  #       node-version: 14
+  #       cache: 'npm'
+  #       cache-dependency-path: backend/package-lock.json
+  #   - run: |
+  #       npm ci
+  #       npm run format
+  #       npm run build
+  #       npm run test

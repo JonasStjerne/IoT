@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+
+#Dev for Nest.js.
+    backend_dev:
+        container_name: api_dev
+        image: nestjs-api-dev:1.0.0
+        build:
+            context: ../backend
+            target: development
+            dockerfile: Dockerfile
+        depends_on:
+            - $DATABASE_HOST
+        command: npm run start:dev
+        environment:
+            DATABASE_HOST: $DATABASE_HOST
+            DATABASE_PORT: $DATABASE_PORT
+            DATABASE_USER: $DATABASE_USER
+            DATABASE_PASSWORD: $DATABASE_PASSWORD
+            DATABASE_NAME: $DATABASE_NAME
+            DATABASE_SYNCHRONIZE: $DATABASE_SYNCHRONIZE
+            HONEYBADGER_API_KEY: $HONEYBADGER_API_KEY
+            JWT_SECRET:  $JWT_SECRET
+            JWT_TTL: $JWT_TTL
+            RATE_LIMIT_TTL: $RATE_LIMIT_TTL
+            RATE_LIMIT_MAX_REQUESTS: $RATE_LIMIT_MAX_REQUESTS
+        ports:
+            - 3000:3000
+            - 9229:9229
+        volumes:
+            - ../backend:/app
+            - /app/node_modules
+            - 'share:/shared'
+        restart: unless-stopped
+    frontend_dev:
+        container_name: $FRONTEND_HOST
+        build:
+            context: ../frontend
+            dockerfile: Dockerfile
+            target: development
+        command: npm start
+        restart: unless-stopped
+        ports:
+        - "4200:$FRONTEND_PORT"
+        volumes:
+            - ../frontend:/app
+            - /app/node_modules
+            - 'share:/shared'
+    db:
+        container_name: $DATABASE_HOST
+        image: mysql
+        restart: unless-stopped
+        command: --default-authentication-plugin=mysql_native_password
+        environment:
+            MYSQL_ROOT_PASSWORD: $DATABASE_PASSWORD
+            MYSQL_DATABASE: $DATABASE_NAME
+        ports:
+        - "3307:$DATABASE_PORT"
+        volumes:
+        - mysqldbiot:/var/lib/mysql
+    adminer:
+        container_name: php_myadmin
+        image: adminer
+        restart: always
+        ports:
+        - 8080:8080
+        depends_on:
+            - $DATABASE_HOST
+        
+volumes:
+    mysqldbiot:
+    share:
+        driver: local

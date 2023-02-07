@@ -1,0 +1,72 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@300;500;600;700&display=swap');
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #FBAE3C;
+    --attention: #fbaf3ca7;
+
+    --lighter: #FFFFFF;
+    --light: #FFF6EE;
+    --dark:  #232323;
+    --secondaryDark: #ECECEC;
+
+    --good: #0AFF89;
+    --danger: rgba(255, 10, 68, 0.86);
+
+    --defaultShadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.1);
+}
+
+body,
+h1,
+h2,
+h3,
+p {
+    margin: 0;
+    font-family: 'Dosis', sans-serif;
+    color: var(--dark);
+}
+
+body {
+    background-color: var(--light);
+    font-size: 20px;
+}
+
+h1 {
+    font-weight: 700 !important;
+    line-height: 1em;
+}
+
+h2 {
+    font-weight: 600;
+}
+
+p {
+    font-weight: 500;
+}
+
+.font--light, small {
+    font-weight: 300;
+}
+
+a {
+    text-decoration: none;
+    cursor: pointer;
+    color: var(--dark);
+}
+
+a:hover {
+    color: var(--primary);
+}
+
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+

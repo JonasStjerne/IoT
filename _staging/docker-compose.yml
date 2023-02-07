@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+
+#Staging for Nest.js.
+    backend_dev:
+        container_name: api_staging
+        image: nestjs-api-staging:1.0.0
+        build:
+            context: ../backend
+            target: production
+            dockerfile: Dockerfile
+        depends_on:
+            - $DATABASE_HOST
+            - $CACHE_HOST
+        command: npm run test:e2e
+        environment:
+            DATABASE_HOST: $DATABASE_HOST
+            DATABASE_PORT: $DATABASE_PORT
+            DATABASE_USER: $DATABASE_USER
+            DATABASE_PASSWORD: $DATABASE_PASSWORD
+            DATABASE_NAME: $DATABASE_NAME
+            DATABASE_SYNCHRONIZE: $DATABASE_SYNCHRONIZE
+            CACHE_HOST: $CACHE_HOST
+            CACHE_PORT: $CACHE_PORT
+            HONEYBADGER_API_KEY: $HONEYBADGER_API_KEY
+        ports:
+            - 3000:3000
+            - 9229:9229
+        restart: unless-stopped
+    # frontend_staging:
+    #     container_name: frontend_staging
+    #     build:
+    #         context: ../frontend
+    #         dockerfile: Dockerfile
+    #         target: production
+    #     depends_on:
+    #         - backend_dev
+    #     command: npm run test
+    #     restart: unless-stopped
+    #     ports:
+    #     - "4200:4200"
+    #     volumes:
+    #         - ../frontend:/app
+    #         - /app/node_modules
+    db:
+        container_name: $DATABASE_HOST
+        image: mysql
+        restart: unless-stopped
+        command: --default-authentication-plugin=mysql_native_password
+        environment:
+            MYSQL_ROOT_PASSWORD: $DATABASE_PASSWORD
+            MYSQL_DATABASE: $DATABASE_NAME
+        ports:
+        - "3307:$DATABASE_PORT"
+    #Redis db cacheing
+    db_cache:
+        container_name: $CACHE_HOST
+        image: redis:3.0-alpine
+        restart: unless-stopped
+        ports:
+        - '6378:$CACHE_PORT'
+        command: redis-server
+    
