@@ -22,7 +22,7 @@ export class UsersService {
   }
 
   findOne(username: User['username']): Promise<User | undefined> {
-    return this.usersRepository.findOneOrFail({ username });
+    return this.usersRepository.findOne({ username });
   }
 
   async remove(id: number) {

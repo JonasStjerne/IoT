@@ -22,6 +22,5 @@ export class SignInComponent implements OnInit {
       .subscribe((response) => {
         console.log(response);
       });
-    console.log('Sign in');
   }
 }
