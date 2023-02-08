@@ -15,9 +15,10 @@ import { JwtInterceptor } from './_interceptors/jwt.interceptor';
 import { ErrorInterceptor } from './_interceptors/error.interceptor';
 import { HomeComponent } from './_pages/home/home.component';
 import { NotFoundComponent } from './_pages/not-found/not-found.component';
+import { CreateUserComponent } from './_pages/create-user/create-user.component';
 
 @NgModule({
-  declarations: [AppComponent, SignInComponent, HomeComponent, NotFoundComponent],
+  declarations: [AppComponent, SignInComponent, HomeComponent, NotFoundComponent, CreateUserComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
