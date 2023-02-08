@@ -6,10 +6,16 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { HubService } from './hub.service';
 import { CreateHubDto } from './dto/create-hub.dto';
 import { UpdateHubDto } from './dto/update-hub.dto';
+import { RegisterHubDto } from './dto/register-hub.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { IAuth } from 'src/auth/auth.model';
 
 @Controller('hub')
 export class HubController {
@@ -19,6 +25,14 @@ export class HubController {
   @Post()
   create(@Body() createHubDto: CreateHubDto) {
     return this.hubService.create(createHubDto);
+  }
+
+  //Register hub to user
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Post('register')
+  register(@Request() req: IAuth<RegisterHubDto>) {
+    return this.hubService.register(req.user, req.body);
   }
 
   //Return all hubs for user
