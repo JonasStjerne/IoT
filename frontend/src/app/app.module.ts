@@ -16,9 +16,17 @@ import { ErrorInterceptor } from './_interceptors/error.interceptor';
 import { HomeComponent } from './_pages/home/home.component';
 import { NotFoundComponent } from './_pages/not-found/not-found.component';
 import { CreateUserComponent } from './_pages/create-user/create-user.component';
+import { RegisterHubComponent } from './_pages/register-hub/register-hub.component';
 
 @NgModule({
-  declarations: [AppComponent, SignInComponent, HomeComponent, NotFoundComponent, CreateUserComponent],
+  declarations: [
+    AppComponent,
+    SignInComponent,
+    HomeComponent,
+    NotFoundComponent,
+    CreateUserComponent,
+    RegisterHubComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,

@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
 import {
   IsEmail,
   IsNotEmpty,
@@ -7,6 +13,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { classToPlain, Exclude } from 'class-transformer';
+import { Hub } from 'src/hub/entities/hub.entity';
 
 @Entity()
 export class User {
@@ -26,4 +33,8 @@ export class User {
   @MinLength(5)
   @Exclude({ toPlainOnly: true })
   password: string;
+
+  @ManyToMany(() => Hub, (hub) => hub.users, { cascade: true })
+  @JoinTable()
+  hubs: Hub[];
 }

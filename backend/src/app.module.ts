@@ -7,6 +7,7 @@ import { mysqlConfigService } from './config/mysql/configuration';
 import { AuthModule } from './auth/auth.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { HubModule } from './hub/hub.module';
 
 @Module({
   imports: [
@@ -29,6 +30,8 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 
     //Components
     AuthModule,
+
+    HubModule,
   ],
   controllers: [AppController],
   providers: [
