@@ -7,10 +7,11 @@ import {
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { ErrorService } from '../_services/error.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-  constructor() {}
+  constructor(private errorService: ErrorService) {}
 
   intercept(
     request: HttpRequest<any>,
@@ -35,8 +36,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           observer.next(event);
         },
         (err) => {
-          console.log('ErrorInterceptor', err);
-          observer.error(err);
+          this.errorService.handleError(err);
         },
         () => {
           observer.complete();

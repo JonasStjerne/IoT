@@ -4,8 +4,8 @@ import { SignInComponent } from './_pages/sign-in/sign-in.component';
 
 const routes: Routes = [
   { path: '', component: SignInComponent },
-  // { path: 'checkout-sell', component: CheckoutSellComponent },
-  // { path: 'checkout-buy', component: CheckoutBuyComponent },
+  // TODO make 404 not found page
+  // { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({

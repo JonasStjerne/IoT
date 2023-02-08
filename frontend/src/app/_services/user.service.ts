@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { User } from '../_api/models';
 
@@ -14,6 +15,11 @@ export class UserService {
   }
   token: string | null = null;
 
+  logOut() {
+    this.token = null;
+    this.user$.next(null);
+  }
+
   loadTokenFromLocalStorage() {
     this.token = localStorage.getItem('token');
   }
@@ -21,6 +27,8 @@ export class UserService {
   saveTokenToLocalStorage() {
     if (this.token) {
       localStorage.setItem('token', this.token);
+    } else {
+      localStorage.removeItem('token');
     }
   }
 }
