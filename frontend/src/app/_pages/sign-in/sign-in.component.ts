@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { take } from 'rxjs/operators';
 import { LoginUserDto, User } from 'src/app/_api/models';
 import { ApiService } from 'src/app/_api/services';
 import { UserService } from 'src/app/_services/user.service';
@@ -11,7 +13,9 @@ import { UserService } from 'src/app/_services/user.service';
 export class SignInComponent implements OnInit {
   constructor(
     private apiService: ApiService,
-    private userService: UserService
+    private userService: UserService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
   username = '';
   password = '';
@@ -26,8 +30,12 @@ export class SignInComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.userService.token = res.access_token;
+          this.route.queryParams.subscribe((params) => {
+            const redirectUrl = params.redirectUrl || '/home';
+            console.log(params);
+            this.router.navigate([redirectUrl]);
+          });
         },
-        error: (err) => console.error(err),
       });
   }
 }

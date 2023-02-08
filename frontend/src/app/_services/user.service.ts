@@ -10,7 +10,7 @@ export class UserService {
   public user$: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(
     null
   );
-  constructor() {
+  constructor(private router: Router) {
     this.user$.subscribe();
   }
   token: string | null = null;
@@ -19,7 +19,9 @@ export class UserService {
     this.token = null;
     this.user$.next(null);
     //If user not on loginpage redirect to loginpage and remeber redirect url
-    console.log('Service: User logged out');
+    if (this.router.url !== '/login') {
+      this.router.navigate(['/login']);
+    }
   }
 
   //Automaticlly gets called from app.components.ts when app starts

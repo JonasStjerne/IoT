@@ -5,8 +5,9 @@ import { HomeComponent } from './_pages/home/home.component';
 import { SignInComponent } from './_pages/sign-in/sign-in.component';
 
 const routes: Routes = [
-  { path: '', component: SignInComponent },
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'login', component: SignInComponent },
+  { path: 'home', component: HomeComponent },
   // TODO make 404 not found page
   // { path: '**', component: PageNotFoundComponent },
 ];
