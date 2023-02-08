@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
   providedIn: 'root',
 })
 export class ErrorService {
-  constructor(private toast: ToastrService) {}
+  constructor(private toastService: ToastrService) {}
 
   handleError(error: HttpErrorResponse) {
     let errorMessage: string;
@@ -15,8 +15,8 @@ export class ErrorService {
       errorMessage = `Error: ${error.error.message}`;
     } else {
       // server-side error
-      errorMessage = 'Something went wrong';
+      errorMessage = `${error.error.message}`;
     }
-    this.toast.error(errorMessage);
+    this.toastService.error(errorMessage);
   }
 }
