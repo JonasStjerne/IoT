@@ -20,7 +20,9 @@ export class UserService {
     this.user$.next(null);
     //If user not on loginpage redirect to loginpage and remeber redirect url
     if (this.router.url !== '/login') {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/login'], {
+        queryParams: { redirectUrl: this.router.url },
+      });
     }
   }
 

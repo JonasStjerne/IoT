@@ -30,7 +30,7 @@ export class SignInComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.userService.token = res.access_token;
-          this.route.queryParams.subscribe((params) => {
+          this.route.queryParams.pipe(take(1)).subscribe((params) => {
             const redirectUrl = params.redirectUrl || '/home';
             console.log(params);
             this.router.navigate([redirectUrl]);
