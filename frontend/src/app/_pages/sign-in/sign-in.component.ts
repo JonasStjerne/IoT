@@ -26,7 +26,6 @@ export class SignInComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.userService.token = res.access_token;
-          console.log('logged in!');
         },
         error: (err) => console.error(err),
       });
