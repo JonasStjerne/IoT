@@ -18,12 +18,15 @@ export class UserService {
   logOut() {
     this.token = null;
     this.user$.next(null);
+    //If user not on loginpage redirect to loginpage and remeber redirect url
+    console.log('Service: User logged out');
   }
 
+  //Automaticlly gets called from app.components.ts when app starts
   loadTokenFromLocalStorage() {
     this.token = localStorage.getItem('token');
   }
-
+  //Automaticlly gets called from app.components.ts when app gets destroyed
   saveTokenToLocalStorage() {
     if (this.token) {
       localStorage.setItem('token', this.token);

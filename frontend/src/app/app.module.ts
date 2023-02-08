@@ -11,11 +11,12 @@ import { AppComponent } from './app.component';
 import { ApiModule } from './_api/api.module';
 import { environment } from 'src/environments/environment';
 import { SignInComponent } from './_pages/sign-in/sign-in.component';
-import { JwtInterceptor } from './_interceptor/jwt.interceptor';
-import { ErrorInterceptor } from './_interceptor/error.interceptor';
+import { JwtInterceptor } from './_interceptors/jwt.interceptor';
+import { ErrorInterceptor } from './_interceptors/error.interceptor';
+import { HomeComponent } from './_pages/home/home.component';
 
 @NgModule({
-  declarations: [AppComponent, SignInComponent],
+  declarations: [AppComponent, SignInComponent, HomeComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
