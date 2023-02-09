@@ -1,5 +1,3 @@
-<div>
-      <div *ngFor="let hub of hubs">
-            <app-hub-card [hub]="hub"></app-hub-card>
-      </div>
+<div *ngFor="let hub of hubs" class="hub_list">
+      <app-hub-card [hub]="hub"></app-hub-card>
 </div>

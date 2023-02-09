@@ -52,9 +52,11 @@ export class HubController {
   }
 
   //Update hub if user have relation to it
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   Rename(@Param('id') id: string, @Body() updateHubDto: UpdateHubDto) {
-    return this.hubService.update(+id, updateHubDto);
+    return this.hubService.update(id, updateHubDto);
   }
 
   //Delete relation to hub if user have relation to it

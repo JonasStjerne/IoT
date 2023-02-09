@@ -15,6 +15,7 @@ export class Hub {
 
   @Column()
   @Generated('uuid')
+  @Exclude()
   secret: string;
 
   @Column({ nullable: true })

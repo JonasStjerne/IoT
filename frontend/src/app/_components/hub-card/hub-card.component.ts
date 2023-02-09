@@ -12,4 +12,6 @@ export class HubCardComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {}
+
+  changeName() {}
 }

@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  Scope,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateHubDto } from './dto/create-hub.dto';
@@ -6,13 +11,15 @@ import { RegisterHubDto } from './dto/register-hub.dto';
 import { UpdateHubDto } from './dto/update-hub.dto';
 import { Hub } from './entities/hub.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AuthUser } from 'src/auth/auth.model';
+import { AuthRequest, AuthUser } from 'src/auth/auth.model';
+import { REQUEST } from '@nestjs/core';
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class HubService {
   constructor(
     @InjectRepository(Hub) private hubsRepository: Repository<Hub>,
     @InjectRepository(User) private usersRepository: Repository<User>,
+    @Inject(REQUEST) private readonly request: AuthRequest,
   ) {}
 
   async register(user: AuthUser, hub: RegisterHubDto) {
@@ -50,8 +57,14 @@ export class HubService {
     return `This action returns a #${id} hub`;
   }
 
-  update(id: number, updateHubDto: UpdateHubDto) {
-    return `This action updates a #${id} hub`;
+  async update(id: Hub['id'], updateHubDto: UpdateHubDto) {
+    const userDb = await this.usersRepository.findOne(this.request.user.userId);
+    const hubDb = userDb.hubs.find((hub) => hub.id == id);
+    if (hubDb) {
+      hubDb.name = updateHubDto.name;
+      return this.hubsRepository.save(hubDb);
+    }
+    return new UnauthorizedException("You don't have access to this hub");
   }
 
   remove(id: number) {
