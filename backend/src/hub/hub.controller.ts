@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Request,
+  Headers,
 } from '@nestjs/common';
 import { HubService } from './hub.service';
 import { CreateHubDto } from './dto/create-hub.dto';
@@ -37,9 +38,11 @@ export class HubController {
   }
 
   //Return all hubs for user
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
-    return this.hubService.findAll();
+  findAll(@Request() req: Auth<null>) {
+    return this.hubService.findAll(req.user);
   }
 
   //Get hub if user have relation to it

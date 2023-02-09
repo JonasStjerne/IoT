@@ -41,8 +41,9 @@ export class HubService {
     return this.hubsRepository.save(newHub);
   }
 
-  findAll() {
-    return `This action returns all hub`;
+  async findAll(user: AuthUser) {
+    const userDb = await this.usersRepository.findOne(user.userId);
+    return userDb.hubs;
   }
 
   findOne(id: number) {
