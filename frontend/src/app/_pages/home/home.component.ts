@@ -8,8 +8,5 @@ import { UserService } from 'src/app/_services/user.service';
 })
 export class HomeComponent implements OnInit {
   constructor(public userService: UserService) {}
-
-  ngOnInit(): void {
-    console.log(this.userService.userId);
-  }
+  ngOnInit(): void {}
 }

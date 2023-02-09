@@ -11,8 +11,10 @@ import { map, filter } from 'rxjs/operators';
 
 import { CreateHubDto } from '../models/create-hub-dto';
 import { CreateUserDto } from '../models/create-user-dto';
+import { Hub } from '../models/hub';
 import { LoginResponse } from '../models/login-response';
 import { LoginUserDto } from '../models/login-user-dto';
+import { RegisterHubDto } from '../models/register-hub-dto';
 import { UpdateHubDto } from '../models/update-hub-dto';
 import { User } from '../models/user';
 
@@ -287,7 +289,7 @@ export class ApiService extends BaseService {
   hubControllerFindAll$Response(params?: {
     context?: HttpContext
   }
-): Observable<StrictHttpResponse<string>> {
+): Observable<StrictHttpResponse<Array<Hub>>> {
 
     const rb = new RequestBuilder(this.rootUrl, ApiService.HubControllerFindAllPath, 'get');
     if (params) {
@@ -300,7 +302,7 @@ export class ApiService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
+        return r as StrictHttpResponse<Array<Hub>>;
       })
     );
   }
@@ -314,10 +316,10 @@ export class ApiService extends BaseService {
   hubControllerFindAll(params?: {
     context?: HttpContext
   }
-): Observable<string> {
+): Observable<Array<Hub>> {
 
     return this.hubControllerFindAll$Response(params).pipe(
-      map((r: StrictHttpResponse<string>) => r.body as string)
+      map((r: StrictHttpResponse<Array<Hub>>) => r.body as Array<Hub>)
     );
   }
 
@@ -336,7 +338,7 @@ export class ApiService extends BaseService {
     context?: HttpContext
     body: CreateHubDto
   }
-): Observable<StrictHttpResponse<string>> {
+): Observable<StrictHttpResponse<Hub>> {
 
     const rb = new RequestBuilder(this.rootUrl, ApiService.HubControllerCreatePath, 'post');
     if (params) {
@@ -350,7 +352,7 @@ export class ApiService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
+        return r as StrictHttpResponse<Hub>;
       })
     );
   }
@@ -365,10 +367,10 @@ export class ApiService extends BaseService {
     context?: HttpContext
     body: CreateHubDto
   }
-): Observable<string> {
+): Observable<Hub> {
 
     return this.hubControllerCreate$Response(params).pipe(
-      map((r: StrictHttpResponse<string>) => r.body as string)
+      map((r: StrictHttpResponse<Hub>) => r.body as Hub)
     );
   }
 
@@ -381,16 +383,18 @@ export class ApiService extends BaseService {
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `hubControllerRegister()` instead.
    *
-   * This method doesn't expect any request body.
+   * This method sends `application/json` and handles request body of type `application/json`.
    */
-  hubControllerRegister$Response(params?: {
+  hubControllerRegister$Response(params: {
     context?: HttpContext
+    body: RegisterHubDto
   }
 ): Observable<StrictHttpResponse<{
 }>> {
 
     const rb = new RequestBuilder(this.rootUrl, ApiService.HubControllerRegisterPath, 'post');
     if (params) {
+      rb.body(params.body, 'application/json');
     }
 
     return this.http.request(rb.build({
@@ -410,10 +414,11 @@ export class ApiService extends BaseService {
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `hubControllerRegister$Response()` instead.
    *
-   * This method doesn't expect any request body.
+   * This method sends `application/json` and handles request body of type `application/json`.
    */
-  hubControllerRegister(params?: {
+  hubControllerRegister(params: {
     context?: HttpContext
+    body: RegisterHubDto
   }
 ): Observable<{
 }> {

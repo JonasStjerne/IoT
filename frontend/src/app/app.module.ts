@@ -17,6 +17,8 @@ import { HomeComponent } from './_pages/home/home.component';
 import { NotFoundComponent } from './_pages/not-found/not-found.component';
 import { CreateUserComponent } from './_pages/create-user/create-user.component';
 import { RegisterHubComponent } from './_pages/register-hub/register-hub.component';
+import { HubCardComponent } from './_components/hub-card/hub-card.component';
+import { HubListComponent } from './_components/hub-list/hub-list.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { RegisterHubComponent } from './_pages/register-hub/register-hub.compone
     NotFoundComponent,
     CreateUserComponent,
     RegisterHubComponent,
+    HubCardComponent,
+    HubListComponent,
   ],
   imports: [
     BrowserModule,
