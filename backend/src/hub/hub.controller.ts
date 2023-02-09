@@ -31,8 +31,8 @@ export class HubController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Post('register')
-  register(@Request() req: IAuth<RegisterHubDto>) {
-    return this.hubService.register(req.user, req.body);
+  async register(@Request() req: IAuth<RegisterHubDto>) {
+    return await this.hubService.register(req.user, req.body);
   }
 
   //Return all hubs for user

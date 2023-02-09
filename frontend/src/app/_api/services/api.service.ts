@@ -9,9 +9,11 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
+import { CreateHubDto } from '../models/create-hub-dto';
 import { CreateUserDto } from '../models/create-user-dto';
 import { LoginResponse } from '../models/login-response';
 import { LoginUserDto } from '../models/login-user-dto';
+import { UpdateHubDto } from '../models/update-hub-dto';
 import { User } from '../models/user';
 
 @Injectable({
@@ -268,6 +270,261 @@ export class ApiService extends BaseService {
 
     return this.usersControllerDelete$Response(params).pipe(
       map((r: StrictHttpResponse<void>) => r.body as void)
+    );
+  }
+
+  /**
+   * Path part for operation hubControllerFindAll
+   */
+  static readonly HubControllerFindAllPath = '/hub';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `hubControllerFindAll()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  hubControllerFindAll$Response(params?: {
+    context?: HttpContext
+  }
+): Observable<StrictHttpResponse<string>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiService.HubControllerFindAllPath, 'get');
+    if (params) {
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<string>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `hubControllerFindAll$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  hubControllerFindAll(params?: {
+    context?: HttpContext
+  }
+): Observable<string> {
+
+    return this.hubControllerFindAll$Response(params).pipe(
+      map((r: StrictHttpResponse<string>) => r.body as string)
+    );
+  }
+
+  /**
+   * Path part for operation hubControllerCreate
+   */
+  static readonly HubControllerCreatePath = '/hub';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `hubControllerCreate()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  hubControllerCreate$Response(params: {
+    context?: HttpContext
+    body: CreateHubDto
+  }
+): Observable<StrictHttpResponse<string>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiService.HubControllerCreatePath, 'post');
+    if (params) {
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<string>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `hubControllerCreate$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  hubControllerCreate(params: {
+    context?: HttpContext
+    body: CreateHubDto
+  }
+): Observable<string> {
+
+    return this.hubControllerCreate$Response(params).pipe(
+      map((r: StrictHttpResponse<string>) => r.body as string)
+    );
+  }
+
+  /**
+   * Path part for operation hubControllerFindOne
+   */
+  static readonly HubControllerFindOnePath = '/hub/{id}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `hubControllerFindOne()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  hubControllerFindOne$Response(params: {
+    id: string;
+    context?: HttpContext
+  }
+): Observable<StrictHttpResponse<string>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiService.HubControllerFindOnePath, 'get');
+    if (params) {
+      rb.path('id', params.id, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<string>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `hubControllerFindOne$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  hubControllerFindOne(params: {
+    id: string;
+    context?: HttpContext
+  }
+): Observable<string> {
+
+    return this.hubControllerFindOne$Response(params).pipe(
+      map((r: StrictHttpResponse<string>) => r.body as string)
+    );
+  }
+
+  /**
+   * Path part for operation hubControllerRemove
+   */
+  static readonly HubControllerRemovePath = '/hub/{id}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `hubControllerRemove()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  hubControllerRemove$Response(params: {
+    id: string;
+    context?: HttpContext
+  }
+): Observable<StrictHttpResponse<string>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiService.HubControllerRemovePath, 'delete');
+    if (params) {
+      rb.path('id', params.id, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<string>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `hubControllerRemove$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  hubControllerRemove(params: {
+    id: string;
+    context?: HttpContext
+  }
+): Observable<string> {
+
+    return this.hubControllerRemove$Response(params).pipe(
+      map((r: StrictHttpResponse<string>) => r.body as string)
+    );
+  }
+
+  /**
+   * Path part for operation hubControllerRename
+   */
+  static readonly HubControllerRenamePath = '/hub/{id}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `hubControllerRename()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  hubControllerRename$Response(params: {
+    id: string;
+    context?: HttpContext
+    body: UpdateHubDto
+  }
+): Observable<StrictHttpResponse<string>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiService.HubControllerRenamePath, 'patch');
+    if (params) {
+      rb.path('id', params.id, {});
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<string>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `hubControllerRename$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  hubControllerRename(params: {
+    id: string;
+    context?: HttpContext
+    body: UpdateHubDto
+  }
+): Observable<string> {
+
+    return this.hubControllerRename$Response(params).pipe(
+      map((r: StrictHttpResponse<string>) => r.body as string)
     );
   }
 
