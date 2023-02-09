@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs/operators';
 import { LoginUserDto, User } from 'src/app/_api/models';
 import { ApiService } from 'src/app/_api/services';
@@ -15,7 +16,8 @@ export class SignInComponent implements OnInit {
     private apiService: ApiService,
     private userService: UserService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private toasterService: ToastrService
   ) {}
   username = '';
   password = '';
@@ -30,9 +32,12 @@ export class SignInComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.userService.token = res.access_token;
+          this.userService.userId = this.userService.parseJwt(
+            res.access_token
+          ).sub;
           this.route.queryParams.pipe(take(1)).subscribe((params) => {
+            this.toasterService.success('You are now logged in');
             const redirectUrl = params.redirectUrl || '/home';
-            console.log(params);
             this.router.navigate([redirectUrl]);
           });
         },
