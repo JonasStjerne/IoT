@@ -1,6 +1,11 @@
 import { User } from 'src/users/entities/user.entity';
 
-export interface IAuth<T> {
-  user: User;
+export class Auth<T> {
+  user: AuthUser;
   body: T;
+}
+
+export class AuthUser {
+  name: User['username'];
+  sub: User['id'];
 }

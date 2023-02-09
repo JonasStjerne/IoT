@@ -6,6 +6,7 @@ import { RegisterHubDto } from './dto/register-hub.dto';
 import { UpdateHubDto } from './dto/update-hub.dto';
 import { Hub } from './entities/hub.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AuthUser } from 'src/auth/auth.model';
 
 @Injectable()
 export class HubService {
@@ -14,11 +15,12 @@ export class HubService {
     @InjectRepository(User) private usersRepository: Repository<User>,
   ) {}
 
-  async register(user: User, hub: RegisterHubDto) {
+  async register(user: AuthUser, hub: RegisterHubDto) {
     const hubDb = await this.validateHubCredentials(hub.id, hub.secret);
-    if (hubDb) {
-      user.hubs.push(hubDb);
-      await this.usersRepository.save(user);
+    const userDb = await this.usersRepository.findOne(user.sub);
+    if (hubDb && userDb) {
+      hubDb.users.push(userDb);
+      await this.hubsRepository.save(hubDb);
       return hubDb;
     }
     return new UnauthorizedException(

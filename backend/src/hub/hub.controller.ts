@@ -15,7 +15,7 @@ import { UpdateHubDto } from './dto/update-hub.dto';
 import { RegisterHubDto } from './dto/register-hub.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { IAuth } from 'src/auth/auth.model';
+import { Auth } from 'src/auth/auth.model';
 
 @Controller('hub')
 export class HubController {
@@ -31,7 +31,7 @@ export class HubController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Post('register')
-  async register(@Request() req: IAuth<RegisterHubDto>) {
+  async register(@Request() req: Auth<RegisterHubDto>) {
     return await this.hubService.register(req.user, req.body);
   }
 

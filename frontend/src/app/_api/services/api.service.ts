@@ -373,6 +373,59 @@ export class ApiService extends BaseService {
   }
 
   /**
+   * Path part for operation hubControllerRegister
+   */
+  static readonly HubControllerRegisterPath = '/hub/register';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `hubControllerRegister()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  hubControllerRegister$Response(params?: {
+    context?: HttpContext
+  }
+): Observable<StrictHttpResponse<{
+}>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiService.HubControllerRegisterPath, 'post');
+    if (params) {
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<{
+        }>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `hubControllerRegister$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  hubControllerRegister(params?: {
+    context?: HttpContext
+  }
+): Observable<{
+}> {
+
+    return this.hubControllerRegister$Response(params).pipe(
+      map((r: StrictHttpResponse<{
+}>) => r.body as {
+})
+    );
+  }
+
+  /**
    * Path part for operation hubControllerFindOne
    */
   static readonly HubControllerFindOnePath = '/hub/{id}';
