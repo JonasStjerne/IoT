@@ -1,1 +1,11 @@
-<p>register-hub works!</p>
+<form class="w-50 mx-auto">
+      <div class="mb-3">
+            <label class="form-label">Hub ID</label>
+            <input name="id" [(ngModel)]="id" type="text" class="form-control">
+      </div>
+      <div class="mb-3">
+            <label class="form-label">Secret</label>
+            <input name="secret" [(ngModel)]="secret" type="password" class="form-control">
+      </div>
+      <button type="submit" (click)="addHub()" class="btn btn-primary">Add Hub</button>
+</form>

@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   Inject,
   Injectable,
   Scope,
@@ -30,7 +31,7 @@ export class HubService {
       await this.usersRepository.save(userDb);
       return hubDb;
     }
-    return new UnauthorizedException(
+    throw new ForbiddenException(
       'Hub credientials not valid, please try again',
     );
   }
@@ -64,7 +65,7 @@ export class HubService {
       hubDb.name = updateHubDto.name;
       return this.hubsRepository.save(hubDb);
     }
-    return new UnauthorizedException("You don't have access to this hub");
+    throw new ForbiddenException("You don't have access to this hub");
   }
 
   remove(id: number) {
