@@ -6,6 +6,7 @@ import {
   RouterStateSnapshot,
   UrlTree,
 } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { UserService } from '../_services/user.service';
 
@@ -13,7 +14,11 @@ import { UserService } from '../_services/user.service';
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(
+    private userService: UserService,
+    private router: Router,
+    private toastService: ToastrService
+  ) {}
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
@@ -22,15 +27,16 @@ export class AuthGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    if (this.userService.token && !this.tokenExpired(this.userService.token)) {
-      return true;
-    } else {
+    if (!this.userService.token) {
+      this.toastService.error('You must be logged in to access this page');
       this.userService.logOut();
-      // not logged in so redirect to login page with the return url
-      // this.router.navigate(['/login'], {
-      //   queryParams: { redirectUrl: state.url },
-      // });
       return false;
+    } else if (this.tokenExpired(this.userService.token)) {
+      this.toastService.error('Your session has expired');
+      this.userService.logOut();
+      return false;
+    } else {
+      return true;
     }
   }
 
