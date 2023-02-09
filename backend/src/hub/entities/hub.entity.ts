@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
@@ -16,8 +17,8 @@ export class Hub {
   @Generated('uuid')
   secret: string;
 
-  @Column()
-  name: string;
+  @Column({ nullable: true })
+  name: string | null;
 
   @ManyToMany(() => User, (user) => user.hubs)
   users: User[];

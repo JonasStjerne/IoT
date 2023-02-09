@@ -6,6 +6,6 @@ export class Auth<T> {
 }
 
 export class AuthUser {
-  name: User['username'];
-  sub: User['id'];
+  username: User['username'];
+  userId: User['id'];
 }

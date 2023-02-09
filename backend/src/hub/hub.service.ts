@@ -17,10 +17,10 @@ export class HubService {
 
   async register(user: AuthUser, hub: RegisterHubDto) {
     const hubDb = await this.validateHubCredentials(hub.id, hub.secret);
-    const userDb = await this.usersRepository.findOne(user.sub);
+    const userDb = await this.usersRepository.findOne(user.userId);
     if (hubDb && userDb) {
-      hubDb.users.push(userDb);
-      await this.hubsRepository.save(hubDb);
+      userDb.hubs = [...userDb.hubs, hubDb];
+      await this.usersRepository.save(userDb);
       return hubDb;
     }
     return new UnauthorizedException(
@@ -30,14 +30,15 @@ export class HubService {
 
   async validateHubCredentials(id: string, secret: string) {
     const hub = await this.hubsRepository.findOne(id);
-    if (hub && hub.secret === secret) {
+    if (hub && hub.secret == secret) {
       return hub;
     }
     return null;
   }
 
   create(createHubDto: CreateHubDto) {
-    return 'This action adds a new hub';
+    const newHub = this.hubsRepository.create(createHubDto);
+    return this.hubsRepository.save(newHub);
   }
 
   findAll() {
