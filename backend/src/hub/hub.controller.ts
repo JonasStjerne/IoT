@@ -15,9 +15,10 @@ import { CreateHubDto } from './dto/create-hub.dto';
 import { UpdateHubDto } from './dto/update-hub.dto';
 import { RegisterHubDto } from './dto/register-hub.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { ApiBearerAuth, ApiBody } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { Auth } from 'src/auth/auth.model';
 
+@ApiTags('Hub')
 @Controller('hub')
 export class HubController {
   constructor(private readonly hubService: HubService) {}

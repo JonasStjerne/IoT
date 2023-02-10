@@ -7,14 +7,15 @@ import {
   Delete,
   ConflictException,
 } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 
-@Controller('users')
+@ApiTags('User')
+@Controller('user')
 export class UsersController {
   constructor(private userService: UsersService) {}
 
