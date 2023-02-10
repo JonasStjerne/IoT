@@ -9,13 +9,17 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
+import { CreateActionDto } from '../models/create-action-dto';
 import { CreateHubDto } from '../models/create-hub-dto';
 import { CreateUserDto } from '../models/create-user-dto';
+import { CreateWorkerDto } from '../models/create-worker-dto';
 import { Hub } from '../models/hub';
 import { LoginResponse } from '../models/login-response';
 import { LoginUserDto } from '../models/login-user-dto';
 import { RegisterHubDto } from '../models/register-hub-dto';
+import { UpdateActionDto } from '../models/update-action-dto';
 import { UpdateHubDto } from '../models/update-hub-dto';
+import { UpdateWorkerDto } from '../models/update-worker-dto';
 import { User } from '../models/user';
 
 @Injectable({
@@ -629,6 +633,516 @@ export class ApiService extends BaseService {
 
     return this.hubControllerUnRegister$Response(params).pipe(
       map((r: StrictHttpResponse<void>) => r.body as void)
+    );
+  }
+
+  /**
+   * Path part for operation workerControllerFindAll
+   */
+  static readonly WorkerControllerFindAllPath = '/worker';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `workerControllerFindAll()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  workerControllerFindAll$Response(params?: {
+    context?: HttpContext
+  }
+): Observable<StrictHttpResponse<string>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiService.WorkerControllerFindAllPath, 'get');
+    if (params) {
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<string>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `workerControllerFindAll$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  workerControllerFindAll(params?: {
+    context?: HttpContext
+  }
+): Observable<string> {
+
+    return this.workerControllerFindAll$Response(params).pipe(
+      map((r: StrictHttpResponse<string>) => r.body as string)
+    );
+  }
+
+  /**
+   * Path part for operation workerControllerCreate
+   */
+  static readonly WorkerControllerCreatePath = '/worker';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `workerControllerCreate()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  workerControllerCreate$Response(params: {
+    context?: HttpContext
+    body: CreateWorkerDto
+  }
+): Observable<StrictHttpResponse<string>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiService.WorkerControllerCreatePath, 'post');
+    if (params) {
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<string>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `workerControllerCreate$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  workerControllerCreate(params: {
+    context?: HttpContext
+    body: CreateWorkerDto
+  }
+): Observable<string> {
+
+    return this.workerControllerCreate$Response(params).pipe(
+      map((r: StrictHttpResponse<string>) => r.body as string)
+    );
+  }
+
+  /**
+   * Path part for operation workerControllerFindOne
+   */
+  static readonly WorkerControllerFindOnePath = '/worker/{id}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `workerControllerFindOne()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  workerControllerFindOne$Response(params: {
+    id: string;
+    context?: HttpContext
+  }
+): Observable<StrictHttpResponse<string>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiService.WorkerControllerFindOnePath, 'get');
+    if (params) {
+      rb.path('id', params.id, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<string>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `workerControllerFindOne$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  workerControllerFindOne(params: {
+    id: string;
+    context?: HttpContext
+  }
+): Observable<string> {
+
+    return this.workerControllerFindOne$Response(params).pipe(
+      map((r: StrictHttpResponse<string>) => r.body as string)
+    );
+  }
+
+  /**
+   * Path part for operation workerControllerRemove
+   */
+  static readonly WorkerControllerRemovePath = '/worker/{id}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `workerControllerRemove()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  workerControllerRemove$Response(params: {
+    id: string;
+    context?: HttpContext
+  }
+): Observable<StrictHttpResponse<string>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiService.WorkerControllerRemovePath, 'delete');
+    if (params) {
+      rb.path('id', params.id, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<string>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `workerControllerRemove$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  workerControllerRemove(params: {
+    id: string;
+    context?: HttpContext
+  }
+): Observable<string> {
+
+    return this.workerControllerRemove$Response(params).pipe(
+      map((r: StrictHttpResponse<string>) => r.body as string)
+    );
+  }
+
+  /**
+   * Path part for operation workerControllerUpdate
+   */
+  static readonly WorkerControllerUpdatePath = '/worker/{id}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `workerControllerUpdate()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  workerControllerUpdate$Response(params: {
+    id: string;
+    context?: HttpContext
+    body: UpdateWorkerDto
+  }
+): Observable<StrictHttpResponse<string>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiService.WorkerControllerUpdatePath, 'patch');
+    if (params) {
+      rb.path('id', params.id, {});
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<string>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `workerControllerUpdate$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  workerControllerUpdate(params: {
+    id: string;
+    context?: HttpContext
+    body: UpdateWorkerDto
+  }
+): Observable<string> {
+
+    return this.workerControllerUpdate$Response(params).pipe(
+      map((r: StrictHttpResponse<string>) => r.body as string)
+    );
+  }
+
+  /**
+   * Path part for operation actionControllerFindAll
+   */
+  static readonly ActionControllerFindAllPath = '/action';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `actionControllerFindAll()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  actionControllerFindAll$Response(params?: {
+    context?: HttpContext
+  }
+): Observable<StrictHttpResponse<string>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiService.ActionControllerFindAllPath, 'get');
+    if (params) {
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<string>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `actionControllerFindAll$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  actionControllerFindAll(params?: {
+    context?: HttpContext
+  }
+): Observable<string> {
+
+    return this.actionControllerFindAll$Response(params).pipe(
+      map((r: StrictHttpResponse<string>) => r.body as string)
+    );
+  }
+
+  /**
+   * Path part for operation actionControllerCreate
+   */
+  static readonly ActionControllerCreatePath = '/action';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `actionControllerCreate()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  actionControllerCreate$Response(params: {
+    context?: HttpContext
+    body: CreateActionDto
+  }
+): Observable<StrictHttpResponse<string>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiService.ActionControllerCreatePath, 'post');
+    if (params) {
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<string>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `actionControllerCreate$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  actionControllerCreate(params: {
+    context?: HttpContext
+    body: CreateActionDto
+  }
+): Observable<string> {
+
+    return this.actionControllerCreate$Response(params).pipe(
+      map((r: StrictHttpResponse<string>) => r.body as string)
+    );
+  }
+
+  /**
+   * Path part for operation actionControllerFindOne
+   */
+  static readonly ActionControllerFindOnePath = '/action/{id}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `actionControllerFindOne()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  actionControllerFindOne$Response(params: {
+    id: string;
+    context?: HttpContext
+  }
+): Observable<StrictHttpResponse<string>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiService.ActionControllerFindOnePath, 'get');
+    if (params) {
+      rb.path('id', params.id, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<string>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `actionControllerFindOne$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  actionControllerFindOne(params: {
+    id: string;
+    context?: HttpContext
+  }
+): Observable<string> {
+
+    return this.actionControllerFindOne$Response(params).pipe(
+      map((r: StrictHttpResponse<string>) => r.body as string)
+    );
+  }
+
+  /**
+   * Path part for operation actionControllerRemove
+   */
+  static readonly ActionControllerRemovePath = '/action/{id}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `actionControllerRemove()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  actionControllerRemove$Response(params: {
+    id: string;
+    context?: HttpContext
+  }
+): Observable<StrictHttpResponse<string>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiService.ActionControllerRemovePath, 'delete');
+    if (params) {
+      rb.path('id', params.id, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<string>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `actionControllerRemove$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  actionControllerRemove(params: {
+    id: string;
+    context?: HttpContext
+  }
+): Observable<string> {
+
+    return this.actionControllerRemove$Response(params).pipe(
+      map((r: StrictHttpResponse<string>) => r.body as string)
+    );
+  }
+
+  /**
+   * Path part for operation actionControllerUpdate
+   */
+  static readonly ActionControllerUpdatePath = '/action/{id}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `actionControllerUpdate()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  actionControllerUpdate$Response(params: {
+    id: string;
+    context?: HttpContext
+    body: UpdateActionDto
+  }
+): Observable<StrictHttpResponse<string>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiService.ActionControllerUpdatePath, 'patch');
+    if (params) {
+      rb.path('id', params.id, {});
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<string>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `actionControllerUpdate$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  actionControllerUpdate(params: {
+    id: string;
+    context?: HttpContext
+    body: UpdateActionDto
+  }
+): Observable<string> {
+
+    return this.actionControllerUpdate$Response(params).pipe(
+      map((r: StrictHttpResponse<string>) => r.body as string)
     );
   }
 
