@@ -1,6 +1,5 @@
 <div class="d-flex justify-content-between">
-      <a [routerLink]="['add-hub']"><button>Add hub</button></a>
-      <button (click)="this.userService.logOut()">Log Out</button>
+      <a [routerLink]="['add-hub']"><button class="btn btn-primary">Add hub</button></a>
+      <button (click)="this.userService.logOut()" class="btn btn-danger">Log Out</button>
 </div>
-<h2 class="text-center">Hubs</h2>
 <app-hub-list></app-hub-list>

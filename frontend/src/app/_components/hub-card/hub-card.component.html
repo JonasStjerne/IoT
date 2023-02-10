@@ -1,10 +1,14 @@
-<div class="hub-card">
-      <div>
-            <input name="hub__name" [(ngModel)]="hub.name">
-            <button (click)="this.changeName()">Save</button>
-            <button (click)="this.deleteHub(content)">Delete &#10060;</button>
+<li class="list-group-item">
+      <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+            <div class="input-group">
+                  <span class="input-group-text" id="basic-addon1">Hub name</span>
+                  <input [(ngModel)]="hub.name" type="text" class="form-control" placeholder="Washer starter"
+                        aria-label="hub name" aria-describedby="basic-addon1">
+            </div>
+            <button (click)="this.changeName()" type="button" class="btn btn-success">Save</button>
+            <button (click)="this.deleteHub(content)" type="button" class="btn btn-danger">Delete</button>
       </div>
-</div>
+</li>
 <!-- Modal content -->
 <ng-template #content let-modal>
       <div class="modal-header">
