@@ -8,6 +8,7 @@
             <button (click)="this.changeName()" type="button" class="btn btn-success">Save</button>
             <button (click)="this.deleteHub(content)" type="button" class="btn btn-danger">Delete</button>
       </div>
+      <a class="text-center d-block" [routerLink]="['/hub', hub.id]">See hub</a>
 </li>
 <!-- Modal content -->
 <ng-template #content let-modal>

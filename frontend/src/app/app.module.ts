@@ -20,6 +20,7 @@ import { RegisterHubComponent } from './_pages/register-hub/register-hub.compone
 import { HubCardComponent } from './_components/hub-card/hub-card.component';
 import { HubListComponent } from './_components/hub-list/hub-list.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { HubComponent } from './_pages/hub/hub.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     RegisterHubComponent,
     HubCardComponent,
     HubListComponent,
+    HubComponent,
   ],
   imports: [
     BrowserModule,

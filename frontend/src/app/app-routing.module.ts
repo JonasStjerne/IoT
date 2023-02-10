@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './_guards/auth.guard';
 import { CreateUserComponent } from './_pages/create-user/create-user.component';
 import { HomeComponent } from './_pages/home/home.component';
+import { HubComponent } from './_pages/hub/hub.component';
 import { NotFoundComponent } from './_pages/not-found/not-found.component';
 import { RegisterHubComponent } from './_pages/register-hub/register-hub.component';
 import { SignInComponent } from './_pages/sign-in/sign-in.component';
@@ -17,7 +18,7 @@ const routes: Routes = [
     component: RegisterHubComponent,
     canActivate: [AuthGuard],
   },
-  // TODO make 404 not found page
+  { path: 'hub/:id', component: HubComponent, canActivate: [AuthGuard] },
   { path: '**', component: NotFoundComponent },
 ];
 
