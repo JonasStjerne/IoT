@@ -375,57 +375,6 @@ export class ApiService extends BaseService {
   }
 
   /**
-   * Path part for operation hubControllerRegister
-   */
-  static readonly HubControllerRegisterPath = '/hub/register';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `hubControllerRegister()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  hubControllerRegister$Response(params: {
-    context?: HttpContext
-    body: RegisterHubDto
-  }
-): Observable<StrictHttpResponse<Hub>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ApiService.HubControllerRegisterPath, 'post');
-    if (params) {
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Hub>;
-      })
-    );
-  }
-
-  /**
-   * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `hubControllerRegister$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  hubControllerRegister(params: {
-    context?: HttpContext
-    body: RegisterHubDto
-  }
-): Observable<Hub> {
-
-    return this.hubControllerRegister$Response(params).pipe(
-      map((r: StrictHttpResponse<Hub>) => r.body as Hub)
-    );
-  }
-
-  /**
    * Path part for operation hubControllerFindOne
    */
   static readonly HubControllerFindOnePath = '/hub/{id}';
@@ -578,6 +527,108 @@ export class ApiService extends BaseService {
 
     return this.hubControllerRename$Response(params).pipe(
       map((r: StrictHttpResponse<Hub>) => r.body as Hub)
+    );
+  }
+
+  /**
+   * Path part for operation hubControllerRegister
+   */
+  static readonly HubControllerRegisterPath = '/hub/register';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `hubControllerRegister()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  hubControllerRegister$Response(params: {
+    context?: HttpContext
+    body: RegisterHubDto
+  }
+): Observable<StrictHttpResponse<Hub>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiService.HubControllerRegisterPath, 'post');
+    if (params) {
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Hub>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `hubControllerRegister$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  hubControllerRegister(params: {
+    context?: HttpContext
+    body: RegisterHubDto
+  }
+): Observable<Hub> {
+
+    return this.hubControllerRegister$Response(params).pipe(
+      map((r: StrictHttpResponse<Hub>) => r.body as Hub)
+    );
+  }
+
+  /**
+   * Path part for operation hubControllerUnRegister
+   */
+  static readonly HubControllerUnRegisterPath = '/hub/unregister/{id}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `hubControllerUnRegister()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  hubControllerUnRegister$Response(params: {
+    id: string;
+    context?: HttpContext
+  }
+): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ApiService.HubControllerUnRegisterPath, 'delete');
+    if (params) {
+      rb.path('id', params.id, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `hubControllerUnRegister$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  hubControllerUnRegister(params: {
+    id: string;
+    context?: HttpContext
+  }
+): Observable<void> {
+
+    return this.hubControllerUnRegister$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
     );
   }
 

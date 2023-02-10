@@ -19,6 +19,7 @@ import { CreateUserComponent } from './_pages/create-user/create-user.component'
 import { RegisterHubComponent } from './_pages/register-hub/register-hub.component';
 import { HubCardComponent } from './_components/hub-card/hub-card.component';
 import { HubListComponent } from './_components/hub-list/hub-list.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { HubListComponent } from './_components/hub-list/hub-list.component';
       progressBar: true,
       closeButton: true,
     }),
+    NgbModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
