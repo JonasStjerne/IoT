@@ -44,6 +44,8 @@ services:
         restart: unless-stopped
         ports:
         - "4200:$FRONTEND_PORT"
+        depends_on:
+            - backend_dev
         volumes:
             - ../frontend:/app
             - /app/node_modules
@@ -68,6 +70,21 @@ services:
         - 8080:8080
         depends_on:
             - $DATABASE_HOST
+    hub_dev:
+        container_name: hub_dev
+        build:
+            context: ../hub
+            dockerfile: Dockerfile
+            target: development
+        command: npm start
+        restart: unless-stopped
+        ports:
+        - "3001:3001"
+        volumes:
+            - ../hub:/app
+            - /app/node_modules
+        depends_on:
+            - backend_dev
         
 volumes:
     mysqldbiot:
