@@ -10,6 +10,7 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { HubModule } from './hub/hub.module';
 import { WorkerModule } from './worker/worker.module';
 import { ActionModule } from './action/action.module';
+import { EventModule } from './event/event.module';
 
 @Module({
   imports: [
@@ -38,6 +39,8 @@ import { ActionModule } from './action/action.module';
     WorkerModule,
 
     ActionModule,
+
+    EventModule,
   ],
   controllers: [AppController],
   providers: [
