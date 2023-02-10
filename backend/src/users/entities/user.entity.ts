@@ -34,7 +34,7 @@ export class User {
   @Exclude({ toPlainOnly: true })
   password: string;
 
-  @ManyToMany(() => Hub, (hub) => hub.users, { cascade: true, eager: true })
+  @ManyToMany(() => Hub, (hub) => hub.users, { eager: true })
   @JoinTable()
   hubs: Hub[];
 }

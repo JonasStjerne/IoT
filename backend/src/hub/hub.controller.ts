@@ -28,6 +28,12 @@ export class HubController {
     return this.hubService.create(createHubDto);
   }
 
+  //Delete hub. Should be guarded by auth for only admin users
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.hubService.remove(+id);
+  }
+
   //Register hub to user
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
@@ -60,8 +66,10 @@ export class HubController {
   }
 
   //Delete relation to hub if user have relation to it
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.hubService.remove(+id);
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Delete('unregister/:id')
+  async unRegister(@Param('id') id: string) {
+    return await this.hubService.unRegister(id);
   }
 }

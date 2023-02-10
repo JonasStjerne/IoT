@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/_api/services';
 
@@ -13,7 +14,8 @@ export class RegisterHubComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private toastService: ToastrService
+    private toastService: ToastrService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {}
@@ -24,6 +26,7 @@ export class RegisterHubComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.toastService.success('Hub registered successfully');
+          this.router.navigate(['/home']);
         },
       });
   }

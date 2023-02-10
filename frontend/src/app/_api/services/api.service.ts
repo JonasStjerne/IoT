@@ -389,8 +389,7 @@ export class ApiService extends BaseService {
     context?: HttpContext
     body: RegisterHubDto
   }
-): Observable<StrictHttpResponse<{
-}>> {
+): Observable<StrictHttpResponse<Hub>> {
 
     const rb = new RequestBuilder(this.rootUrl, ApiService.HubControllerRegisterPath, 'post');
     if (params) {
@@ -404,8 +403,7 @@ export class ApiService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<{
-        }>;
+        return r as StrictHttpResponse<Hub>;
       })
     );
   }
@@ -420,13 +418,10 @@ export class ApiService extends BaseService {
     context?: HttpContext
     body: RegisterHubDto
   }
-): Observable<{
-}> {
+): Observable<Hub> {
 
     return this.hubControllerRegister$Response(params).pipe(
-      map((r: StrictHttpResponse<{
-}>) => r.body as {
-})
+      map((r: StrictHttpResponse<Hub>) => r.body as Hub)
     );
   }
 
@@ -548,7 +543,7 @@ export class ApiService extends BaseService {
     context?: HttpContext
     body: UpdateHubDto
   }
-): Observable<StrictHttpResponse<string>> {
+): Observable<StrictHttpResponse<Hub>> {
 
     const rb = new RequestBuilder(this.rootUrl, ApiService.HubControllerRenamePath, 'patch');
     if (params) {
@@ -563,7 +558,7 @@ export class ApiService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
+        return r as StrictHttpResponse<Hub>;
       })
     );
   }
@@ -579,10 +574,10 @@ export class ApiService extends BaseService {
     context?: HttpContext
     body: UpdateHubDto
   }
-): Observable<string> {
+): Observable<Hub> {
 
     return this.hubControllerRename$Response(params).pipe(
-      map((r: StrictHttpResponse<string>) => r.body as string)
+      map((r: StrictHttpResponse<Hub>) => r.body as Hub)
     );
   }
 

@@ -71,4 +71,17 @@ export class HubService {
   remove(id: number) {
     return `This action removes a #${id} hub`;
   }
+
+  async unRegister(id: string) {
+    const userDb = await this.usersRepository.findOne(this.request.user.userId);
+    const hubDb = userDb.hubs.find((hub) => hub.id == id);
+    if (!hubDb) {
+      throw new ForbiddenException(
+        "You don't have access to this hub, or it doesn't exist",
+      );
+    }
+    userDb.hubs = userDb.hubs.filter((hub) => hub.id != id);
+    await this.usersRepository.save(userDb);
+    return;
+  }
 }
