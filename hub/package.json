@@ -5,7 +5,9 @@
   "main": "src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "npx nodemon"
+    "start": "npm run build && node build/index.js",
+    "start:dev": "npx nodemon",
+    "build": "rimraf ./build && tsc"
   },
   "author": "",
   "license": "ISC",
