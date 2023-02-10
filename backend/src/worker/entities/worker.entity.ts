@@ -1,9 +1,11 @@
+import { Action } from 'src/action/entities/action.entity';
 import {
   Column,
   Entity,
   Generated,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -55,4 +57,7 @@ export class Worker {
 
   @ManyToOne(() => Hub, (hub) => hub.workers)
   hub: Hub;
+
+  @OneToMany(() => Action, (action) => action.worker)
+  actions: Action[];
 }
