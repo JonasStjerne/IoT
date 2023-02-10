@@ -1,0 +1,58 @@
+import {
+  Column,
+  Entity,
+  Generated,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+
+import { Hub } from '../../hub/entities/hub.entity';
+
+export enum WorkerAction {
+  PRESS = 'press',
+}
+
+export enum WorkerStatus {
+  IDLE = 'idle',
+  BUSY = 'busy',
+  ERROR = 'error',
+}
+
+export enum WorkerState {
+  OFFLINE = 'offline',
+  ONLINE = 'online',
+}
+
+@Entity()
+export class Worker {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  name: string;
+
+  @Column({
+    type: 'enum',
+    enum: WorkerAction,
+    default: WorkerAction.PRESS,
+  })
+  action: WorkerAction;
+
+  @Column({
+    type: 'enum',
+    enum: WorkerStatus,
+    default: WorkerStatus.IDLE,
+  })
+  status: WorkerStatus;
+
+  @Column({
+    type: 'enum',
+    enum: WorkerState,
+    default: WorkerState.OFFLINE,
+  })
+  state: WorkerState;
+
+  @ManyToOne(() => Hub, (hub) => hub.workers)
+  hub: Hub;
+}
