@@ -14,6 +14,7 @@ services:
             - $DATABASE_HOST
         command: npm run start:dev
         environment:
+            BACKEND_PORT: $BACKEND_PORT
             DATABASE_HOST: $DATABASE_HOST
             DATABASE_PORT: $DATABASE_PORT
             DATABASE_USER: $DATABASE_USER
@@ -77,6 +78,8 @@ services:
             dockerfile: Dockerfile
             target: development
         command: npm start
+        environment:
+            HUB_PORT: $HUB_PORT
         restart: unless-stopped
         ports:
         - "3001:3001"

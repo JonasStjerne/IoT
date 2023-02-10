@@ -49,21 +49,6 @@ async function bootstrap() {
   Honeybadger.configure({ apiKey: process.env.HONEYBADGER_API_KEY });
 
   //Listen on port 3000
-  await app.listen(3000);
-  // const client = createClient();
-  // await client.connect();
-  // await client.ft.create(
-  //   'idx:books',
-  //   {
-  //     title: {
-  //       type: SchemaFieldTypes.TEXT,
-  //       textSearch: true,
-  //     },
-  //   },
-  //   {
-  //     ON: 'HASH',
-  //     PREFIX: 'redis:books',
-  //   },
-  // );
+  await app.listen(parseInt(process.env.BACKEND_PORT) || 3000);
 }
 bootstrap();
