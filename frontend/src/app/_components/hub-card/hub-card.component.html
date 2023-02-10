@@ -2,5 +2,17 @@
       <div>
             <input name="hub__name" [(ngModel)]="hub.name">
             <button (click)="this.changeName()">Save</button>
+            <button (click)="this.deleteHub(content)">Delete &#10060;</button>
       </div>
 </div>
+<!-- Modal content -->
+<ng-template #content let-modal>
+      <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Are you sure you want to delete this hub?</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+      <div class="modal-footer">
+            <button type="button" class="btn btn-success" (click)="modal.close('no')">No</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('delete')">Delete</button>
+      </div>
+</ng-template>
