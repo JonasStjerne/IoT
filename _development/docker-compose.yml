@@ -77,7 +77,7 @@ services:
             context: ../hub
             dockerfile: Dockerfile
             target: development
-        command: npm start
+        command: npm run start:dev
         environment:
             HUB_PORT: $HUB_PORT
         restart: unless-stopped
