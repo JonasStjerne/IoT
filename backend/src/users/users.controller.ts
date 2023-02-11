@@ -7,7 +7,7 @@ import {
   Delete,
   ConflictException,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { LocalAuthGuard } from 'src/auth/local-auth.guard';
@@ -19,6 +19,7 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private userService: UsersService) {}
 
+  @ApiOperation({ summary: 'Create a new user' })
   @Post('create')
   async create(@Body() createUserDto: CreateUserDto) {
     if (await this.userService.findOne(createUserDto.username)) {
@@ -27,6 +28,7 @@ export class UsersController {
     return await this.userService.create(createUserDto);
   }
 
+  @ApiOperation({ summary: 'Delete users own acount' })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Delete()

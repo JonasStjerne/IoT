@@ -11,6 +11,7 @@ import {
   ApiBody,
   ApiConsumes,
   ApiExtraModels,
+  ApiOperation,
   ApiProperty,
   ApiQuery,
 } from '@nestjs/swagger';
@@ -32,21 +33,8 @@ export class AppController {
     private readonly authService: AuthService,
   ) {}
 
-  @Get()
-  async getHello() {
-    return this.appService.getHello();
-  }
-
-  // @ApiBody({
-  //   type: LoginUserDto,
-  // })
-  // @UseGuards(LocalAuthGuard)
-  // @Post('auth/login')
-  // async login(@Request() req) {
-  //   return await this.authService.login(req.user);
-  // }
-
   //Protected route
+  @ApiOperation({ summary: 'Example of a proctected endpoint' })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get('protected')

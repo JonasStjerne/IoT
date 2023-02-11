@@ -15,7 +15,7 @@ import { CreateHubDto } from './dto/create-hub.dto';
 import { UpdateHubDto } from './dto/update-hub.dto';
 import { RegisterHubDto } from './dto/register-hub.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Auth } from 'src/auth/auth.model';
 
 @ApiTags('Hub')
@@ -23,19 +23,21 @@ import { Auth } from 'src/auth/auth.model';
 export class HubController {
   constructor(private readonly hubService: HubService) {}
 
-  //Should be guarded by auth for only admin users
+  //TODO Should be guarded by auth for only admin users
+  @ApiOperation({ summary: 'Create a new hub' })
   @Post()
   create(@Body() createHubDto: CreateHubDto) {
     return this.hubService.create(createHubDto);
   }
 
-  //Delete hub. Should be guarded by auth for only admin users
+  //TODO Should be guarded by auth for only admin users
+  @ApiOperation({ summary: 'Delete hub' })
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.hubService.remove(+id);
   }
 
-  //Register hub to user
+  @ApiOperation({ summary: 'Register hub to user' })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @ApiBody({ type: RegisterHubDto })
@@ -44,7 +46,7 @@ export class HubController {
     return await this.hubService.register(req.user, req.body);
   }
 
-  //Return all hubs for user
+  @ApiOperation({ summary: 'Return all hubs connected to user' })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get()
@@ -52,13 +54,14 @@ export class HubController {
     return this.hubService.findAll(req.user);
   }
 
-  //Get hub if user have relation to it
+  @ApiOperation({ summary: 'Return hub of user (not implementet)' })
   @Get(':id')
   findOne(@Param('id') id: string) {
+    //TODO implement findOne in service
     return this.hubService.findOne(+id);
   }
 
-  //Update hub if user have relation to it
+  @ApiOperation({ summary: 'Update hub of user' })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
@@ -66,7 +69,7 @@ export class HubController {
     return this.hubService.update(id, updateHubDto);
   }
 
-  //Delete relation to hub if user have relation to it
+  @ApiOperation({ summary: 'Delete users connection to hub' })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Delete('unregister/:id')
