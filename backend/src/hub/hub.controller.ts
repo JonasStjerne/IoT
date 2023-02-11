@@ -54,11 +54,10 @@ export class HubController {
     return this.hubService.findAll(req.user);
   }
 
-  @ApiOperation({ summary: 'Return hub of user (not implementet)' })
+  @ApiOperation({ summary: 'Return hub of user' })
   @Get(':id')
   findOne(@Param('id') id: string) {
-    //TODO implement findOne in service
-    return this.hubService.findOne(+id);
+    return this.hubService.findOne(id);
   }
 
   @ApiOperation({ summary: 'Update hub of user' })

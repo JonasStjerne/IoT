@@ -54,8 +54,13 @@ export class HubService {
     return userDb.hubs;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} hub`;
+  async findOne(id: string) {
+    const userDb = await this.usersRepository.findOne(this.request.user.userId);
+    const hubDb = userDb.hubs.find((hub) => hub.id == id);
+    if (hubDb) {
+      return hubDb;
+    }
+    throw new ForbiddenException("You don't have access to this hub");
   }
 
   async update(id: Hub['id'], updateHubDto: UpdateHubDto) {
