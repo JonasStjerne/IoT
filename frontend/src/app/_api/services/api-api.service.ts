@@ -13,7 +13,7 @@ import { map, filter } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root',
 })
-export class ApiService extends BaseService {
+export class ApiApiService extends BaseService {
   constructor(
     config: ApiConfiguration,
     http: HttpClient
@@ -41,7 +41,7 @@ export class ApiService extends BaseService {
   }
 ): Observable<StrictHttpResponse<string>> {
 
-    const rb = new RequestBuilder(this.rootUrl, ApiService.AppControllerProtectedPath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, ApiApiService.AppControllerProtectedPath, 'get');
     if (params) {
     }
 

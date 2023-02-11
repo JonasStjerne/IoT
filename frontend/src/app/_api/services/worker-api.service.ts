@@ -15,7 +15,7 @@ import { UpdateWorkerDto } from '../models/update-worker-dto';
 @Injectable({
   providedIn: 'root',
 })
-export class WorkerService extends BaseService {
+export class WorkerApiService extends BaseService {
   constructor(
     config: ApiConfiguration,
     http: HttpClient
@@ -39,7 +39,7 @@ export class WorkerService extends BaseService {
   }
 ): Observable<StrictHttpResponse<string>> {
 
-    const rb = new RequestBuilder(this.rootUrl, WorkerService.WorkerControllerFindAllPath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, WorkerApiService.WorkerControllerFindAllPath, 'get');
     if (params) {
     }
 
@@ -88,7 +88,7 @@ export class WorkerService extends BaseService {
   }
 ): Observable<StrictHttpResponse<string>> {
 
-    const rb = new RequestBuilder(this.rootUrl, WorkerService.WorkerControllerCreatePath, 'post');
+    const rb = new RequestBuilder(this.rootUrl, WorkerApiService.WorkerControllerCreatePath, 'post');
     if (params) {
       rb.body(params.body, 'application/json');
     }
@@ -139,7 +139,7 @@ export class WorkerService extends BaseService {
   }
 ): Observable<StrictHttpResponse<string>> {
 
-    const rb = new RequestBuilder(this.rootUrl, WorkerService.WorkerControllerFindOnePath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, WorkerApiService.WorkerControllerFindOnePath, 'get');
     if (params) {
       rb.path('id', params.id, {});
     }
@@ -190,7 +190,7 @@ export class WorkerService extends BaseService {
   }
 ): Observable<StrictHttpResponse<string>> {
 
-    const rb = new RequestBuilder(this.rootUrl, WorkerService.WorkerControllerRemovePath, 'delete');
+    const rb = new RequestBuilder(this.rootUrl, WorkerApiService.WorkerControllerRemovePath, 'delete');
     if (params) {
       rb.path('id', params.id, {});
     }
@@ -242,7 +242,7 @@ export class WorkerService extends BaseService {
   }
 ): Observable<StrictHttpResponse<string>> {
 
-    const rb = new RequestBuilder(this.rootUrl, WorkerService.WorkerControllerUpdatePath, 'patch');
+    const rb = new RequestBuilder(this.rootUrl, WorkerApiService.WorkerControllerUpdatePath, 'patch');
     if (params) {
       rb.path('id', params.id, {});
       rb.body(params.body, 'application/json');

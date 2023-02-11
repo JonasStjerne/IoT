@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Hub } from 'src/app/_api/models';
-import { ApiService } from 'src/app/_api/services';
+import { HubApiService } from 'src/app/_api/services';
 import { UserService } from 'src/app/_services/user.service';
 
 @Component({
@@ -11,11 +11,11 @@ import { UserService } from 'src/app/_services/user.service';
 export class HubListComponent implements OnInit {
   constructor(
     public userService: UserService,
-    private apiService: ApiService
+    private hubApiService: HubApiService
   ) {}
   hubs: Hub[] = [];
   ngOnInit(): void {
-    this.apiService.hubControllerFindAll().subscribe({
+    this.hubApiService.hubControllerFindAll().subscribe({
       next: (res) => {
         this.hubs = res;
       },

@@ -17,7 +17,7 @@ import { UpdateHubDto } from '../models/update-hub-dto';
 @Injectable({
   providedIn: 'root',
 })
-export class HubService extends BaseService {
+export class HubApiService extends BaseService {
   constructor(
     config: ApiConfiguration,
     http: HttpClient
@@ -45,7 +45,7 @@ export class HubService extends BaseService {
   }
 ): Observable<StrictHttpResponse<Array<Hub>>> {
 
-    const rb = new RequestBuilder(this.rootUrl, HubService.HubControllerFindAllPath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, HubApiService.HubControllerFindAllPath, 'get');
     if (params) {
     }
 
@@ -102,7 +102,7 @@ export class HubService extends BaseService {
   }
 ): Observable<StrictHttpResponse<Hub>> {
 
-    const rb = new RequestBuilder(this.rootUrl, HubService.HubControllerCreatePath, 'post');
+    const rb = new RequestBuilder(this.rootUrl, HubApiService.HubControllerCreatePath, 'post');
     if (params) {
       rb.body(params.body, 'application/json');
     }
@@ -161,7 +161,7 @@ export class HubService extends BaseService {
   }
 ): Observable<StrictHttpResponse<Hub>> {
 
-    const rb = new RequestBuilder(this.rootUrl, HubService.HubControllerFindOnePath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, HubApiService.HubControllerFindOnePath, 'get');
     if (params) {
       rb.path('id', params.id, {});
     }
@@ -220,7 +220,7 @@ export class HubService extends BaseService {
   }
 ): Observable<StrictHttpResponse<string>> {
 
-    const rb = new RequestBuilder(this.rootUrl, HubService.HubControllerRemovePath, 'delete');
+    const rb = new RequestBuilder(this.rootUrl, HubApiService.HubControllerRemovePath, 'delete');
     if (params) {
       rb.path('id', params.id, {});
     }
@@ -280,7 +280,7 @@ export class HubService extends BaseService {
   }
 ): Observable<StrictHttpResponse<Hub>> {
 
-    const rb = new RequestBuilder(this.rootUrl, HubService.HubControllerRenamePath, 'patch');
+    const rb = new RequestBuilder(this.rootUrl, HubApiService.HubControllerRenamePath, 'patch');
     if (params) {
       rb.path('id', params.id, {});
       rb.body(params.body, 'application/json');
@@ -341,7 +341,7 @@ export class HubService extends BaseService {
   }
 ): Observable<StrictHttpResponse<Hub>> {
 
-    const rb = new RequestBuilder(this.rootUrl, HubService.HubControllerRegisterPath, 'post');
+    const rb = new RequestBuilder(this.rootUrl, HubApiService.HubControllerRegisterPath, 'post');
     if (params) {
       rb.body(params.body, 'application/json');
     }
@@ -400,7 +400,7 @@ export class HubService extends BaseService {
   }
 ): Observable<StrictHttpResponse<void>> {
 
-    const rb = new RequestBuilder(this.rootUrl, HubService.HubControllerUnRegisterPath, 'delete');
+    const rb = new RequestBuilder(this.rootUrl, HubApiService.HubControllerUnRegisterPath, 'delete');
     if (params) {
       rb.path('id', params.id, {});
     }

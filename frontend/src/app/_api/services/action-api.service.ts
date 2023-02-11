@@ -15,7 +15,7 @@ import { UpdateActionDto } from '../models/update-action-dto';
 @Injectable({
   providedIn: 'root',
 })
-export class ActionService extends BaseService {
+export class ActionApiService extends BaseService {
   constructor(
     config: ApiConfiguration,
     http: HttpClient
@@ -39,7 +39,7 @@ export class ActionService extends BaseService {
   }
 ): Observable<StrictHttpResponse<string>> {
 
-    const rb = new RequestBuilder(this.rootUrl, ActionService.ActionControllerFindAllPath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, ActionApiService.ActionControllerFindAllPath, 'get');
     if (params) {
     }
 
@@ -88,7 +88,7 @@ export class ActionService extends BaseService {
   }
 ): Observable<StrictHttpResponse<string>> {
 
-    const rb = new RequestBuilder(this.rootUrl, ActionService.ActionControllerCreatePath, 'post');
+    const rb = new RequestBuilder(this.rootUrl, ActionApiService.ActionControllerCreatePath, 'post');
     if (params) {
       rb.body(params.body, 'application/json');
     }
@@ -139,7 +139,7 @@ export class ActionService extends BaseService {
   }
 ): Observable<StrictHttpResponse<string>> {
 
-    const rb = new RequestBuilder(this.rootUrl, ActionService.ActionControllerFindOnePath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, ActionApiService.ActionControllerFindOnePath, 'get');
     if (params) {
       rb.path('id', params.id, {});
     }
@@ -190,7 +190,7 @@ export class ActionService extends BaseService {
   }
 ): Observable<StrictHttpResponse<string>> {
 
-    const rb = new RequestBuilder(this.rootUrl, ActionService.ActionControllerRemovePath, 'delete');
+    const rb = new RequestBuilder(this.rootUrl, ActionApiService.ActionControllerRemovePath, 'delete');
     if (params) {
       rb.path('id', params.id, {});
     }
@@ -242,7 +242,7 @@ export class ActionService extends BaseService {
   }
 ): Observable<StrictHttpResponse<string>> {
 
-    const rb = new RequestBuilder(this.rootUrl, ActionService.ActionControllerUpdatePath, 'patch');
+    const rb = new RequestBuilder(this.rootUrl, ActionApiService.ActionControllerUpdatePath, 'patch');
     if (params) {
       rb.path('id', params.id, {});
       rb.body(params.body, 'application/json');

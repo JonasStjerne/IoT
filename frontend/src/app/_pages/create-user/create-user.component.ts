@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CreateUserDto } from 'src/app/_api/models';
-import { ApiService } from 'src/app/_api/services';
 import { UserService } from 'src/app/_services/user.service';
+import { UserApiService } from 'src/app/_api/services';
 
 @Component({
   selector: 'app-create-user',
@@ -12,7 +12,7 @@ import { UserService } from 'src/app/_services/user.service';
 })
 export class CreateUserComponent {
   constructor(
-    private apiService: ApiService,
+    private userApiService: UserApiService,
     private router: Router,
     private userService: UserService,
     private toastr: ToastrService
@@ -22,7 +22,7 @@ export class CreateUserComponent {
   password = '';
 
   registerUser() {
-    this.apiService
+    this.userApiService
       .usersControllerCreate({
         body: { username: this.email, password: this.password },
       })

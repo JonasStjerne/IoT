@@ -15,7 +15,7 @@ import { User } from '../models/user';
 @Injectable({
   providedIn: 'root',
 })
-export class UserService extends BaseService {
+export class UserApiService extends BaseService {
   constructor(
     config: ApiConfiguration,
     http: HttpClient
@@ -44,7 +44,7 @@ export class UserService extends BaseService {
   }
 ): Observable<StrictHttpResponse<User>> {
 
-    const rb = new RequestBuilder(this.rootUrl, UserService.UsersControllerCreatePath, 'post');
+    const rb = new RequestBuilder(this.rootUrl, UserApiService.UsersControllerCreatePath, 'post');
     if (params) {
       rb.body(params.body, 'application/json');
     }
@@ -102,7 +102,7 @@ export class UserService extends BaseService {
   }
 ): Observable<StrictHttpResponse<void>> {
 
-    const rb = new RequestBuilder(this.rootUrl, UserService.UsersControllerDeletePath, 'delete');
+    const rb = new RequestBuilder(this.rootUrl, UserApiService.UsersControllerDeletePath, 'delete');
     if (params) {
     }
 

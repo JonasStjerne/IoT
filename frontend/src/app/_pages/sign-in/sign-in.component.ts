@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs/operators';
 import { LoginUserDto, User } from 'src/app/_api/models';
-import { ApiService } from 'src/app/_api/services';
+import { AuthApiService } from 'src/app/_api/services';
 import { UserService } from 'src/app/_services/user.service';
 
 @Component({
@@ -13,7 +13,7 @@ import { UserService } from 'src/app/_services/user.service';
 })
 export class SignInComponent implements OnInit {
   constructor(
-    private apiService: ApiService,
+    private authApiService: AuthApiService,
     private userService: UserService,
     private route: ActivatedRoute,
     private router: Router,
@@ -25,7 +25,7 @@ export class SignInComponent implements OnInit {
   ngOnInit(): void {}
 
   signIn() {
-    this.apiService
+    this.authApiService
       .authControllerLogin({
         body: { username: this.username, password: this.password },
       })

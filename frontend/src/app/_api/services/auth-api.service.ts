@@ -15,7 +15,7 @@ import { LoginUserDto } from '../models/login-user-dto';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService extends BaseService {
+export class AuthApiService extends BaseService {
   constructor(
     config: ApiConfiguration,
     http: HttpClient
@@ -44,7 +44,7 @@ export class AuthService extends BaseService {
   }
 ): Observable<StrictHttpResponse<LoginResponse>> {
 
-    const rb = new RequestBuilder(this.rootUrl, AuthService.AuthControllerLoginPath, 'post');
+    const rb = new RequestBuilder(this.rootUrl, AuthApiService.AuthControllerLoginPath, 'post');
     if (params) {
       rb.body(params.body, 'application/json');
     }

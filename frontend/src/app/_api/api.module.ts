@@ -4,12 +4,12 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
-import { ApiService } from './services/api.service';
-import { AuthService } from './services/auth.service';
-import { UserService } from './services/user.service';
-import { HubService } from './services/hub.service';
-import { WorkerService } from './services/worker.service';
-import { ActionService } from './services/action.service';
+import { ApiApiService } from './services/api-api.service';
+import { AuthApiService } from './services/auth-api.service';
+import { UserApiService } from './services/user-api.service';
+import { HubApiService } from './services/hub-api.service';
+import { WorkerApiService } from './services/worker-api.service';
+import { ActionApiService } from './services/action-api.service';
 
 /**
  * Module that provides all services and configuration.
@@ -19,12 +19,12 @@ import { ActionService } from './services/action.service';
   exports: [],
   declarations: [],
   providers: [
-    ApiService,
-    AuthService,
-    UserService,
-    HubService,
-    WorkerService,
-    ActionService,
+    ApiApiService,
+    AuthApiService,
+    UserApiService,
+    HubApiService,
+    WorkerApiService,
+    ActionApiService,
     ApiConfiguration
   ],
 })

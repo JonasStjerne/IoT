@@ -2,7 +2,7 @@ import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { Hub } from 'src/app/_api/models';
-import { ApiService } from 'src/app/_api/services';
+import { HubApiService } from 'src/app/_api/services';
 
 @Component({
   selector: 'app-hub-card',
@@ -12,7 +12,7 @@ import { ApiService } from 'src/app/_api/services';
 export class HubCardComponent implements OnInit {
   @Input() hub!: Hub;
   constructor(
-    private apiService: ApiService,
+    private hubApiService: HubApiService,
     private toastService: ToastrService,
     private modalService: NgbModal
   ) {}
@@ -20,7 +20,7 @@ export class HubCardComponent implements OnInit {
   ngOnInit(): void {}
 
   changeName() {
-    this.apiService
+    this.hubApiService
       .hubControllerRename({ id: this.hub.id, body: { name: this.hub.name } })
       .subscribe((res) => {
         this.toastService.success('Hub name changed');
@@ -32,7 +32,7 @@ export class HubCardComponent implements OnInit {
     this.modalService.open(content).result.then(
       (result) => {
         if (result === 'delete') {
-          this.apiService
+          this.hubApiService
             .hubControllerUnRegister({ id: this.hub.id })
             .subscribe((res) => {
               this.toastService.success('Hub deleted');

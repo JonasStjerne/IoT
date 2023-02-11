@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { ApiService } from 'src/app/_api/services';
+import { HubApiService } from 'src/app/_api/services';
 
 @Component({
   selector: 'app-register-hub',
@@ -13,7 +13,7 @@ export class RegisterHubComponent implements OnInit {
   secret = '';
 
   constructor(
-    private apiService: ApiService,
+    private hubApiService: HubApiService,
     private toastService: ToastrService,
     private router: Router
   ) {}
@@ -21,7 +21,7 @@ export class RegisterHubComponent implements OnInit {
   ngOnInit(): void {}
 
   addHub() {
-    this.apiService
+    this.hubApiService
       .hubControllerRegister({ body: { id: this.id, secret: this.secret } })
       .subscribe({
         next: (res) => {
