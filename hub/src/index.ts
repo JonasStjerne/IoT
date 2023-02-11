@@ -1,6 +1,6 @@
 console.log("Hello world!");
 var io = require("socket.io-client");
-var socket = io.connect("http://localhost:3000/", {
+var socket = io.connect("http://backend_dev:3000", {
   reconnection: true,
 });
 
@@ -11,3 +11,5 @@ socket.on("connect", function () {
     socket.emit("serverEvent", "thanks server! for sending '" + data + "'");
   });
 });
+
+socket.emit("serverEvent", "hello server!");

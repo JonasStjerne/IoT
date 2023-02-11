@@ -4,7 +4,7 @@ services:
 
 #Dev for Nest.js.
     backend_dev:
-        container_name: api_dev
+        container_name: $BACKEND_HOST
         image: nestjs-api-dev:1.0.0
         build:
             context: ../backend
@@ -80,6 +80,7 @@ services:
         command: npm run start:dev
         environment:
             HUB_PORT: $HUB_PORT
+            BACKEND_HOST: $BACKEND_HOST
         restart: unless-stopped
         ports:
         - "3001:3001"
