@@ -1,4 +1,10 @@
-import { ForbiddenException, Inject, Injectable, Scope } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  Scope,
+} from '@nestjs/common';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateHubDto } from './dto/create-hub.dto';
@@ -8,6 +14,7 @@ import { Hub } from './entities/hub.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthRequest, AuthUser } from 'src/auth/auth.model';
 import { REQUEST } from '@nestjs/core';
+import { ApiOkResponse } from '@nestjs/swagger';
 
 @Injectable({ scope: Scope.REQUEST })
 export class HubService {
@@ -73,8 +80,13 @@ export class HubService {
     throw new ForbiddenException("You don't have access to this hub");
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} hub`;
+  async remove(id: string) {
+    const deleted = await this.hubsRepository.delete(id);
+    if (deleted.affected > 0) {
+      return 'Hub deleted successfully';
+    } else {
+      throw new NotFoundException("Hub doesn't exist");
+    }
   }
 
   async unRegister(id: string) {

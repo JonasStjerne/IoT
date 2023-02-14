@@ -35,7 +35,7 @@ export class HubController {
   @Auth(UserType.Admin)
   @ApiOperation({ summary: 'Delete hub' })
   remove(@Param('id') id: string) {
-    return this.hubService.remove(+id);
+    return this.hubService.remove(id);
   }
 
   @Post('register')
