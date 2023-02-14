@@ -30,7 +30,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Delete users own acount' })
   @ApiBearerAuth()
   @Auth()
-  async delete() {
-    return await this.userService.remove();
+  async delete(@Request() req) {
+    return await this.userService.remove(req.user.id);
   }
 }
