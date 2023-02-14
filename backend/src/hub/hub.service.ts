@@ -44,12 +44,16 @@ export class HubService {
   }
 
   async findAll() {
-    const userDb = await this.usersRepository.findOne(this.request.user.id);
+    const userDb = await this.usersRepository.findOneOrFail(
+      this.request.user.id,
+    );
     return userDb.hubs;
   }
 
   async findOne(id: string) {
-    const userDb = await this.usersRepository.findOne(this.request.user.id);
+    const userDb = await this.usersRepository.findOneOrFail(
+      this.request.user.id,
+    );
     const hubDb = userDb.hubs.find((hub) => hub.id == id);
     if (hubDb) {
       return hubDb;
@@ -58,7 +62,9 @@ export class HubService {
   }
 
   async update(id: Hub['id'], updateHubDto: UpdateHubDto) {
-    const userDb = await this.usersRepository.findOne(this.request.user.id);
+    const userDb = await this.usersRepository.findOneOrFail(
+      this.request.user.id,
+    );
     const hubDb = userDb.hubs.find((hub) => hub.id == id);
     if (hubDb) {
       hubDb.name = updateHubDto.name;
@@ -72,7 +78,9 @@ export class HubService {
   }
 
   async unRegister(id: string) {
-    const userDb = await this.usersRepository.findOne(this.request.user.id);
+    const userDb = await this.usersRepository.findOneOrFail(
+      this.request.user.id,
+    );
     const hubDb = userDb.hubs.find((hub) => hub.id == id);
     if (!hubDb) {
       throw new ForbiddenException(
