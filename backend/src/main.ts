@@ -33,7 +33,11 @@ async function bootstrap() {
   //Save openapi spec for application
   fs.writeFileSync('/shared/openapi-spec.json', JSON.stringify(document));
 
-  SwaggerModule.setup('/api', app, document);
+  SwaggerModule.setup('/api', app, document, {
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+  });
 
   //Global validation
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
