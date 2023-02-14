@@ -2,45 +2,31 @@ import {
   WebSocketGateway,
   SubscribeMessage,
   MessageBody,
+  WebSocketServer,
+  OnGatewayConnection,
 } from '@nestjs/websockets';
 import { EventService } from './event.service';
-import { CreateEventDto } from './dto/create-event.dto';
-import { UpdateEventDto } from './dto/update-event.dto';
+import { WorkerStateChangeDto } from './dto/workerStateChange.dto';
+import { Server } from 'socket.io';
 
-@WebSocketGateway({
-  cors: {
-    origin: '*',
-  },
-})
-export class EventGateway {
+@WebSocketGateway()
+export class EventGateway implements OnGatewayConnection {
+  @WebSocketServer() server: Server;
   constructor(private readonly eventService: EventService) {}
+
   @SubscribeMessage('serverEvent')
   clientEvent(@MessageBody() text: string) {
     console.log('serverEvent: ', text);
     return;
   }
-  @SubscribeMessage('createEvent')
-  create(@MessageBody() createEventDto: CreateEventDto) {
-    return this.eventService.create(createEventDto);
+
+  handleConnection(req: any) {
+    //On connection send all data for hub
+    console.log({ req });
   }
 
-  @SubscribeMessage('findAllEvent')
-  findAll() {
-    return this.eventService.findAll();
-  }
-
-  @SubscribeMessage('findOneEvent')
-  findOne(@MessageBody() id: number) {
-    return this.eventService.findOne(id);
-  }
-
-  @SubscribeMessage('updateEvent')
-  update(@MessageBody() updateEventDto: UpdateEventDto) {
-    return this.eventService.update(updateEventDto.id, updateEventDto);
-  }
-
-  @SubscribeMessage('removeEvent')
-  remove(@MessageBody() id: number) {
-    return this.eventService.remove(id);
+  @SubscribeMessage('workerStateChange')
+  create(@MessageBody() WorkerStateChangeDto: WorkerStateChangeDto) {
+    return 'this should update the worker state in the db';
   }
 }
