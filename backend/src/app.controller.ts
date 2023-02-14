@@ -20,7 +20,8 @@ import { AuthService } from './auth/auth.service';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 import { LoginUserDto } from './users/dto/login-user.dto';
-import { User } from './users/entities/user.entity';
+import { User, UserType } from './users/entities/user.entity';
+import { Auth } from './auth/auth.decorator';
 
 class LoginResponse {
   access_token: string;
@@ -34,10 +35,9 @@ export class AppController {
   ) {}
 
   //Protected route
-  @ApiOperation({ summary: 'Example of a proctected endpoint' })
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   @Get('protected')
+  @ApiOperation({ summary: 'Example of a proctected endpoint' })
+  @Auth()
   protected(@Request() req): string {
     return req.user;
   }

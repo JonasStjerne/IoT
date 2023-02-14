@@ -15,6 +15,11 @@ import {
 import { classToPlain, Exclude } from 'class-transformer';
 import { Hub } from 'src/hub/entities/hub.entity';
 
+export enum UserType {
+  Admin = 1,
+  User = 2,
+}
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -33,6 +38,14 @@ export class User {
   @MinLength(5)
   @Exclude({ toPlainOnly: true })
   password: string;
+
+  @Column({
+    type: 'enum',
+    enum: UserType,
+    default: UserType.User,
+  })
+  userType: UserType;
+
 
   @ManyToMany(() => Hub, (hub) => hub.users, { eager: true })
   @JoinTable()

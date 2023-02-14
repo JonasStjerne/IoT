@@ -28,10 +28,10 @@ export class UsersController {
     return await this.userService.create(createUserDto);
   }
 
+  @Delete()
   @ApiOperation({ summary: 'Delete users own acount' })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  @Delete()
   async delete(@Request() req) {
     return await this.userService.remove(req.user.userId);
   }
