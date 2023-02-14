@@ -17,9 +17,9 @@ export class HubService {
     @Inject(REQUEST) private readonly request: AuthRequest,
   ) {}
 
-  async register(user: AuthUser, hub: RegisterHubDto) {
+  async register(hub: RegisterHubDto) {
     const hubDb = await this.validateHubCredentials(hub.id, hub.secret);
-    const userDb = await this.usersRepository.findOne(user.userId);
+    const userDb = await this.usersRepository.findOne(this.request.user.userId);
     if (hubDb && userDb) {
       userDb.hubs = [...userDb.hubs, hubDb];
       await this.usersRepository.save(userDb);
@@ -43,8 +43,8 @@ export class HubService {
     return this.hubsRepository.save(newHub);
   }
 
-  async findAll(user: AuthUser) {
-    const userDb = await this.usersRepository.findOne(user.userId);
+  async findAll() {
+    const userDb = await this.usersRepository.findOne(this.request.user.userId);
     return userDb.hubs;
   }
 

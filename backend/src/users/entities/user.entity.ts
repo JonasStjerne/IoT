@@ -25,7 +25,7 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   @IsNotEmpty()
   @IsNumberString()
-  id: number;
+  id: string;
 
   @Column()
   @IsNotEmpty()
@@ -45,7 +45,6 @@ export class User {
     default: UserType.User,
   })
   userType: UserType;
-
 
   @ManyToMany(() => Hub, (hub) => hub.users, { eager: true })
   @JoinTable()

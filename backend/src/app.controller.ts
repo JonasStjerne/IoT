@@ -17,9 +17,6 @@ import {
 } from '@nestjs/swagger';
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
-import { LocalAuthGuard } from './auth/local-auth.guard';
-import { LoginUserDto } from './users/dto/login-user.dto';
 import { User, UserType } from './users/entities/user.entity';
 import { Auth } from './auth/auth.decorator';
 
@@ -36,9 +33,31 @@ export class AppController {
 
   //Protected route
   @Get('protected')
-  @ApiOperation({ summary: 'Example of a proctected endpoint' })
+  @ApiOperation({
+    summary: 'Example of a proctected endpoint. All logged in users can access',
+  })
   @Auth()
   protected(@Request() req): string {
+    return req.user;
+  }
+
+  //Protected route
+  @Get('protected-OnlyAdmin')
+  @ApiOperation({
+    summary: 'Example of a proctected endpoint. Only admins can access',
+  })
+  @Auth(UserType.Admin)
+  protectedAdmin(@Request() req): string {
+    return req.user;
+  }
+
+  //Protected route
+  @Get('protected-OnlyUser')
+  @ApiOperation({
+    summary: 'Example of a proctected endpoint. Only normal user can access',
+  })
+  @Auth(UserType.User)
+  protectedUser(@Request() req): string {
     return req.user;
   }
 }
