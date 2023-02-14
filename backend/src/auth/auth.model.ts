@@ -6,10 +6,12 @@ export interface AuthRequest extends Request {
 
 export class AuthUser {
   username: User['username'];
-  userId: User['id'];
+  id: User['id'];
+  userType: User['userType'];
 }
 
-export class Auth<T> {
-  user: AuthUser;
-  body: T;
+export interface IJwtPayload {
+  sub: User['id'];
+  username: User['username'];
+  userType: User['userType'];
 }

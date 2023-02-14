@@ -19,7 +19,7 @@ export class HubService {
 
   async register(hub: RegisterHubDto) {
     const hubDb = await this.validateHubCredentials(hub.id, hub.secret);
-    const userDb = await this.usersRepository.findOne(this.request.user.userId);
+    const userDb = await this.usersRepository.findOne(this.request.user.id);
     if (hubDb && userDb) {
       userDb.hubs = [...userDb.hubs, hubDb];
       await this.usersRepository.save(userDb);
@@ -44,12 +44,12 @@ export class HubService {
   }
 
   async findAll() {
-    const userDb = await this.usersRepository.findOne(this.request.user.userId);
+    const userDb = await this.usersRepository.findOne(this.request.user.id);
     return userDb.hubs;
   }
 
   async findOne(id: string) {
-    const userDb = await this.usersRepository.findOne(this.request.user.userId);
+    const userDb = await this.usersRepository.findOne(this.request.user.id);
     const hubDb = userDb.hubs.find((hub) => hub.id == id);
     if (hubDb) {
       return hubDb;
@@ -58,7 +58,7 @@ export class HubService {
   }
 
   async update(id: Hub['id'], updateHubDto: UpdateHubDto) {
-    const userDb = await this.usersRepository.findOne(this.request.user.userId);
+    const userDb = await this.usersRepository.findOne(this.request.user.id);
     const hubDb = userDb.hubs.find((hub) => hub.id == id);
     if (hubDb) {
       hubDb.name = updateHubDto.name;
@@ -72,7 +72,7 @@ export class HubService {
   }
 
   async unRegister(id: string) {
-    const userDb = await this.usersRepository.findOne(this.request.user.userId);
+    const userDb = await this.usersRepository.findOne(this.request.user.id);
     const hubDb = userDb.hubs.find((hub) => hub.id == id);
     if (!hubDb) {
       throw new ForbiddenException(

@@ -5,6 +5,7 @@ import { User } from '../users/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { UnprocessableEntityException } from '@nestjs/common/exceptions/unprocessable-entity.exception';
 import { ApiProperty } from '@nestjs/swagger';
+import { AuthUser, IJwtPayload } from './auth.model';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +17,7 @@ export class AuthService {
   async validateUser(
     username: User['username'],
     password: User['password'],
-  ): Promise<any> {
+  ): Promise<AuthUser | null> {
     const user = await this.usersService.findOne(username);
     if (!user) {
       return null;
@@ -24,18 +25,18 @@ export class AuthService {
     const passwordIsMatch = await bcrypt.compare(password, user.password);
 
     if (user && passwordIsMatch) {
-      const { password, ...rest } = user;
+      const { password, hubs, ...rest } = user;
       return rest;
     }
     return null;
   }
 
-  async login(user: User): Promise<LoginResponse> {
+  async login(user: AuthUser): Promise<LoginResponse> {
     const payload = {
       sub: user.id,
       username: user.username,
       userType: user.userType,
-    };
+    } as IJwtPayload;
 
     return {
       access_token: this.jwtService.sign(payload),
