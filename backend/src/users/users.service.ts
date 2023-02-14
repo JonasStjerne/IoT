@@ -26,10 +26,7 @@ export class UsersService {
   }
 
   async remove(id: User['id']) {
-    const user = await this.usersRepository.findOne({
-      id,
-    });
-    await this.usersRepository.delete(user);
+    await this.usersRepository.delete({ id });
     return;
   }
 }

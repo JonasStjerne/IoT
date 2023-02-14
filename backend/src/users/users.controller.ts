@@ -31,7 +31,6 @@ export class UsersController {
   @ApiBearerAuth()
   @Auth()
   async delete(@Request() req) {
-    console.log(req.user);
     return await this.userService.remove(req.user.id);
   }
 }
