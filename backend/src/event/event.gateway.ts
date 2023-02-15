@@ -19,9 +19,9 @@ export class EventGateway implements OnGatewayConnection {
     console.log('serverEvent: ', text);
     return;
   }
-
   handleConnection(req: any) {
-    //On connection send all data for hub
+    //On connection send all data for hub and save socket id
+    this.eventService.saveSocketId(req);
     console.log({ req });
   }
 

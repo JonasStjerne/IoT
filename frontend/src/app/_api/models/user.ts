@@ -3,7 +3,8 @@
 import { Hub } from './hub';
 export interface User {
   hubs: Array<Hub>;
-  id: number;
+  id: string;
   password: string;
+  userType: 'Admin' | 'User';
   username: string;
 }

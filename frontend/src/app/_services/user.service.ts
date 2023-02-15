@@ -46,7 +46,7 @@ export class UserService {
     }
   }
 
-  parseJwt(token: string): { exp: number; iat: number; sub: number } {
+  parseJwt(token: string): { exp: number; iat: number; sub: string } {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
     var jsonPayload = decodeURIComponent(

@@ -1,4 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class EventService {}
+export class EventService {
+  saveSocketId(req: any) {
+    console.log('saveSocketId', req);
+  }
+}

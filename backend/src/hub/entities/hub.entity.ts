@@ -23,6 +23,9 @@ export class Hub {
   @Column({ nullable: true })
   name: string | null;
 
+  @Column({ nullable: true })
+  socketId: string | null;
+
   @ManyToMany(() => User, (user) => user.hubs)
   users: User[];
 
