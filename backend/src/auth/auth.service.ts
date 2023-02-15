@@ -5,13 +5,18 @@ import { User } from '../users/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { UnprocessableEntityException } from '@nestjs/common/exceptions/unprocessable-entity.exception';
 import { ApiProperty } from '@nestjs/swagger';
-import { AuthUser, IJwtPayload } from './auth.model';
+import { AuthUser, IJwtPayload, IAuthHub } from './auth.model';
+import { Hub } from 'src/hub/entities/hub.entity';
+import { UnauthorizedException } from '@nestjs/common/exceptions';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    @InjectRepository(Hub) private hubsRepository: Repository<Hub>,
   ) {}
 
   async validateUser(
@@ -41,6 +46,15 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  async validateHub(id: Hub['id'], secret: Hub['secret']) {
+    const hubDb = await this.hubsRepository.findOne(id);
+    if (hubDb && hubDb.secret == secret) {
+      const { secret, workers, users, ...rest } = hubDb;
+      return rest as IAuthHub;
+    }
+    return null;
   }
 }
 
