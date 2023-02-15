@@ -9,7 +9,7 @@ import { EventService } from './event.service';
 import { WorkerStateChangeDto } from './dto/workerStateChange.dto';
 import { Server } from 'socket.io';
 import { WsGuard } from 'src/auth/ws.guard';
-import { UseGuards } from '@nestjs/common';
+import { UseGuards, Request } from '@nestjs/common';
 
 @WebSocketGateway()
 export class EventGateway implements OnGatewayConnection {
@@ -18,8 +18,8 @@ export class EventGateway implements OnGatewayConnection {
 
   @UseGuards(WsGuard)
   @SubscribeMessage('serverEvent')
-  clientEvent(@MessageBody() text: string) {
-    console.log('serverEvent: ', text);
+  async clientEvent(@Request() req: any, @MessageBody() text: string) {
+    console.log('serverEvent: ', req.hub);
     return;
   }
   @UseGuards(WsGuard)

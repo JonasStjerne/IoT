@@ -6,29 +6,19 @@ import { AuthService } from './auth.service';
 export class WsGuard implements CanActivate {
   constructor(private authService: AuthService) {}
 
-  canActivate(
-    context: any,
-  ): boolean | any | Promise<boolean | any> | Observable<boolean | any> {
+  async canActivate(context: any): Promise<boolean> {
     const basicToken = context.args[0].handshake.headers.authorization
       .split(' ')[1]
       .split('.');
     const [id, secret, ...rest] = basicToken;
-    console.log({ id, secret });
     if (!id || !secret) {
       return false;
     }
-    return this.authService.validateHub(id, secret);
-
-    // return new Promise((resolve, reject) => {
-    //   return this.userService
-    //     .findByUsername(decoded.username)
-    //     .then((user) => {
-    //       if (user) {
-    //         resolve(user);
-    //       } else {
-    //         reject(false);
-    //       }
-    //     });
-    // });
+    const hub = await this.authService.validateHub(id, secret);
+    if (!hub) {
+      return false;
+    }
+    context.switchToHttp().getRequest().hub = hub;
+    return true;
   }
 }
