@@ -52,9 +52,11 @@ export class AuthService {
     const hubDb = await this.hubsRepository.findOne(id);
     if (hubDb && hubDb.secret == secret) {
       const { secret, workers, users, ...rest } = hubDb;
-      return rest as IAuthHub;
+      console.log('Guard returned true');
+      return true;
     }
-    return null;
+    console.log('Guard returned false');
+    return false;
   }
 }
 

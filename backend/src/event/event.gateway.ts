@@ -8,21 +8,25 @@ import {
 import { EventService } from './event.service';
 import { WorkerStateChangeDto } from './dto/workerStateChange.dto';
 import { Server } from 'socket.io';
+import { WsGuard } from 'src/auth/ws.guard';
+import { UseGuards } from '@nestjs/common';
 
 @WebSocketGateway()
 export class EventGateway implements OnGatewayConnection {
   @WebSocketServer() server: Server;
   constructor(private readonly eventService: EventService) {}
 
+  @UseGuards(WsGuard)
   @SubscribeMessage('serverEvent')
   clientEvent(@MessageBody() text: string) {
     console.log('serverEvent: ', text);
     return;
   }
+  @UseGuards(WsGuard)
   handleConnection(req: any) {
     //On connection send all data for hub and save socket id
     this.eventService.saveSocketId(req);
-    console.log({ req });
+    // console.log({ req });
   }
 
   @SubscribeMessage('workerStateChange')
