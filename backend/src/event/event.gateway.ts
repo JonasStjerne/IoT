@@ -9,6 +9,7 @@ import { EventService } from './event.service';
 import { WorkerStateChangeDto } from './dto/workerStateChange.dto';
 import { Server } from 'socket.io';
 import { WsGuard } from 'src/auth/ws.guard';
+import { WsGuard } from 'src/auth/_guards/ws.guard';
 import { UseGuards, Request } from '@nestjs/common';
 
 @WebSocketGateway()

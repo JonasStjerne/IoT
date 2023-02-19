@@ -18,7 +18,7 @@ import {
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
 import { User, UserType } from './users/entities/user.entity';
-import { Auth } from './auth/auth.decorator';
+import { Auth } from './auth/_decorators/auth.decorator';
 
 class LoginResponse {
   access_token: string;

@@ -8,7 +8,7 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Auth } from 'src/auth/auth.decorator';
+import { Auth } from 'src/auth/_decorators/auth.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 
