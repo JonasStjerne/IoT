@@ -14,7 +14,8 @@ socket.on("connect", function () {
     socket.emit("serverEvent", "thanks server! for sending '" + data + "'");
   });
   setInterval(function () {
-    socket.emit("serverEvent", Math.random());
+    // socket.emit("serverEvent", Math.random());
+    socket.emit("getWorkerData");
     console.log("message sent to the server");
   }, 10000);
 });
