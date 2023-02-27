@@ -16,17 +16,17 @@ import { AuthRequest, AuthUser } from 'src/auth/auth.model';
 import { REQUEST } from '@nestjs/core';
 import { ApiOkResponse } from '@nestjs/swagger';
 
-@Injectable({ scope: Scope.REQUEST })
+@Injectable()
 export class HubService {
   constructor(
     @InjectRepository(Hub) private hubsRepository: Repository<Hub>,
-    @InjectRepository(User) private usersRepository: Repository<User>,
-    @Inject(REQUEST) private readonly request: AuthRequest,
+    @InjectRepository(User) private usersRepository: Repository<User>, // @Inject(REQUEST) private readonly request: AuthRequest,
   ) {}
 
-  async register(hub: RegisterHubDto) {
+  async register(userId: User['id'], hub: RegisterHubDto) {
     const hubDb = await this.validateHubCredentials(hub.id, hub.secret);
-    const userDb = await this.usersRepository.findOne(this.request.user.id);
+    const userDb = await this.usersRepository.findOne(userId);
+    console.log(hubDb, userDb);
     if (hubDb && userDb) {
       userDb.hubs = [...userDb.hubs, hubDb];
       await this.usersRepository.save(userDb);
@@ -50,57 +50,65 @@ export class HubService {
     return this.hubsRepository.save(newHub);
   }
 
-  async findAll() {
-    const userDb = await this.usersRepository.findOneOrFail(
-      this.request.user.id,
-    );
+  async findAll(userId: User['id']) {
+    const userDb = await this.usersRepository.findOne({ id: userId });
     return userDb.hubs;
   }
 
-  async findOne(id: string) {
-    const userDb = await this.usersRepository.findOneOrFail(
-      this.request.user.id,
-    );
-    const hubDb = userDb.hubs.find((hub) => hub.id == id);
+  async findOne(userId: User['id'], hubId: Hub['id']) {
+    const userDb = await this.usersRepository.findOne({ id: userId });
+    const hubDb = userDb.hubs.find((hub) => hub.id == hubId);
     if (hubDb) {
       return hubDb;
     }
-    throw new ForbiddenException("You don't have access to this hub");
+    return null;
   }
 
-  async update(id: Hub['id'], updateHubDto: UpdateHubDto) {
-    const userDb = await this.usersRepository.findOneOrFail(
-      this.request.user.id,
-    );
-    const hubDb = userDb.hubs.find((hub) => hub.id == id);
+  async update(
+    userId: User['id'],
+    hubId: Hub['id'],
+    updateHubDto: UpdateHubDto,
+  ) {
+    const userDb = await this.usersRepository.findOneOrFail({ id: userId });
+    const hubDb = userDb.hubs.find((hub) => hub.id == hubId);
     if (hubDb) {
       hubDb.name = updateHubDto.name;
-      return this.hubsRepository.save(hubDb);
+      return await this.hubsRepository.save(hubDb);
     }
-    throw new ForbiddenException("You don't have access to this hub");
+    return null;
   }
 
-  async remove(id: string) {
-    const deleted = await this.hubsRepository.delete(id);
-    if (deleted.affected > 0) {
-      return 'Hub deleted successfully';
-    } else {
-      throw new NotFoundException("Hub doesn't exist");
-    }
-  }
-
-  async unRegister(id: string) {
-    const userDb = await this.usersRepository.findOneOrFail(
-      this.request.user.id,
-    );
-    const hubDb = userDb.hubs.find((hub) => hub.id == id);
+  async remove(userId: User['id'], hubId: Hub['id']) {
+    const userDb = await this.usersRepository.findOneOrFail({ id: userId });
+    const hubDb = userDb.hubs.find((hub) => hub.id == hubId);
     if (!hubDb) {
       throw new ForbiddenException(
         "You don't have access to this hub, or it doesn't exist",
       );
     }
-    userDb.hubs = userDb.hubs.filter((hub) => hub.id != id);
+    const deleted = await this.hubsRepository.delete(hubDb);
+    if (deleted.affected > 0) {
+      return 'Hub deleted successfully';
+    } else {
+      throw new NotFoundException('Something went wrong');
+    }
+  }
+
+  async unRegister(userId: User['id'], hubId: Hub['id']) {
+    const userDb = await this.usersRepository.findOneOrFail({ id: userId });
+    const hubDb = userDb.hubs.find((hub) => hub.id == hubId);
+    if (!hubDb) {
+      throw new ForbiddenException(
+        "You don't have access to this hub, or it doesn't exist",
+      );
+    }
+    userDb.hubs = userDb.hubs.filter((hub) => hub.id != hubId);
     await this.usersRepository.save(userDb);
     return;
+  }
+
+  async getWorkersOfHub(hubId: string) {
+    const hubDb = await this.hubsRepository.findOne({ id: hubId });
+    return hubDb.workers;
   }
 }

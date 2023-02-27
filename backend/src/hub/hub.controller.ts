@@ -6,17 +6,18 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
-  Request,
-  Headers,
+  ForbiddenException,
+  ValidationPipe,
 } from '@nestjs/common';
 import { HubService } from './hub.service';
 import { CreateHubDto } from './dto/create-hub.dto';
 import { UpdateHubDto } from './dto/update-hub.dto';
 import { RegisterHubDto } from './dto/register-hub.dto';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserType } from 'src/users/entities/user.entity';
 import { Auth } from 'src/auth/_decorators/auth.decorator';
+import { AuthUser } from 'src/auth/_decorators/user.decorator';
+import { User } from 'src/users/entities/user.entity';
 
 @ApiTags('Hub')
 @Controller('hub')
@@ -33,43 +34,69 @@ export class HubController {
   @Delete(':id')
   @Auth(UserType.Admin)
   @ApiOperation({ summary: 'Delete hub' })
-  remove(@Param('id') id: string) {
-    return this.hubService.remove(id);
+  async remove(@AuthUser('id') userId: User['id'], @Param('id') hubId: string) {
+    return await this.hubService.remove(userId, hubId);
   }
 
   @Post('register')
   @ApiOperation({ summary: 'Register hub to user' })
   @Auth()
-  @ApiBody({ type: RegisterHubDto })
-  async register(@Body() registerHubDto: RegisterHubDto) {
-    return await this.hubService.register(registerHubDto);
+  async register(
+    @AuthUser('id') userId: User['id'],
+    @Body(new ValidationPipe({ transform: true }))
+    registerHubDto: RegisterHubDto,
+  ) {
+    console.log(registerHubDto);
+    return await this.hubService.register(userId, registerHubDto);
   }
 
   @Get()
   @ApiOperation({ summary: 'Return all hubs connected to user' })
   @Auth()
-  findAll() {
-    return this.hubService.findAll();
+  async findAll(@AuthUser('id') userId: User['id']) {
+    return await this.hubService.findAll(userId);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Return hub of user' })
   @Auth()
-  findOne(@Param('id') id: string) {
-    return this.hubService.findOne(id);
+  async findOne(
+    @AuthUser('id') userId: User['id'],
+    @Param('id') hubId: string,
+  ) {
+    const hub = await this.hubService.findOne(userId, hubId);
+    if (hub) {
+      return hub;
+    }
+    throw new ForbiddenException(
+      "You don't have access to this hub, or it doesn't exist",
+    );
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update hub of user' })
   @Auth()
-  Rename(@Param('id') id: string, @Body() updateHubDto: UpdateHubDto) {
-    return this.hubService.update(id, updateHubDto);
+  async Rename(
+    @AuthUser('id') userId: User['id'],
+    @Param('id') hubId: string,
+    @Body() updateHubDto: UpdateHubDto,
+  ) {
+    const hubUpdate = await this.hubService.update(userId, hubId, updateHubDto);
+    if (hubUpdate) {
+      return hubUpdate;
+    }
+    throw new ForbiddenException(
+      "You don't have access to this hub, or it doesn't exist",
+    );
   }
 
   @Delete('unregister/:id')
   @ApiOperation({ summary: 'Delete users connection to hub' })
   @Auth()
-  async unRegister(@Param('id') id: string) {
-    return await this.hubService.unRegister(id);
+  async unRegister(
+    @AuthUser('id') userId: User['id'],
+    @Param('id') hubId: string,
+  ) {
+    return await this.hubService.unRegister(userId, hubId);
   }
 }

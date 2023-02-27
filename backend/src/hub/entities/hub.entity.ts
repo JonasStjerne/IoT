@@ -1,4 +1,6 @@
-import { Exclude } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
+import { Exclude, Type } from 'class-transformer';
+import { IsNotEmpty } from 'class-validator';
 import { User } from 'src/users/entities/user.entity';
 import { Worker } from 'src/worker/entities/worker.entity';
 import {
@@ -17,7 +19,7 @@ export class Hub {
 
   @Column()
   @Generated('uuid')
-  @Exclude()
+  @Exclude({ toPlainOnly: true })
   secret: string;
 
   @Column({ nullable: true })
