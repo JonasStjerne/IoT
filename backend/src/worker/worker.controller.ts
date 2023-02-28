@@ -6,11 +6,19 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
+  ForbiddenException,
 } from '@nestjs/common';
 import { WorkerService } from './worker.service';
 import { CreateWorkerDto } from './dto/create-worker.dto';
 import { UpdateWorkerDto } from './dto/update-worker.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Auth } from 'src/auth/_decorators/auth.decorator';
+import { AuthUser } from 'src/auth/_decorators/user.decorator';
+import { User } from 'src/users/entities/user.entity';
+import { Hub } from 'src/hub/entities/hub.entity';
+import { Worker } from './entities/worker.entity';
+
 
 @ApiTags('Worker')
 @Controller('worker')
@@ -28,13 +36,42 @@ export class WorkerController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.workerService.findOne(+id);
-  }
+  @ApiOperation({ summary: 'Find worker with id' })
+  @Auth()
+  async findOne(
+    @AuthUser('id') userId: User['id'],
+    @Param('id') id: string
+    ) {
+    const worker = await this.workerService.findOne(userId, id);
+    console.log('After findOne');
+    console.log(JSON.stringify(worker, null, 4));
+    if (worker) {
+      return worker;
+    }
+    throw new ForbiddenException(
+      "You don't have access to this worker or it doesn't exist",
+    );
+   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateWorkerDto: UpdateWorkerDto) {
-    return this.workerService.update(+id, updateWorkerDto);
+  @ApiOperation({ summary: 'Update worker' })
+  @Auth()
+  async Rename(
+    @AuthUser('id') userId: User['id'],
+    @Query('hubId') hubId: string, 
+    @Param('id') workerId: string, 
+    @Body() updateWorkerDto: UpdateWorkerDto) {
+
+      console.log('update worker');
+      console.log(updateWorkerDto);
+
+    const workerUpdate = await this.workerService.update(userId, hubId, workerId, updateWorkerDto);
+    if (workerUpdate) {
+      return workerUpdate;
+    }
+    throw new ForbiddenException(
+      "You don't have access to this worker, or it doesn't exist",
+    );
   }
 
   @Delete(':id')

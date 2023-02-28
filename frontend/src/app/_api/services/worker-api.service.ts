@@ -11,6 +11,7 @@ import { map, filter } from 'rxjs/operators';
 
 import { CreateWorkerDto } from '../models/create-worker-dto';
 import { UpdateWorkerDto } from '../models/update-worker-dto';
+import { Worker } from '../models/worker';
 
 @Injectable({
   providedIn: 'root',
@@ -230,21 +231,23 @@ export class WorkerApiService extends BaseService {
   static readonly WorkerControllerUpdatePath = '/worker/{id}';
 
   /**
+   * Update worker of hub.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `workerControllerUpdate()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   workerControllerUpdate$Response(params: {
-    id: string;
     context?: HttpContext
     body: UpdateWorkerDto
   }
-): Observable<StrictHttpResponse<string>> {
+): Observable<StrictHttpResponse<Worker>> {
 
     const rb = new RequestBuilder(this.rootUrl, WorkerApiService.WorkerControllerUpdatePath, 'patch');
     if (params) {
-      rb.path('id', params.id, {});
       rb.body(params.body, 'application/json');
     }
 
@@ -255,26 +258,29 @@ export class WorkerApiService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
+        return r as StrictHttpResponse<Worker>;
       })
     );
   }
 
   /**
+   * Update worker of hub.
+   *
+   *
+   *
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `workerControllerUpdate$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   workerControllerUpdate(params: {
-    id: string;
     context?: HttpContext
     body: UpdateWorkerDto
   }
-): Observable<string> {
+): Observable<Worker> {
 
     return this.workerControllerUpdate$Response(params).pipe(
-      map((r: StrictHttpResponse<string>) => r.body as string)
+      map((r: StrictHttpResponse<Worker>) => r.body as Worker)
     );
   }
 
