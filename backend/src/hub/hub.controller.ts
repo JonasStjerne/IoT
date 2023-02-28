@@ -34,8 +34,8 @@ export class HubController {
   @Delete(':id')
   @Auth(UserType.Admin)
   @ApiOperation({ summary: 'Delete hub' })
-  async remove(@AuthUser('id') userId: User['id'], @Param('id') hubId: string) {
-    return await this.hubService.remove(userId, hubId);
+  async remove(@Param('id') hubId: string) {
+    return await this.hubService.remove(hubId);
   }
 
   @Post('register')

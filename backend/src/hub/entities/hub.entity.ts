@@ -15,11 +15,13 @@ import {
 @Entity()
 export class Hub {
   @PrimaryGeneratedColumn('uuid')
+  @IsNotEmpty()
   id: string;
 
   @Column()
   @Generated('uuid')
   @Exclude({ toPlainOnly: true })
+  @IsNotEmpty()
   secret: string;
 
   @Column({ nullable: true })

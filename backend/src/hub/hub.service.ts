@@ -78,16 +78,10 @@ export class HubService {
     return null;
   }
 
-  async remove(userId: User['id'], hubId: Hub['id']) {
-    const userDb = await this.usersRepository.findOneOrFail({ id: userId });
-    const hubDb = userDb.hubs.find((hub) => hub.id == hubId);
-    if (!hubDb) {
-      throw new ForbiddenException(
-        "You don't have access to this hub, or it doesn't exist",
-      );
-    }
-    const deleted = await this.hubsRepository.delete(hubDb);
-    if (deleted.affected > 0) {
+  async remove(hubId: Hub['id']) {
+    const hubDb = await this.hubsRepository.findOneOrFail({ id: hubId });
+    const deleted = await this.hubsRepository.remove(hubDb);
+    if (deleted) {
       return 'Hub deleted successfully';
     } else {
       throw new NotFoundException('Something went wrong');
@@ -95,6 +89,7 @@ export class HubService {
   }
 
   async unRegister(userId: User['id'], hubId: Hub['id']) {
+    console.log('unregister called');
     const userDb = await this.usersRepository.findOneOrFail({ id: userId });
     const hubDb = userDb.hubs.find((hub) => hub.id == hubId);
     if (!hubDb) {
@@ -102,7 +97,9 @@ export class HubService {
         "You don't have access to this hub, or it doesn't exist",
       );
     }
-    userDb.hubs = userDb.hubs.filter((hub) => hub.id != hubId);
+    userDb.hubs = userDb.hubs.filter((hub) => {
+      return hub.id !== hubId;
+    });
     await this.usersRepository.save(userDb);
     return;
   }
