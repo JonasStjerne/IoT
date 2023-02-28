@@ -10,7 +10,7 @@ import { Repository } from 'typeorm';
 import { CreateHubDto } from './dto/create-hub.dto';
 import { RegisterHubDto } from './dto/register-hub.dto';
 import { UpdateHubDto } from './dto/update-hub.dto';
-import { Hub } from './entities/hub.entity';
+import { Hub, HubState } from './entities/hub.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthRequest, AuthUser } from 'src/auth/auth.model';
 import { REQUEST } from '@nestjs/core';
@@ -107,5 +107,17 @@ export class HubService {
   async getWorkersOfHub(hubId: string) {
     const hubDb = await this.hubsRepository.findOne({ id: hubId });
     return hubDb.workers;
+  }
+
+  async setState(hubId: Hub['id'], state: HubState) {
+    const hubDb = await this.hubsRepository.findOneOrFail({ id: hubId });
+    hubDb.state = state;
+    return await this.hubsRepository.save(hubDb);
+  }
+
+  async setSocketId(hubId: Hub['id'], socketId: string | null) {
+    const hubDb = await this.hubsRepository.findOneOrFail({ id: hubId });
+    hubDb.socketId = socketId;
+    return await this.hubsRepository.save(hubDb);
   }
 }
