@@ -24,7 +24,6 @@ export enum UserType {
 export class User {
   @PrimaryGeneratedColumn('uuid')
   @IsNotEmpty()
-  @IsNumberString()
   id: string;
 
   @Column()
@@ -46,7 +45,10 @@ export class User {
   })
   userType: UserType;
 
-  @ManyToMany(() => Hub, (hub) => hub.users, { eager: true })
+  @ManyToMany(() => Hub, (hub) => hub.users, {
+    eager: true,
+    onDelete: 'CASCADE',
+  })
   @JoinTable()
   hubs: Hub[];
 }

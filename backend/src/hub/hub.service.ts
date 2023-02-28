@@ -10,7 +10,7 @@ import { Repository } from 'typeorm';
 import { CreateHubDto } from './dto/create-hub.dto';
 import { RegisterHubDto } from './dto/register-hub.dto';
 import { UpdateHubDto } from './dto/update-hub.dto';
-import { Hub } from './entities/hub.entity';
+import { Hub, HubState } from './entities/hub.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthRequest, AuthUser } from 'src/auth/auth.model';
 import { REQUEST } from '@nestjs/core';
@@ -78,16 +78,10 @@ export class HubService {
     return null;
   }
 
-  async remove(userId: User['id'], hubId: Hub['id']) {
-    const userDb = await this.usersRepository.findOneOrFail({ id: userId });
-    const hubDb = userDb.hubs.find((hub) => hub.id == hubId);
-    if (!hubDb) {
-      throw new ForbiddenException(
-        "You don't have access to this hub, or it doesn't exist",
-      );
-    }
-    const deleted = await this.hubsRepository.delete(hubDb);
-    if (deleted.affected > 0) {
+  async remove(hubId: Hub['id']) {
+    const hubDb = await this.hubsRepository.findOneOrFail({ id: hubId });
+    const deleted = await this.hubsRepository.remove(hubDb);
+    if (deleted) {
       return 'Hub deleted successfully';
     } else {
       throw new NotFoundException('Something went wrong');
@@ -95,6 +89,7 @@ export class HubService {
   }
 
   async unRegister(userId: User['id'], hubId: Hub['id']) {
+    console.log('unregister called');
     const userDb = await this.usersRepository.findOneOrFail({ id: userId });
     const hubDb = userDb.hubs.find((hub) => hub.id == hubId);
     if (!hubDb) {
@@ -102,7 +97,9 @@ export class HubService {
         "You don't have access to this hub, or it doesn't exist",
       );
     }
-    userDb.hubs = userDb.hubs.filter((hub) => hub.id != hubId);
+    userDb.hubs = userDb.hubs.filter((hub) => {
+      return hub.id !== hubId;
+    });
     await this.usersRepository.save(userDb);
     return;
   }
@@ -110,5 +107,17 @@ export class HubService {
   async getWorkersOfHub(hubId: string) {
     const hubDb = await this.hubsRepository.findOne({ id: hubId });
     return hubDb.workers;
+  }
+
+  async setState(hubId: Hub['id'], state: HubState) {
+    const hubDb = await this.hubsRepository.findOneOrFail({ id: hubId });
+    hubDb.state = state;
+    return await this.hubsRepository.save(hubDb);
+  }
+
+  async setSocketId(hubId: Hub['id'], socketId: string | null) {
+    const hubDb = await this.hubsRepository.findOneOrFail({ id: hubId });
+    hubDb.socketId = socketId;
+    return await this.hubsRepository.save(hubDb);
   }
 }

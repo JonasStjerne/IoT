@@ -1,3 +1,4 @@
+import { IsNotEmpty } from 'class-validator';
 import { Action } from 'src/action/entities/action.entity';
 import {
   Column,
@@ -29,6 +30,7 @@ export enum WorkerState {
 @Entity()
 export class Worker {
   @PrimaryGeneratedColumn('uuid')
+  @IsNotEmpty()
   id: string;
 
   @Column()

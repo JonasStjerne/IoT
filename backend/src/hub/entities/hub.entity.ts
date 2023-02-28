@@ -12,14 +12,21 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+export enum HubState {
+  ONLINE = 'ONLINE',
+  OFFLINE = 'OFFLINE',
+}
+
 @Entity()
 export class Hub {
   @PrimaryGeneratedColumn('uuid')
+  @IsNotEmpty()
   id: string;
 
   @Column()
   @Generated('uuid')
   @Exclude({ toPlainOnly: true })
+  @IsNotEmpty()
   secret: string;
 
   @Column({ nullable: true })
@@ -27,6 +34,13 @@ export class Hub {
 
   @Column({ nullable: true })
   socketId: string | null;
+
+  @Column({
+    type: 'enum',
+    enum: HubState,
+    default: HubState.OFFLINE,
+  })
+  state: HubState;
 
   @ManyToMany(() => User, (user) => user.hubs)
   users: User[];

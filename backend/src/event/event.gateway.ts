@@ -11,6 +11,9 @@ import { Server, Socket } from 'socket.io';
 import { WsGuard } from 'src/auth/_guards/ws.guard';
 import { UseGuards, Request } from '@nestjs/common';
 import { HubService } from 'src/hub/hub.service';
+import { AuthService } from 'src/auth/auth.service';
+import { UnauthorizedException } from '@nestjs/common/exceptions';
+import { HubState } from 'src/hub/entities/hub.entity';
 @UseGuards(WsGuard)
 @WebSocketGateway()
 export class EventGateway implements OnGatewayConnection {
@@ -18,6 +21,7 @@ export class EventGateway implements OnGatewayConnection {
   constructor(
     private readonly eventService: EventService,
     private readonly hubsService: HubService,
+    private readonly authService: AuthService,
   ) {}
 
   //Event for testing
@@ -27,18 +31,26 @@ export class EventGateway implements OnGatewayConnection {
     console.log('serverEvent: ', req.hub);
     return;
   }
+
   async handleConnection(socket: Socket, @Request() req: any) {
     console.log('Soclket connected');
-    // const hub = await this.authService.validateHub(id, secret);
-    // console.log(hub);
-    // if (!hub) {
-    //   socket.disconnect(true);
-    // }
-    // //On connection send all data for hub and save socket id
-    // console.log('Connected to hub: ', hub.id);
-    // const workers = await this.hubsService.getWorkersOfHub(req.hub.id);
+    //Manually authenticate socket because guards not working on lifecycle hooks
+    const basicToken = socket.handshake.headers.authorization
+      .split(' ')[1]
+      .split('.');
+    const [id, secret] = basicToken;
+    if (!id || !secret) {
+      socket.disconnect(true);
+    }
+    const hub = await this.authService.validateHub(id, secret);
+    if (!hub) {
+      socket.disconnect(true);
+    }
+    this.hubsService.setSocketId(hub.id, socket.id);
+    this.hubsService.setState(hub.id, HubState.ONLINE);
+
+    //Return all workers of hub and their actions
     return;
-    // console.log({ req });
   }
 
   @SubscribeMessage('getWorkerData')
