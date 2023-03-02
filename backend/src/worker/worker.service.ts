@@ -25,15 +25,10 @@ export class WorkerService {
   }
 
   async findOne(userId: string, workerId: string) {
-    console.log('findOne worker ' + userId + ", " + workerId);
     const userDb = await this.usersRepository.findOneOrFail({ id: userId });
     for (let hub of userDb.hubs) {
-      console.log(JSON.stringify(hub, null, 4));
-      hub.workers.forEach((w) => console.log(w + ", " + w.id));
       const worker = hub.workers.find((w) => w.id == workerId);
       if (worker) {
-        console.log("Found worker!!!")
-        console.log(JSON.stringify(worker, null, 4))
         return worker;
       }
     }
@@ -42,18 +37,12 @@ export class WorkerService {
 
   async update(userId: string, hubId: string, workerId: string, updateWorkerDto: UpdateWorkerDto) {
     const userDb = await this.usersRepository.findOneOrFail({ id: userId });
-    console.log(userDb);
-    console.log('hubId: ' + hubId);
     const hubDb = userDb.hubs.find((hub) => hub.id == hubId);
-    console.log(hubDb);
-
-    console.log('workerId: ' + workerId);
     const workerDb = hubDb.workers.find((worker) => worker.id == workerId);
     if (workerDb) {
       workerDb.name = updateWorkerDto.name;
       return await this.workerRepository.save(workerDb);
     }
-    // ikke så godt - user ejer ikke hub som worker er tilknyttet
     return null;
   }
 

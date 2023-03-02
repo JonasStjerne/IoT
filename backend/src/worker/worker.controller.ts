@@ -43,8 +43,6 @@ export class WorkerController {
     @Param('id') id: string
     ) {
     const worker = await this.workerService.findOne(userId, id);
-    console.log('After findOne');
-    console.log(JSON.stringify(worker, null, 4));
     if (worker) {
       return worker;
     }
@@ -61,10 +59,6 @@ export class WorkerController {
     @Query('hubId') hubId: string, 
     @Param('id') workerId: string, 
     @Body() updateWorkerDto: UpdateWorkerDto) {
-
-      console.log('update worker');
-      console.log(updateWorkerDto);
-
     const workerUpdate = await this.workerService.update(userId, hubId, workerId, updateWorkerDto);
     if (workerUpdate) {
       return workerUpdate;

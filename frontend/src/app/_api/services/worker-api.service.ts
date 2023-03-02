@@ -129,6 +129,10 @@ export class WorkerApiService extends BaseService {
   static readonly WorkerControllerFindOnePath = '/worker/{id}';
 
   /**
+   * Find worker with id.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `workerControllerFindOne()` instead.
    *
@@ -138,7 +142,7 @@ export class WorkerApiService extends BaseService {
     id: string;
     context?: HttpContext
   }
-): Observable<StrictHttpResponse<string>> {
+): Observable<StrictHttpResponse<Worker>> {
 
     const rb = new RequestBuilder(this.rootUrl, WorkerApiService.WorkerControllerFindOnePath, 'get');
     if (params) {
@@ -152,12 +156,16 @@ export class WorkerApiService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
+        return r as StrictHttpResponse<Worker>;
       })
     );
   }
 
   /**
+   * Find worker with id.
+   *
+   *
+   *
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `workerControllerFindOne$Response()` instead.
    *
@@ -167,10 +175,10 @@ export class WorkerApiService extends BaseService {
     id: string;
     context?: HttpContext
   }
-): Observable<string> {
+): Observable<Worker> {
 
     return this.workerControllerFindOne$Response(params).pipe(
-      map((r: StrictHttpResponse<string>) => r.body as string)
+      map((r: StrictHttpResponse<Worker>) => r.body as Worker)
     );
   }
 
@@ -226,28 +234,32 @@ export class WorkerApiService extends BaseService {
   }
 
   /**
-   * Path part for operation workerControllerUpdate
+   * Path part for operation workerControllerRename
    */
-  static readonly WorkerControllerUpdatePath = '/worker/{id}';
+  static readonly WorkerControllerRenamePath = '/worker/{id}';
 
   /**
-   * Update worker of hub.
+   * Update worker.
    *
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `workerControllerUpdate()` instead.
+   * To access only the response body, use `workerControllerRename()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  workerControllerUpdate$Response(params: {
+  workerControllerRename$Response(params: {
+    hubId: string;
+    id: string;
     context?: HttpContext
     body: UpdateWorkerDto
   }
 ): Observable<StrictHttpResponse<Worker>> {
 
-    const rb = new RequestBuilder(this.rootUrl, WorkerApiService.WorkerControllerUpdatePath, 'patch');
+    const rb = new RequestBuilder(this.rootUrl, WorkerApiService.WorkerControllerRenamePath, 'patch');
     if (params) {
+      rb.query('hubId', params.hubId, {});
+      rb.path('id', params.id, {});
       rb.body(params.body, 'application/json');
     }
 
@@ -264,22 +276,24 @@ export class WorkerApiService extends BaseService {
   }
 
   /**
-   * Update worker of hub.
+   * Update worker.
    *
    *
    *
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `workerControllerUpdate$Response()` instead.
+   * To access the full response (for headers, for example), `workerControllerRename$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  workerControllerUpdate(params: {
+  workerControllerRename(params: {
+    hubId: string;
+    id: string;
     context?: HttpContext
     body: UpdateWorkerDto
   }
 ): Observable<Worker> {
 
-    return this.workerControllerUpdate$Response(params).pipe(
+    return this.workerControllerRename$Response(params).pipe(
       map((r: StrictHttpResponse<Worker>) => r.body as Worker)
     );
   }
