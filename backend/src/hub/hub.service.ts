@@ -12,9 +12,7 @@ import { RegisterHubDto } from './dto/register-hub.dto';
 import { UpdateHubDto } from './dto/update-hub.dto';
 import { Hub, HubState } from './entities/hub.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AuthRequest, AuthUser } from 'src/auth/auth.model';
-import { REQUEST } from '@nestjs/core';
-import { ApiOkResponse } from '@nestjs/swagger';
+import { Worker } from '../worker/entities/worker.entity';
 
 @Injectable()
 export class HubService {
@@ -107,6 +105,12 @@ export class HubService {
   async getWorkersOfHub(hubId: string) {
     const hubDb = await this.hubsRepository.findOne({ id: hubId });
     return hubDb.workers;
+  }
+
+  async setWorkersOfHub(hubId: string, workers: Worker[]) {
+    const hubDb = await this.hubsRepository.findOne({ id: hubId });
+    hubDb.workers = workers;
+    return await this.hubsRepository.save(hubDb);
   }
 
   async setState(hubId: Hub['id'], state: HubState) {

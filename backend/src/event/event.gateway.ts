@@ -16,6 +16,7 @@ import { HubService } from 'src/hub/hub.service';
 import { AuthService } from 'src/auth/auth.service';
 import { UnauthorizedException } from '@nestjs/common/exceptions';
 import { HubState } from 'src/hub/entities/hub.entity';
+import { ConnectedWorkersDto } from './dto/connectedWorkers.dto';
 @UseGuards(WsGuard)
 @WebSocketGateway()
 export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -36,17 +37,22 @@ export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
     return;
   }
 
-  async handleConnection(socket: Socket, @Request() req: any) {
+  async handleConnection(
+    socket: Socket,
+    @MessageBody() connectedWorkersDto: ConnectedWorkersDto,
+  ) {
     console.log('Soclket connected');
     //Manually authenticate socket because guards not working on lifecycle hooks
     const hub = await this.eventService.isAuthenticatedHub(socket);
     if (!hub) {
       socket.disconnect(true);
     }
-    this.hubsService.setSocketId(hub.id, socket.id);
-    this.hubsService.setState(hub.id, HubState.ONLINE);
+    await this.hubsService.setSocketId(hub.id, socket.id);
+    await this.hubsService.setState(hub.id, HubState.ONLINE);
 
-    return this.eventService.getHubData(hub.id);
+    await this.hubsService.setWorkersOfHub(hub.id, connectedWorkersDto.workers);
+
+    return await this.eventService.getHubData(hub.id);
   }
 
   async handleDisconnect(socket: Socket) {
