@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { HubService } from 'src/hub/hub.service';
 import { CreateWorkerDto } from './dto/create-worker.dto';
 import { UpdateWorkerDto } from './dto/update-worker.dto';
 

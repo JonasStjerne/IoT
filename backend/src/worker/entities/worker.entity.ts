@@ -60,6 +60,6 @@ export class Worker {
   @ManyToOne(() => Hub, (hub) => hub.workers)
   hub: Hub;
 
-  @OneToMany(() => Action, (action) => action.worker)
+  @OneToMany(() => Action, (action) => action.worker, {eager: true})
   actions: Action[];
 }
