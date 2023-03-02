@@ -10,12 +10,10 @@ import { UpdateWorkerDto } from './dto/update-worker.dto';
 
 @Injectable()
 export class WorkerService {
-
   constructor(
     @InjectRepository(User) private usersRepository: Repository<User>,
     @InjectRepository(Worker) private workerRepository: Repository<Worker>,
   ) {}
-
 
   create(createWorkerDto: CreateWorkerDto) {
     return 'This action adds a new worker';
@@ -36,10 +34,15 @@ export class WorkerService {
     return null;
   }
 
-  async update(userId: string, hubId: string, workerId: string, updateWorkerDto: UpdateWorkerDto) {
+  async update(
+    userId: string,
+    hubId: string,
+    workerId: string,
+    updateWorkerDto: UpdateWorkerDto,
+  ) {
     const userDb = await this.usersRepository.findOneOrFail({ id: userId });
     const hubDb = userDb.hubs.find((hub) => hub.id == hubId);
-    const workerDb = hubDb.workers.find((worker) => worker.id == workerId);
+    const workerDb = hubDb?.workers.find((worker) => worker.id == workerId);
     if (workerDb) {
       workerDb.name = updateWorkerDto.name;
       return await this.workerRepository.save(workerDb);
@@ -51,4 +54,3 @@ export class WorkerService {
     return `This action removes a #${id} worker`;
   }
 }
-
