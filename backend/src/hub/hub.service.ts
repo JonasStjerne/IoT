@@ -120,4 +120,13 @@ export class HubService {
     hubDb.socketId = socketId;
     return await this.hubsRepository.save(hubDb);
   }
+
+  async getHubExtendedData(hubId: Hub['id']) {
+    const result = await this.hubsRepository
+      .createQueryBuilder('hub')
+      .leftJoinAndSelect('hub.workers', 'workers')
+      .where('hub.id = :id', { id: hubId })
+      .getOne();
+    return result;
+  }
 }

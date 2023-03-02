@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Hub } from 'src/hub/entities/hub.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
+import { HubService } from 'src/hub/hub.service';
 import { CreateWorkerDto } from './dto/create-worker.dto';
 import { UpdateWorkerDto } from './dto/update-worker.dto';
 

@@ -4,6 +4,8 @@ import {
   MessageBody,
   WebSocketServer,
   OnGatewayConnection,
+  WsException,
+  OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { EventService } from './event.service';
 import { WorkerStateChangeDto } from './dto/workerStateChange.dto';
@@ -16,7 +18,7 @@ import { UnauthorizedException } from '@nestjs/common/exceptions';
 import { HubState } from 'src/hub/entities/hub.entity';
 @UseGuards(WsGuard)
 @WebSocketGateway()
-export class EventGateway implements OnGatewayConnection {
+export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
   constructor(
     private readonly eventService: EventService,
@@ -29,28 +31,31 @@ export class EventGateway implements OnGatewayConnection {
   @SubscribeMessage('serverEvent')
   async clientEvent(@Request() req: any, @MessageBody() text: string) {
     console.log('serverEvent: ', req.hub);
+    const result = await this.eventService.getHubData(req.hub.id);
+    console.log('result: ', result);
     return;
   }
 
   async handleConnection(socket: Socket, @Request() req: any) {
     console.log('Soclket connected');
     //Manually authenticate socket because guards not working on lifecycle hooks
-    const basicToken = socket.handshake.headers.authorization
-      .split(' ')[1]
-      .split('.');
-    const [id, secret] = basicToken;
-    if (!id || !secret) {
-      socket.disconnect(true);
-    }
-    const hub = await this.authService.validateHub(id, secret);
+    const hub = await this.eventService.isAuthenticatedHub(socket);
     if (!hub) {
       socket.disconnect(true);
     }
     this.hubsService.setSocketId(hub.id, socket.id);
     this.hubsService.setState(hub.id, HubState.ONLINE);
 
-    //Return all workers of hub and their actions
-    return;
+    return this.eventService.getHubData(hub.id);
+  }
+
+  async handleDisconnect(socket: Socket) {
+    const hub = await this.eventService.isAuthenticatedHub(socket);
+    if (!hub) {
+      return;
+    }
+    this.hubsService.setSocketId(hub.id, null);
+    this.hubsService.setState(hub.id, HubState.OFFLINE);
   }
 
   @SubscribeMessage('getWorkerData')
