@@ -60,6 +60,10 @@ export class Worker {
   @ManyToOne(() => Hub, (hub) => hub.workers)
   hub: Hub;
 
-  @OneToMany(() => Action, (action) => action.worker, {eager: true})
+  @OneToMany(() => Action, (action) => action.worker, {
+    eager: true,
+    onDelete: 'CASCADE',
+  })
   actions: Action[];
+  
 }

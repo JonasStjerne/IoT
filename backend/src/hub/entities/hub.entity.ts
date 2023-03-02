@@ -45,6 +45,10 @@ export class Hub {
   @ManyToMany(() => User, (user) => user.hubs)
   users: User[];
 
-  @OneToMany(() => Worker, (worker) => worker.hub)
+  @OneToMany(() => Worker, (worker) => worker.hub, {
+    eager: true,
+    onDelete: 'CASCADE',
+  })
   workers: Worker[];
+
 }
