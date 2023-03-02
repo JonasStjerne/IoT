@@ -7,6 +7,7 @@ export interface Hub {
   name: null | string;
   secret: string;
   socketId: null | string;
+  state: 'ONLINE' | 'OFFLINE';
   users: Array<User>;
   workers: Array<Worker>;
 }

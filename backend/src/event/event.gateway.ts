@@ -23,6 +23,7 @@ export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private readonly eventService: EventService,
     private readonly hubsService: HubService,
+    private readonly authService: AuthService,
   ) {}
 
   //Event for testing
