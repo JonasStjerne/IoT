@@ -15,6 +15,8 @@ import { UpdateActionDto } from './dto/update-action.dto';
 import { Auth } from 'src/auth/_decorators/auth.decorator';
 import { AuthUser } from 'src/auth/_decorators/user.decorator';
 import { User } from 'src/users/entities/user.entity';
+import { Worker } from 'src/worker/entities/worker.entity';
+import { Action } from './entities/action.entity';
 
 @ApiTags('Action')
 @Controller('action')
@@ -47,7 +49,7 @@ export class ActionController {
   @ApiOperation({ summary: 'Update action' })
   @Auth()
   async update(
-    @AuthUser('id') userId: string, 
+    @AuthUser('id') userId: User['id'], 
     @Param('id') actionId: string, 
     @Body() updateActionDto: UpdateActionDto) {
     return await this.actionService.update(userId, actionId, updateActionDto);

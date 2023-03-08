@@ -10,6 +10,5 @@ import { Worker } from '../worker/entities/worker.entity';
   imports: [TypeOrmModule.forFeature([Action, Worker, User])],
   controllers: [ActionController],
   providers: [ActionService],
-  exports: [ActionService],
 })
 export class ActionModule {}

@@ -34,7 +34,7 @@ export class ActionService {
   }
 
   async findOne(actionId: string) {
-    return await this.actionRepository.findOne({id: actionId})
+    return await this.actionRepository.findOneOrFail({id: actionId})
   }
 
   async update(userId: string, actionId: string, updateActionDto: UpdateActionDto) {
@@ -49,21 +49,12 @@ export class ActionService {
         throw new NotFoundException('Action not found');
     }
     */
-
-    if (action) {
-      if (updateActionDto.repeat) {
-        action.repeat = updateActionDto.repeat;
-      }
-      if (updateActionDto.executeDateTime) {
-        action.executeDateTime = updateActionDto.executeDateTime;
-      }
-      if (updateActionDto.durationSeconds) {
-        action.durationSeconds = updateActionDto.durationSeconds;
-      }
-      return await this.actionRepository.save(action);
-    }
-    return null;
-
+      return await this.actionRepository.save({
+        id: action.id,
+        isComplete: action.isComplete,
+        worker: action.worker,
+        ...updateActionDto,
+      });
   }
 
   async remove(userId: string, actionId: string) {

@@ -1,5 +1,4 @@
-import { PickType } from '@nestjs/swagger';
-import { Action } from '../entities/action.entity';
+import { PartialType } from '@nestjs/swagger';
+import { CreateActionDto } from './create-action.dto';
 
-export class UpdateActionDto extends PickType(Action, ['repeat','executeDateTime','durationSeconds'] as const) {}
-
+export class UpdateActionDto extends PartialType(CreateActionDto) {}
