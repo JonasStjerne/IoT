@@ -17,10 +17,7 @@ import { Worker } from '../models/worker';
   providedIn: 'root',
 })
 export class WorkerApiService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
+  constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
@@ -36,24 +33,30 @@ export class WorkerApiService extends BaseService {
    * This method doesn't expect any request body.
    */
   workerControllerFindAll$Response(params?: {
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<string>> {
-
-    const rb = new RequestBuilder(this.rootUrl, WorkerApiService.WorkerControllerFindAllPath, 'get');
+    context?: HttpContext;
+  }): Observable<StrictHttpResponse<string>> {
+    const rb = new RequestBuilder(
+      this.rootUrl,
+      WorkerApiService.WorkerControllerFindAllPath,
+      'get'
+    );
     if (params) {
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json',
+          context: params?.context,
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<string>;
+        })
+      );
   }
 
   /**
@@ -63,10 +66,8 @@ export class WorkerApiService extends BaseService {
    * This method doesn't expect any request body.
    */
   workerControllerFindAll(params?: {
-    context?: HttpContext
-  }
-): Observable<string> {
-
+    context?: HttpContext;
+  }): Observable<string> {
     return this.workerControllerFindAll$Response(params).pipe(
       map((r: StrictHttpResponse<string>) => r.body as string)
     );
@@ -84,26 +85,32 @@ export class WorkerApiService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   workerControllerCreate$Response(params: {
-    context?: HttpContext
-    body: CreateWorkerDto
-  }
-): Observable<StrictHttpResponse<string>> {
-
-    const rb = new RequestBuilder(this.rootUrl, WorkerApiService.WorkerControllerCreatePath, 'post');
+    context?: HttpContext;
+    body: CreateWorkerDto;
+  }): Observable<StrictHttpResponse<string>> {
+    const rb = new RequestBuilder(
+      this.rootUrl,
+      WorkerApiService.WorkerControllerCreatePath,
+      'post'
+    );
     if (params) {
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json',
+          context: params?.context,
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<string>;
+        })
+      );
   }
 
   /**
@@ -113,20 +120,18 @@ export class WorkerApiService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   workerControllerCreate(params: {
-    context?: HttpContext
-    body: CreateWorkerDto
-  }
-): Observable<string> {
-
+    context?: HttpContext;
+    body: CreateWorkerDto;
+  }): Observable<string> {
     return this.workerControllerCreate$Response(params).pipe(
       map((r: StrictHttpResponse<string>) => r.body as string)
     );
   }
 
   /**
-   * Path part for operation workerControllerFindOne
+   * Path part for operation workerControllerfindOneBy
    */
-  static readonly WorkerControllerFindOnePath = '/worker/{id}';
+  static readonly WorkerControllerfindOneByPath = '/worker/{id}';
 
   /**
    * Find worker with id.
@@ -134,31 +139,37 @@ export class WorkerApiService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `workerControllerFindOne()` instead.
+   * To access only the response body, use `workerControllerfindOneBy()` instead.
    *
    * This method doesn't expect any request body.
    */
-  workerControllerFindOne$Response(params: {
+  workerControllerfindOneBy$Response(params: {
     id: string;
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<Worker>> {
-
-    const rb = new RequestBuilder(this.rootUrl, WorkerApiService.WorkerControllerFindOnePath, 'get');
+    context?: HttpContext;
+  }): Observable<StrictHttpResponse<Worker>> {
+    const rb = new RequestBuilder(
+      this.rootUrl,
+      WorkerApiService.WorkerControllerfindOneByPath,
+      'get'
+    );
     if (params) {
       rb.path('id', params.id, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Worker>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json',
+          context: params?.context,
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Worker>;
+        })
+      );
   }
 
   /**
@@ -167,17 +178,15 @@ export class WorkerApiService extends BaseService {
    *
    *
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `workerControllerFindOne$Response()` instead.
+   * To access the full response (for headers, for example), `workerControllerfindOneBy$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  workerControllerFindOne(params: {
+  workerControllerfindOneBy(params: {
     id: string;
-    context?: HttpContext
-  }
-): Observable<Worker> {
-
-    return this.workerControllerFindOne$Response(params).pipe(
+    context?: HttpContext;
+  }): Observable<Worker> {
+    return this.workerControllerfindOneBy$Response(params).pipe(
       map((r: StrictHttpResponse<Worker>) => r.body as Worker)
     );
   }
@@ -195,25 +204,31 @@ export class WorkerApiService extends BaseService {
    */
   workerControllerRemove$Response(params: {
     id: string;
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<string>> {
-
-    const rb = new RequestBuilder(this.rootUrl, WorkerApiService.WorkerControllerRemovePath, 'delete');
+    context?: HttpContext;
+  }): Observable<StrictHttpResponse<string>> {
+    const rb = new RequestBuilder(
+      this.rootUrl,
+      WorkerApiService.WorkerControllerRemovePath,
+      'delete'
+    );
     if (params) {
       rb.path('id', params.id, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json',
+          context: params?.context,
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<string>;
+        })
+      );
   }
 
   /**
@@ -224,10 +239,8 @@ export class WorkerApiService extends BaseService {
    */
   workerControllerRemove(params: {
     id: string;
-    context?: HttpContext
-  }
-): Observable<string> {
-
+    context?: HttpContext;
+  }): Observable<string> {
     return this.workerControllerRemove$Response(params).pipe(
       map((r: StrictHttpResponse<string>) => r.body as string)
     );
@@ -251,28 +264,34 @@ export class WorkerApiService extends BaseService {
   workerControllerRename$Response(params: {
     hubId: string;
     id: string;
-    context?: HttpContext
-    body: UpdateWorkerDto
-  }
-): Observable<StrictHttpResponse<Worker>> {
-
-    const rb = new RequestBuilder(this.rootUrl, WorkerApiService.WorkerControllerRenamePath, 'patch');
+    context?: HttpContext;
+    body: UpdateWorkerDto;
+  }): Observable<StrictHttpResponse<Worker>> {
+    const rb = new RequestBuilder(
+      this.rootUrl,
+      WorkerApiService.WorkerControllerRenamePath,
+      'patch'
+    );
     if (params) {
       rb.query('hubId', params.hubId, {});
       rb.path('id', params.id, {});
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Worker>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json',
+          context: params?.context,
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Worker>;
+        })
+      );
   }
 
   /**
@@ -288,14 +307,11 @@ export class WorkerApiService extends BaseService {
   workerControllerRename(params: {
     hubId: string;
     id: string;
-    context?: HttpContext
-    body: UpdateWorkerDto
-  }
-): Observable<Worker> {
-
+    context?: HttpContext;
+    body: UpdateWorkerDto;
+  }): Observable<Worker> {
     return this.workerControllerRename$Response(params).pipe(
       map((r: StrictHttpResponse<Worker>) => r.body as Worker)
     );
   }
-
 }

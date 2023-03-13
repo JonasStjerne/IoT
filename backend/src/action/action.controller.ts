@@ -28,8 +28,8 @@ export class ActionController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.actionService.findOne(+id);
+  findOneBy(@Param('id') id: string) {
+    return this.actionService.findOneBy(+id);
   }
 
   @Patch(':id')

@@ -18,10 +18,7 @@ import { UpdateHubDto } from '../models/update-hub-dto';
   providedIn: 'root',
 })
 export class HubApiService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
+  constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
@@ -41,24 +38,30 @@ export class HubApiService extends BaseService {
    * This method doesn't expect any request body.
    */
   hubControllerFindAll$Response(params?: {
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<Array<Hub>>> {
-
-    const rb = new RequestBuilder(this.rootUrl, HubApiService.HubControllerFindAllPath, 'get');
+    context?: HttpContext;
+  }): Observable<StrictHttpResponse<Array<Hub>>> {
+    const rb = new RequestBuilder(
+      this.rootUrl,
+      HubApiService.HubControllerFindAllPath,
+      'get'
+    );
     if (params) {
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<Hub>>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json',
+          context: params?.context,
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Array<Hub>>;
+        })
+      );
   }
 
   /**
@@ -72,10 +75,8 @@ export class HubApiService extends BaseService {
    * This method doesn't expect any request body.
    */
   hubControllerFindAll(params?: {
-    context?: HttpContext
-  }
-): Observable<Array<Hub>> {
-
+    context?: HttpContext;
+  }): Observable<Array<Hub>> {
     return this.hubControllerFindAll$Response(params).pipe(
       map((r: StrictHttpResponse<Array<Hub>>) => r.body as Array<Hub>)
     );
@@ -97,26 +98,32 @@ export class HubApiService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   hubControllerCreate$Response(params: {
-    context?: HttpContext
-    body: CreateHubDto
-  }
-): Observable<StrictHttpResponse<Hub>> {
-
-    const rb = new RequestBuilder(this.rootUrl, HubApiService.HubControllerCreatePath, 'post');
+    context?: HttpContext;
+    body: CreateHubDto;
+  }): Observable<StrictHttpResponse<Hub>> {
+    const rb = new RequestBuilder(
+      this.rootUrl,
+      HubApiService.HubControllerCreatePath,
+      'post'
+    );
     if (params) {
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Hub>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json',
+          context: params?.context,
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Hub>;
+        })
+      );
   }
 
   /**
@@ -130,20 +137,18 @@ export class HubApiService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   hubControllerCreate(params: {
-    context?: HttpContext
-    body: CreateHubDto
-  }
-): Observable<Hub> {
-
+    context?: HttpContext;
+    body: CreateHubDto;
+  }): Observable<Hub> {
     return this.hubControllerCreate$Response(params).pipe(
       map((r: StrictHttpResponse<Hub>) => r.body as Hub)
     );
   }
 
   /**
-   * Path part for operation hubControllerFindOne
+   * Path part for operation hubControllerfindOneBy
    */
-  static readonly HubControllerFindOnePath = '/hub/{id}';
+  static readonly HubControllerfindOneByPath = '/hub/{id}';
 
   /**
    * Return hub of user.
@@ -151,31 +156,37 @@ export class HubApiService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `hubControllerFindOne()` instead.
+   * To access only the response body, use `hubControllerfindOneBy()` instead.
    *
    * This method doesn't expect any request body.
    */
-  hubControllerFindOne$Response(params: {
+  hubControllerfindOneBy$Response(params: {
     id: string;
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<Hub>> {
-
-    const rb = new RequestBuilder(this.rootUrl, HubApiService.HubControllerFindOnePath, 'get');
+    context?: HttpContext;
+  }): Observable<StrictHttpResponse<Hub>> {
+    const rb = new RequestBuilder(
+      this.rootUrl,
+      HubApiService.HubControllerfindOneByPath,
+      'get'
+    );
     if (params) {
       rb.path('id', params.id, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Hub>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json',
+          context: params?.context,
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Hub>;
+        })
+      );
   }
 
   /**
@@ -184,17 +195,15 @@ export class HubApiService extends BaseService {
    *
    *
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `hubControllerFindOne$Response()` instead.
+   * To access the full response (for headers, for example), `hubControllerfindOneBy$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  hubControllerFindOne(params: {
+  hubControllerfindOneBy(params: {
     id: string;
-    context?: HttpContext
-  }
-): Observable<Hub> {
-
-    return this.hubControllerFindOne$Response(params).pipe(
+    context?: HttpContext;
+  }): Observable<Hub> {
+    return this.hubControllerfindOneBy$Response(params).pipe(
       map((r: StrictHttpResponse<Hub>) => r.body as Hub)
     );
   }
@@ -216,25 +225,31 @@ export class HubApiService extends BaseService {
    */
   hubControllerRemove$Response(params: {
     id: string;
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<string>> {
-
-    const rb = new RequestBuilder(this.rootUrl, HubApiService.HubControllerRemovePath, 'delete');
+    context?: HttpContext;
+  }): Observable<StrictHttpResponse<string>> {
+    const rb = new RequestBuilder(
+      this.rootUrl,
+      HubApiService.HubControllerRemovePath,
+      'delete'
+    );
     if (params) {
       rb.path('id', params.id, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json',
+          context: params?.context,
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<string>;
+        })
+      );
   }
 
   /**
@@ -249,10 +264,8 @@ export class HubApiService extends BaseService {
    */
   hubControllerRemove(params: {
     id: string;
-    context?: HttpContext
-  }
-): Observable<string> {
-
+    context?: HttpContext;
+  }): Observable<string> {
     return this.hubControllerRemove$Response(params).pipe(
       map((r: StrictHttpResponse<string>) => r.body as string)
     );
@@ -275,27 +288,33 @@ export class HubApiService extends BaseService {
    */
   hubControllerRename$Response(params: {
     id: string;
-    context?: HttpContext
-    body: UpdateHubDto
-  }
-): Observable<StrictHttpResponse<Hub>> {
-
-    const rb = new RequestBuilder(this.rootUrl, HubApiService.HubControllerRenamePath, 'patch');
+    context?: HttpContext;
+    body: UpdateHubDto;
+  }): Observable<StrictHttpResponse<Hub>> {
+    const rb = new RequestBuilder(
+      this.rootUrl,
+      HubApiService.HubControllerRenamePath,
+      'patch'
+    );
     if (params) {
       rb.path('id', params.id, {});
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Hub>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json',
+          context: params?.context,
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Hub>;
+        })
+      );
   }
 
   /**
@@ -310,11 +329,9 @@ export class HubApiService extends BaseService {
    */
   hubControllerRename(params: {
     id: string;
-    context?: HttpContext
-    body: UpdateHubDto
-  }
-): Observable<Hub> {
-
+    context?: HttpContext;
+    body: UpdateHubDto;
+  }): Observable<Hub> {
     return this.hubControllerRename$Response(params).pipe(
       map((r: StrictHttpResponse<Hub>) => r.body as Hub)
     );
@@ -336,26 +353,32 @@ export class HubApiService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   hubControllerRegister$Response(params: {
-    context?: HttpContext
-    body: RegisterHubDto
-  }
-): Observable<StrictHttpResponse<Hub>> {
-
-    const rb = new RequestBuilder(this.rootUrl, HubApiService.HubControllerRegisterPath, 'post');
+    context?: HttpContext;
+    body: RegisterHubDto;
+  }): Observable<StrictHttpResponse<Hub>> {
+    const rb = new RequestBuilder(
+      this.rootUrl,
+      HubApiService.HubControllerRegisterPath,
+      'post'
+    );
     if (params) {
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Hub>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'json',
+          accept: 'application/json',
+          context: params?.context,
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return r as StrictHttpResponse<Hub>;
+        })
+      );
   }
 
   /**
@@ -369,11 +392,9 @@ export class HubApiService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   hubControllerRegister(params: {
-    context?: HttpContext
-    body: RegisterHubDto
-  }
-): Observable<Hub> {
-
+    context?: HttpContext;
+    body: RegisterHubDto;
+  }): Observable<Hub> {
     return this.hubControllerRegister$Response(params).pipe(
       map((r: StrictHttpResponse<Hub>) => r.body as Hub)
     );
@@ -396,25 +417,33 @@ export class HubApiService extends BaseService {
    */
   hubControllerUnRegister$Response(params: {
     id: string;
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, HubApiService.HubControllerUnRegisterPath, 'delete');
+    context?: HttpContext;
+  }): Observable<StrictHttpResponse<void>> {
+    const rb = new RequestBuilder(
+      this.rootUrl,
+      HubApiService.HubControllerUnRegisterPath,
+      'delete'
+    );
     if (params) {
       rb.path('id', params.id, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+    return this.http
+      .request(
+        rb.build({
+          responseType: 'text',
+          accept: '*/*',
+          context: params?.context,
+        })
+      )
+      .pipe(
+        filter((r: any) => r instanceof HttpResponse),
+        map((r: HttpResponse<any>) => {
+          return (r as HttpResponse<any>).clone({
+            body: undefined,
+          }) as StrictHttpResponse<void>;
+        })
+      );
   }
 
   /**
@@ -429,13 +458,10 @@ export class HubApiService extends BaseService {
    */
   hubControllerUnRegister(params: {
     id: string;
-    context?: HttpContext
-  }
-): Observable<void> {
-
+    context?: HttpContext;
+  }): Observable<void> {
     return this.hubControllerUnRegister$Response(params).pipe(
       map((r: StrictHttpResponse<void>) => r.body as void)
     );
   }
-
 }

@@ -23,7 +23,7 @@ export class HubService {
 
   async register(userId: User['id'], hub: RegisterHubDto) {
     const hubDb = await this.validateHubCredentials(hub.id, hub.secret);
-    const userDb = await this.usersRepository.findOne(userId);
+    const userDb = await this.usersRepository.findOneBy({ id: userId });
     console.log(hubDb, userDb);
     if (hubDb && userDb) {
       userDb.hubs = [...userDb.hubs, hubDb];
@@ -36,7 +36,7 @@ export class HubService {
   }
 
   async validateHubCredentials(id: string, secret: string) {
-    const hub = await this.hubsRepository.findOne(id);
+    const hub = await this.hubsRepository.findOneBy({ id });
     if (hub && hub.secret == secret) {
       return hub;
     }
@@ -49,12 +49,12 @@ export class HubService {
   }
 
   async findAll(userId: User['id']) {
-    const userDb = await this.usersRepository.findOne({ id: userId });
+    const userDb = await this.usersRepository.findOneBy({ id: userId });
     return userDb.hubs;
   }
 
-  async findOne(userId: User['id'], hubId: Hub['id']) {
-    const userDb = await this.usersRepository.findOne({ id: userId });
+  async findOneBy(userId: User['id'], hubId: Hub['id']) {
+    const userDb = await this.usersRepository.findOneBy({ id: userId });
     const hubDb = userDb.hubs.find((hub) => hub.id == hubId);
     if (hubDb) {
       return hubDb;
@@ -67,7 +67,7 @@ export class HubService {
     hubId: Hub['id'],
     updateHubDto: UpdateHubDto,
   ) {
-    const userDb = await this.usersRepository.findOneOrFail({ id: userId });
+    const userDb = await this.usersRepository.findOneByOrFail({ id: userId });
     const hubDb = userDb.hubs.find((hub) => hub.id == hubId);
     if (hubDb) {
       hubDb.name = updateHubDto.name;
@@ -77,7 +77,7 @@ export class HubService {
   }
 
   async remove(hubId: Hub['id']) {
-    const hubDb = await this.hubsRepository.findOneOrFail({ id: hubId });
+    const hubDb = await this.hubsRepository.findOneByOrFail({ id: hubId });
     const deleted = await this.hubsRepository.remove(hubDb);
     if (deleted) {
       return 'Hub deleted successfully';
@@ -88,7 +88,7 @@ export class HubService {
 
   async unRegister(userId: User['id'], hubId: Hub['id']) {
     console.log('unregister called');
-    const userDb = await this.usersRepository.findOneOrFail({ id: userId });
+    const userDb = await this.usersRepository.findOneByOrFail({ id: userId });
     const hubDb = userDb.hubs.find((hub) => hub.id == hubId);
     if (!hubDb) {
       throw new ForbiddenException(
@@ -103,24 +103,24 @@ export class HubService {
   }
 
   async getWorkersOfHub(hubId: string) {
-    const hubDb = await this.hubsRepository.findOne({ id: hubId });
+    const hubDb = await this.hubsRepository.findOneBy({ id: hubId });
     return hubDb.workers;
   }
 
   async setWorkersOfHub(hubId: string, workers: Worker[]) {
-    const hubDb = await this.hubsRepository.findOne({ id: hubId });
+    const hubDb = await this.hubsRepository.findOneBy({ id: hubId });
     hubDb.workers = workers;
     return await this.hubsRepository.save(hubDb);
   }
 
   async setState(hubId: Hub['id'], state: HubState) {
-    const hubDb = await this.hubsRepository.findOneOrFail({ id: hubId });
+    const hubDb = await this.hubsRepository.findOneByOrFail({ id: hubId });
     hubDb.state = state;
     return await this.hubsRepository.save(hubDb);
   }
 
   async setSocketId(hubId: Hub['id'], socketId: string | null) {
-    const hubDb = await this.hubsRepository.findOneOrFail({ id: hubId });
+    const hubDb = await this.hubsRepository.findOneByOrFail({ id: hubId });
     hubDb.socketId = socketId;
     return await this.hubsRepository.save(hubDb);
   }

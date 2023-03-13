@@ -21,8 +21,8 @@ export class UsersService {
     return this.usersRepository.save(newUser);
   }
 
-  findOne(username: User['username']): Promise<User | undefined> {
-    return this.usersRepository.findOne({ username });
+  findOneBy(username: User['username']): Promise<User | undefined> {
+    return this.usersRepository.findOneBy({ username });
   }
 
   async remove(id: User['id']) {

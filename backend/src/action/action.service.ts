@@ -12,7 +12,7 @@ export class ActionService {
     return `This action returns all action`;
   }
 
-  findOne(id: number) {
+  findOneBy(id: number) {
     return `This action returns a #${id} action`;
   }
 
