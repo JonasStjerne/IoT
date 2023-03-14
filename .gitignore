@@ -3,3 +3,4 @@ dist/
 node_modules/
 enviroments/
 .vscode
+.DS_Store
