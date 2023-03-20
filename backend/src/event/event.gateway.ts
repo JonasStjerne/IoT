@@ -39,19 +39,20 @@ export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   async handleConnection(socket: Socket) {
-    console.log('Soclket connected');
     //Manually authenticate socket because guards not working on lifecycle hooks
     const hub = await this.eventService.isAuthenticatedHub(socket);
     if (!hub) {
+      console.log('Hub not authenticated');
       socket.disconnect(true);
+      throw new WsException('Wrong credentiels');
     }
+    console.log('Hub authenticated');
     await this.hubsService.setSocketId(hub.id, socket.id);
     await this.hubsService.setState(hub.id, HubState.ONLINE);
   }
 
   @SubscribeMessage('connectedWorkers')
   async connectedWorkers(
-    socket: Socket,
     @AuthHub() hub: Hub,
     @MessageBody() connectedWorkersDto: ConnectedWorkersDto,
   ) {
@@ -61,7 +62,7 @@ export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
       connectedWorkersDto.workers,
     );
 
-    socket.emit('workerData', hubDb.workers);
+    return hubDb.workers;
   }
 
   @SubscribeMessage('workerStateChange')

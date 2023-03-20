@@ -11,7 +11,7 @@ import * as fs from 'fs';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: new CustomLogger(),
+    // logger: new CustomLogger(),
     rawBody: true,
   });
   app.enableCors({
@@ -50,7 +50,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   //HoneyBadger for error tracking and app monitoring
-  Honeybadger.configure({ apiKey: process.env.HONEYBADGER_API_KEY });
+  // Honeybadger.configure({ apiKey: process.env.HONEYBADGER_API_KEY });
 
   //Listen on port 3000
   await app.listen(parseInt(process.env.BACKEND_PORT) || 3000);
