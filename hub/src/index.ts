@@ -1,13 +1,18 @@
 require("dotenv").config();
-var io = require("socket.io-client");
-var socket = io.connect(`http://${process.env.BACKEND_HOST}${process.env.BACKEND_PORT}`, {
-  reconnection: true,
-  extraHeaders: {
-    Authorization: `Basic ${process.env.HUB_ID}.${process.env.HUB_SECRET}`,
-  },
-});
+import { socketConnection } from "./websocket";
 
-socket.on("connect", function () {
+const socket = socketConnection(
+  {
+    backendHost: process.env.BACKEND_HOST!,
+    backendPort: +process.env.BACKEND_PORT!,
+  },
+  {
+    hubId: process.env.HUB_ID!,
+    hubSecret: process.env.HUB_SECRET!,
+  }
+);
+
+socket.on("connect", () => {
   console.log("connected to localhost:3000");
 
   //Send connected workers to server
@@ -18,6 +23,7 @@ socket.on("connect", function () {
     console.log("workerData from the server:", data);
   });
 
+  //Function for debuggin websocket connection
   setInterval(function () {
     socket.emit("serverEvent", Math.random());
     // socket.emit("getWorkerData");
