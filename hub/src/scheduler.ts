@@ -7,13 +7,13 @@ function scheduleAction(action: IActionDto) {
   switch (action.repeat) {
     case ActionRepeat.ONCE:
       schedule.scheduleJob(action.executeDateTime, () => bluetoothService.sendAction());
-
+      break;
     case ActionRepeat.DAILY:
       schedule.scheduleJob(
         { hour: action.executeDateTime.getHours(), minute: action.executeDateTime.getMinutes() },
         () => bluetoothService.sendAction()
       );
-
+      break;
     case ActionRepeat.WEEKLY:
       schedule.scheduleJob(
         {
@@ -23,7 +23,7 @@ function scheduleAction(action: IActionDto) {
         },
         () => bluetoothService.sendAction()
       );
-
+      break;
     case ActionRepeat.YEARLY:
       schedule.scheduleJob(
         {
@@ -34,6 +34,7 @@ function scheduleAction(action: IActionDto) {
         },
         () => bluetoothService.sendAction()
       );
+      break;
   }
 }
 
