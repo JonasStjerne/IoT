@@ -6,12 +6,12 @@ import bluetoothService from "./bluetooth";
 function scheduleAction(action: IActionDto) {
   switch (action.repeat) {
     case ActionRepeat.ONCE:
-      schedule.scheduleJob(action.executeDateTime, bluetoothService.sendAction());
+      schedule.scheduleJob(action.executeDateTime, () => bluetoothService.sendAction());
 
     case ActionRepeat.DAILY:
       schedule.scheduleJob(
         { hour: action.executeDateTime.getHours(), minute: action.executeDateTime.getMinutes() },
-        bluetoothService.sendAction()
+        () => bluetoothService.sendAction()
       );
 
     case ActionRepeat.WEEKLY:
@@ -21,7 +21,7 @@ function scheduleAction(action: IActionDto) {
           minute: action.executeDateTime.getMinutes(),
           dayOfWeek: action.executeDateTime.getDate(),
         },
-        bluetoothService.sendAction()
+        () => bluetoothService.sendAction()
       );
 
     case ActionRepeat.YEARLY:
@@ -32,15 +32,16 @@ function scheduleAction(action: IActionDto) {
           dayOfWeek: action.executeDateTime.getDate(),
           year: action.executeDateTime.getFullYear(),
         },
-        bluetoothService.sendAction()
+        () => bluetoothService.sendAction()
       );
   }
 }
 
 export default class scheduler {
-  createjobs(workerData: IWorkerDto[]) {
+  scheduleActions(workerData: IWorkerDto[]) {
     workerData.forEach((worker) => {
       worker.actions.forEach((action) => {
+        console.log("Scheduling ", action);
         scheduleAction(action);
       });
     });

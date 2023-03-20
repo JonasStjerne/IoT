@@ -1,16 +1,16 @@
 import { IActionDto } from "./action.dto";
 
-enum WorkerAction {
+export enum WorkerAction {
   PRESS = "press",
 }
 
-enum WorkerStatus {
+export enum WorkerStatus {
   IDLE = "idle",
   BUSY = "busy",
   ERROR = "error",
 }
 
-enum WorkerState {
+export enum WorkerState {
   OFFLINE = "offline",
   ONLINE = "online",
 }
