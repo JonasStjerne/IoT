@@ -1,4 +1,4 @@
-import Action from "./action.dto";
+import { IActionDto } from "./action.dto";
 
 enum WorkerAction {
   PRESS = "press",
@@ -26,5 +26,5 @@ export interface IWorkerDto {
 
   state: WorkerState;
 
-  actions: Action[];
+  actions: IActionDto[];
 }

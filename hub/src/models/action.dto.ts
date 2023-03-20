@@ -1,4 +1,4 @@
-enum ActionRepeat {
+export enum ActionRepeat {
   ONCE = "once",
   DAILY = "daily",
   WEEKLY = "weekly",
@@ -6,7 +6,7 @@ enum ActionRepeat {
   YEARLY = "yearly",
 }
 
-export default interface IActionDto {
+export interface IActionDto {
   id: string;
 
   repeat: ActionRepeat;
