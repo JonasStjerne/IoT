@@ -141,9 +141,9 @@ export class HubApiService extends BaseService {
   }
 
   /**
-   * Path part for operation hubControllerFindOne
+   * Path part for operation hubControllerFindOneBy
    */
-  static readonly HubControllerFindOnePath = '/hub/{id}';
+  static readonly HubControllerFindOneByPath = '/hub/{id}';
 
   /**
    * Return hub of user.
@@ -151,17 +151,17 @@ export class HubApiService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `hubControllerFindOne()` instead.
+   * To access only the response body, use `hubControllerFindOneBy()` instead.
    *
    * This method doesn't expect any request body.
    */
-  hubControllerFindOne$Response(params: {
+  hubControllerFindOneBy$Response(params: {
     id: string;
     context?: HttpContext
   }
 ): Observable<StrictHttpResponse<Hub>> {
 
-    const rb = new RequestBuilder(this.rootUrl, HubApiService.HubControllerFindOnePath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, HubApiService.HubControllerFindOneByPath, 'get');
     if (params) {
       rb.path('id', params.id, {});
     }
@@ -184,17 +184,17 @@ export class HubApiService extends BaseService {
    *
    *
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `hubControllerFindOne$Response()` instead.
+   * To access the full response (for headers, for example), `hubControllerFindOneBy$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  hubControllerFindOne(params: {
+  hubControllerFindOneBy(params: {
     id: string;
     context?: HttpContext
   }
 ): Observable<Hub> {
 
-    return this.hubControllerFindOne$Response(params).pipe(
+    return this.hubControllerFindOneBy$Response(params).pipe(
       map((r: StrictHttpResponse<Hub>) => r.body as Hub)
     );
   }

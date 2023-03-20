@@ -19,7 +19,6 @@ import { User } from 'src/users/entities/user.entity';
 import { Hub } from 'src/hub/entities/hub.entity';
 import { Worker } from './entities/worker.entity';
 
-
 @ApiTags('Worker')
 @Controller('worker')
 export class WorkerController {
@@ -38,28 +37,31 @@ export class WorkerController {
   @Get(':id')
   @ApiOperation({ summary: 'Find worker with id' })
   @Auth()
-  async findOne(
-    @AuthUser('id') userId: User['id'],
-    @Param('id') id: string
-    ) {
-    const worker = await this.workerService.findOne(userId, id);
+  async findOneBy(@AuthUser('id') userId: User['id'], @Param('id') id: string) {
+    const worker = await this.workerService.findOneBy(userId, id);
     if (worker) {
       return worker;
     }
     throw new ForbiddenException(
       "You don't have access to this worker or it doesn't exist",
     );
-   }
+  }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update worker' })
   @Auth()
   async Rename(
     @AuthUser('id') userId: User['id'],
-    @Query('hubId') hubId: string, 
-    @Param('id') workerId: string, 
-    @Body() updateWorkerDto: UpdateWorkerDto) {
-    const workerUpdate = await this.workerService.update(userId, hubId, workerId, updateWorkerDto);
+    @Query('hubId') hubId: string,
+    @Param('id') workerId: string,
+    @Body() updateWorkerDto: UpdateWorkerDto,
+  ) {
+    const workerUpdate = await this.workerService.update(
+      userId,
+      hubId,
+      workerId,
+      updateWorkerDto,
+    );
     if (workerUpdate) {
       return workerUpdate;
     }

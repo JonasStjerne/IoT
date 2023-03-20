@@ -23,8 +23,8 @@ export class WorkerService {
     return `This action returns all worker`;
   }
 
-  async findOne(userId: string, workerId: string) {
-    const userDb = await this.usersRepository.findOneOrFail({ id: userId });
+  async findOneBy(userId: string, workerId: string) {
+    const userDb = await this.usersRepository.findOneByOrFail({ id: userId });
     for (let hub of userDb.hubs) {
       const worker = hub.workers.find((w) => w.id == workerId);
       if (worker) {
@@ -40,7 +40,7 @@ export class WorkerService {
     workerId: string,
     updateWorkerDto: UpdateWorkerDto,
   ) {
-    const userDb = await this.usersRepository.findOneOrFail({ id: userId });
+    const userDb = await this.usersRepository.findOneByOrFail({ id: userId });
     const hubDb = userDb.hubs.find((hub) => hub.id == hubId);
     const workerDb = hubDb?.workers.find((worker) => worker.id == workerId);
     if (workerDb) {

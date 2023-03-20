@@ -79,7 +79,7 @@ services:
             target: development
         command: npm run start:dev
         environment:
-            HUB_PORT: $HUB_PORT
+            HUB_PORT: $BACKEND_PORT
             BACKEND_HOST: $BACKEND_HOST
         restart: unless-stopped
         ports:

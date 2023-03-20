@@ -11,15 +11,15 @@ COPY . .
 RUN npm run build
 
 #stage 2
-FROM nginx:alpine AS production
+# FROM nginx:alpine AS production
 
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
+# ARG NODE_ENV=production
+# ENV NODE_ENV=${NODE_ENV}
 
-WORKDIR /app
+# WORKDIR /app
 
-COPY package*.json ./
+# COPY package*.json ./
 
-RUN npm install --only=production
+# # RUN npm install --only=production
 
-COPY --from=development ./dist/frontend /usr/share/nginx/html
+# COPY --from=development ./dist/frontend /usr/share/nginx/html

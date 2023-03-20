@@ -124,9 +124,9 @@ export class WorkerApiService extends BaseService {
   }
 
   /**
-   * Path part for operation workerControllerFindOne
+   * Path part for operation workerControllerFindOneBy
    */
-  static readonly WorkerControllerFindOnePath = '/worker/{id}';
+  static readonly WorkerControllerFindOneByPath = '/worker/{id}';
 
   /**
    * Find worker with id.
@@ -134,17 +134,17 @@ export class WorkerApiService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `workerControllerFindOne()` instead.
+   * To access only the response body, use `workerControllerFindOneBy()` instead.
    *
    * This method doesn't expect any request body.
    */
-  workerControllerFindOne$Response(params: {
+  workerControllerFindOneBy$Response(params: {
     id: string;
     context?: HttpContext
   }
 ): Observable<StrictHttpResponse<Worker>> {
 
-    const rb = new RequestBuilder(this.rootUrl, WorkerApiService.WorkerControllerFindOnePath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, WorkerApiService.WorkerControllerFindOneByPath, 'get');
     if (params) {
       rb.path('id', params.id, {});
     }
@@ -167,17 +167,17 @@ export class WorkerApiService extends BaseService {
    *
    *
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `workerControllerFindOne$Response()` instead.
+   * To access the full response (for headers, for example), `workerControllerFindOneBy$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  workerControllerFindOne(params: {
+  workerControllerFindOneBy(params: {
     id: string;
     context?: HttpContext
   }
 ): Observable<Worker> {
 
-    return this.workerControllerFindOne$Response(params).pipe(
+    return this.workerControllerFindOneBy$Response(params).pipe(
       map((r: StrictHttpResponse<Worker>) => r.body as Worker)
     );
   }

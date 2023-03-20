@@ -29,7 +29,8 @@ export class ActionController {
   create(
     @AuthUser('id') userId: User['id'],
     @Query('workerId') workerId: string,
-    @Body() createActionDto: CreateActionDto) {
+    @Body() createActionDto: CreateActionDto,
+  ) {
     return this.actionService.create(userId, workerId, createActionDto);
   }
 
@@ -41,26 +42,28 @@ export class ActionController {
   @Get(':id')
   @Auth()
   @ApiOperation({ summary: 'Find an action' })
-  findOne(@Param('id') actionId: string) {
-    return this.actionService.findOne(actionId);
+  findOneBy(@Param('id') actionId: string) {
+    return this.actionService.findOneBy(actionId);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update action' })
   @Auth()
   async update(
-    @AuthUser('id') userId: User['id'], 
-    @Param('id') actionId: string, 
-    @Body() updateActionDto: UpdateActionDto) {
+    @AuthUser('id') userId: User['id'],
+    @Param('id') actionId: string,
+    @Body() updateActionDto: UpdateActionDto,
+  ) {
     return await this.actionService.update(userId, actionId, updateActionDto);
   }
 
   @Delete(':id')
   @Auth()
   @ApiOperation({ summary: 'Delete an action' })
-  async remove(@AuthUser('id') userId: User['id'], @Param('id') actionId: string) {
+  async remove(
+    @AuthUser('id') userId: User['id'],
+    @Param('id') actionId: string,
+  ) {
     return await this.actionService.remove(userId, actionId);
   }
 }
-
-

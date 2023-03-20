@@ -60,11 +60,11 @@ export class HubController {
   @Get(':id')
   @ApiOperation({ summary: 'Return hub of user' })
   @Auth()
-  async findOne(
+  async findOneBy(
     @AuthUser('id') userId: User['id'],
     @Param('id') hubId: string,
   ) {
-    const hub = await this.hubService.findOne(userId, hubId);
+    const hub = await this.hubService.findOneBy(userId, hubId);
     if (hub) {
       return hub;
     }

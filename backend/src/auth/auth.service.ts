@@ -23,7 +23,7 @@ export class AuthService {
     username: User['username'],
     password: User['password'],
   ): Promise<AuthUser | null> {
-    const user = await this.usersService.findOne(username);
+    const user = await this.usersService.findOneBy(username);
     if (!user) {
       return null;
     }
@@ -49,7 +49,7 @@ export class AuthService {
   }
 
   async validateHub(id: Hub['id'], secret: Hub['secret']) {
-    const hubDb = await this.hubsRepository.findOne(id);
+    const hubDb = await this.hubsRepository.findOneBy({ id });
     if (hubDb && hubDb.secret == secret) {
       const { secret, workers, users, ...rest } = hubDb;
       return rest as IAuthHub;

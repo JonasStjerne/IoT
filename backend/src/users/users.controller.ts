@@ -20,7 +20,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Create a new user' })
   @Post('create')
   async create(@Body() createUserDto: CreateUserDto) {
-    if (await this.userService.findOne(createUserDto.username)) {
+    if (await this.userService.findOneBy(createUserDto.username)) {
       throw new ConflictException('User already exists');
     }
     return await this.userService.create(createUserDto);

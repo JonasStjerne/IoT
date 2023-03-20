@@ -5,6 +5,6 @@ export interface User {
   hubs: Array<Hub>;
   id: string;
   password: string;
-  userType: 'Admin' | 'User';
+  userType: 1 | 2;
   username: string;
 }
