@@ -5,12 +5,18 @@ import {
   Body,
   Patch,
   Param,
+  Query,
   Delete,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ActionService } from './action.service';
 import { CreateActionDto } from './dto/create-action.dto';
 import { UpdateActionDto } from './dto/update-action.dto';
+import { Auth } from 'src/auth/_decorators/auth.decorator';
+import { AuthUser } from 'src/auth/_decorators/user.decorator';
+import { User } from 'src/users/entities/user.entity';
+import { Worker } from 'src/worker/entities/worker.entity';
+import { Action } from './entities/action.entity';
 
 @ApiTags('Action')
 @Controller('action')
@@ -18,8 +24,13 @@ export class ActionController {
   constructor(private readonly actionService: ActionService) {}
 
   @Post()
-  create(@Body() createActionDto: CreateActionDto) {
-    return this.actionService.create(createActionDto);
+  @Auth()
+  @ApiOperation({ summary: 'Create new action for worker' })
+  create(
+    @AuthUser('id') userId: User['id'],
+    @Query('workerId') workerId: string,
+    @Body() createActionDto: CreateActionDto) {
+    return this.actionService.create(userId, workerId, createActionDto);
   }
 
   @Get()
@@ -28,17 +39,28 @@ export class ActionController {
   }
 
   @Get(':id')
-  findOneBy(@Param('id') id: string) {
-    return this.actionService.findOneBy(+id);
+  @Auth()
+  @ApiOperation({ summary: 'Find an action' })
+  findOne(@Param('id') actionId: string) {
+    return this.actionService.findOne(actionId);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateActionDto: UpdateActionDto) {
-    return this.actionService.update(+id, updateActionDto);
+  @ApiOperation({ summary: 'Update action' })
+  @Auth()
+  async update(
+    @AuthUser('id') userId: User['id'], 
+    @Param('id') actionId: string, 
+    @Body() updateActionDto: UpdateActionDto) {
+    return await this.actionService.update(userId, actionId, updateActionDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.actionService.remove(+id);
+  @Auth()
+  @ApiOperation({ summary: 'Delete an action' })
+  async remove(@AuthUser('id') userId: User['id'], @Param('id') actionId: string) {
+    return await this.actionService.remove(userId, actionId);
   }
 }
+
+

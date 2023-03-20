@@ -9,6 +9,7 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
+import { Action } from '../models/action';
 import { CreateActionDto } from '../models/create-action-dto';
 import { UpdateActionDto } from '../models/update-action-dto';
 
@@ -16,7 +17,10 @@ import { UpdateActionDto } from '../models/update-action-dto';
   providedIn: 'root',
 })
 export class ActionApiService extends BaseService {
-  constructor(config: ApiConfiguration, http: HttpClient) {
+  constructor(
+    config: ApiConfiguration,
+    http: HttpClient
+  ) {
     super(config, http);
   }
 
@@ -32,30 +36,24 @@ export class ActionApiService extends BaseService {
    * This method doesn't expect any request body.
    */
   actionControllerFindAll$Response(params?: {
-    context?: HttpContext;
-  }): Observable<StrictHttpResponse<string>> {
-    const rb = new RequestBuilder(
-      this.rootUrl,
-      ActionApiService.ActionControllerFindAllPath,
-      'get'
-    );
+    context?: HttpContext
+  }
+): Observable<StrictHttpResponse<string>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ActionApiService.ActionControllerFindAllPath, 'get');
     if (params) {
     }
 
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json',
-          context: params?.context,
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<string>;
-        })
-      );
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<string>;
+      })
+    );
   }
 
   /**
@@ -65,8 +63,10 @@ export class ActionApiService extends BaseService {
    * This method doesn't expect any request body.
    */
   actionControllerFindAll(params?: {
-    context?: HttpContext;
-  }): Observable<string> {
+    context?: HttpContext
+  }
+): Observable<string> {
+
     return this.actionControllerFindAll$Response(params).pipe(
       map((r: StrictHttpResponse<string>) => r.body as string)
     );
@@ -78,107 +78,118 @@ export class ActionApiService extends BaseService {
   static readonly ActionControllerCreatePath = '/action';
 
   /**
+   * Create new action for worker.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `actionControllerCreate()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   actionControllerCreate$Response(params: {
-    context?: HttpContext;
-    body: CreateActionDto;
-  }): Observable<StrictHttpResponse<string>> {
-    const rb = new RequestBuilder(
-      this.rootUrl,
-      ActionApiService.ActionControllerCreatePath,
-      'post'
-    );
+    workerId: string;
+    context?: HttpContext
+    body: CreateActionDto
+  }
+): Observable<StrictHttpResponse<Action>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ActionApiService.ActionControllerCreatePath, 'post');
     if (params) {
+      rb.query('workerId', params.workerId, {});
       rb.body(params.body, 'application/json');
     }
 
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json',
-          context: params?.context,
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<string>;
-        })
-      );
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Action>;
+      })
+    );
   }
 
   /**
+   * Create new action for worker.
+   *
+   *
+   *
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `actionControllerCreate$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   actionControllerCreate(params: {
-    context?: HttpContext;
-    body: CreateActionDto;
-  }): Observable<string> {
+    workerId: string;
+    context?: HttpContext
+    body: CreateActionDto
+  }
+): Observable<Action> {
+
     return this.actionControllerCreate$Response(params).pipe(
-      map((r: StrictHttpResponse<string>) => r.body as string)
+      map((r: StrictHttpResponse<Action>) => r.body as Action)
     );
   }
 
   /**
-   * Path part for operation actionControllerfindOneBy
+   * Path part for operation actionControllerFindOne
    */
-  static readonly ActionControllerfindOneByPath = '/action/{id}';
+  static readonly ActionControllerFindOnePath = '/action/{id}';
 
   /**
+   * Find an action.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `actionControllerfindOneBy()` instead.
+   * To access only the response body, use `actionControllerFindOne()` instead.
    *
    * This method doesn't expect any request body.
    */
-  actionControllerfindOneBy$Response(params: {
+  actionControllerFindOne$Response(params: {
     id: string;
-    context?: HttpContext;
-  }): Observable<StrictHttpResponse<string>> {
-    const rb = new RequestBuilder(
-      this.rootUrl,
-      ActionApiService.ActionControllerfindOneByPath,
-      'get'
-    );
+    context?: HttpContext
+  }
+): Observable<StrictHttpResponse<Action>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ActionApiService.ActionControllerFindOnePath, 'get');
     if (params) {
       rb.path('id', params.id, {});
     }
 
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json',
-          context: params?.context,
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<string>;
-        })
-      );
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Action>;
+      })
+    );
   }
 
   /**
+   * Find an action.
+   *
+   *
+   *
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `actionControllerfindOneBy$Response()` instead.
+   * To access the full response (for headers, for example), `actionControllerFindOne$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  actionControllerfindOneBy(params: {
+  actionControllerFindOne(params: {
     id: string;
-    context?: HttpContext;
-  }): Observable<string> {
-    return this.actionControllerfindOneBy$Response(params).pipe(
-      map((r: StrictHttpResponse<string>) => r.body as string)
+    context?: HttpContext
+  }
+): Observable<Action> {
+
+    return this.actionControllerFindOne$Response(params).pipe(
+      map((r: StrictHttpResponse<Action>) => r.body as Action)
     );
   }
 
@@ -188,6 +199,10 @@ export class ActionApiService extends BaseService {
   static readonly ActionControllerRemovePath = '/action/{id}';
 
   /**
+   * Delete an action.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `actionControllerRemove()` instead.
    *
@@ -195,34 +210,32 @@ export class ActionApiService extends BaseService {
    */
   actionControllerRemove$Response(params: {
     id: string;
-    context?: HttpContext;
-  }): Observable<StrictHttpResponse<string>> {
-    const rb = new RequestBuilder(
-      this.rootUrl,
-      ActionApiService.ActionControllerRemovePath,
-      'delete'
-    );
+    context?: HttpContext
+  }
+): Observable<StrictHttpResponse<string>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ActionApiService.ActionControllerRemovePath, 'delete');
     if (params) {
       rb.path('id', params.id, {});
     }
 
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json',
-          context: params?.context,
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<string>;
-        })
-      );
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<string>;
+      })
+    );
   }
 
   /**
+   * Delete an action.
+   *
+   *
+   *
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `actionControllerRemove$Response()` instead.
    *
@@ -230,8 +243,10 @@ export class ActionApiService extends BaseService {
    */
   actionControllerRemove(params: {
     id: string;
-    context?: HttpContext;
-  }): Observable<string> {
+    context?: HttpContext
+  }
+): Observable<string> {
+
     return this.actionControllerRemove$Response(params).pipe(
       map((r: StrictHttpResponse<string>) => r.body as string)
     );
@@ -243,6 +258,10 @@ export class ActionApiService extends BaseService {
   static readonly ActionControllerUpdatePath = '/action/{id}';
 
   /**
+   * Update action.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `actionControllerUpdate()` instead.
    *
@@ -250,36 +269,34 @@ export class ActionApiService extends BaseService {
    */
   actionControllerUpdate$Response(params: {
     id: string;
-    context?: HttpContext;
-    body: UpdateActionDto;
-  }): Observable<StrictHttpResponse<string>> {
-    const rb = new RequestBuilder(
-      this.rootUrl,
-      ActionApiService.ActionControllerUpdatePath,
-      'patch'
-    );
+    context?: HttpContext
+    body: UpdateActionDto
+  }
+): Observable<StrictHttpResponse<Action>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ActionApiService.ActionControllerUpdatePath, 'patch');
     if (params) {
       rb.path('id', params.id, {});
       rb.body(params.body, 'application/json');
     }
 
-    return this.http
-      .request(
-        rb.build({
-          responseType: 'json',
-          accept: 'application/json',
-          context: params?.context,
-        })
-      )
-      .pipe(
-        filter((r: any) => r instanceof HttpResponse),
-        map((r: HttpResponse<any>) => {
-          return r as StrictHttpResponse<string>;
-        })
-      );
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Action>;
+      })
+    );
   }
 
   /**
+   * Update action.
+   *
+   *
+   *
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `actionControllerUpdate$Response()` instead.
    *
@@ -287,11 +304,14 @@ export class ActionApiService extends BaseService {
    */
   actionControllerUpdate(params: {
     id: string;
-    context?: HttpContext;
-    body: UpdateActionDto;
-  }): Observable<string> {
+    context?: HttpContext
+    body: UpdateActionDto
+  }
+): Observable<Action> {
+
     return this.actionControllerUpdate$Response(params).pipe(
-      map((r: StrictHttpResponse<string>) => r.body as string)
+      map((r: StrictHttpResponse<Action>) => r.body as Action)
     );
   }
+
 }
