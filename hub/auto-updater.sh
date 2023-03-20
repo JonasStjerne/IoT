@@ -9,7 +9,7 @@ if [ $LOCAL = $REMOTE ]; then
     echo "Up-to-date"
 elif [ $LOCAL = $BASE ]; then
     echo "Need to pull"
-    echo "git pull"
+    git pull
 else
     echo "Diverged"
 fi
