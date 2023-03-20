@@ -13,3 +13,4 @@ elif [ $LOCAL = $BASE ]; then
 else
     echo "Diverged"
 fi
+
