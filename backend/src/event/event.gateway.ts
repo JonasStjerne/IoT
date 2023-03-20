@@ -6,6 +6,7 @@ import {
   OnGatewayConnection,
   WsException,
   OnGatewayDisconnect,
+  ConnectedSocket,
 } from '@nestjs/websockets';
 import { EventService } from './event.service';
 import { WorkerStateChangeDto } from './dto/workerStateChange.dto';
@@ -53,6 +54,7 @@ export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('connectedWorkers')
   async connectedWorkers(
+    @ConnectedSocket() client: Socket,
     @AuthHub() hub: Hub,
     @MessageBody() connectedWorkersDto: ConnectedWorkersDto,
   ) {
@@ -62,7 +64,7 @@ export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
       connectedWorkersDto.workers,
     );
 
-    return hubDb.workers;
+    return client.emit('workerData', hubDb.workers);
   }
 
   @SubscribeMessage('workerStateChange')
