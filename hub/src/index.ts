@@ -114,7 +114,7 @@ function connect(peripheral: noble.Peripheral) {
         console.log(characteristics);
         characteristics[0].write(Buffer.alloc(5, "a", "ascii"), false);
 
-        characteristics[0].once("write", false, (error) => {
+        characteristics[0].once("write", (error: any) => {
           if (error) {
             console.log(error);
           } else {
