@@ -3,7 +3,7 @@ import scheduler from "./scheduler";
 import { ActionRepeat } from "./models/action.dto";
 import { IWorkerDto, WorkerAction, WorkerState, WorkerStatus } from "./models/worker.dto";
 import { socketConnection } from "./websocket";
-import noble from "@abandonware/noble";
+import noble, { Characteristic } from "@abandonware/noble";
 
 // const socket = socketConnection(
 //   {
@@ -94,13 +94,31 @@ noble.on("discover", function (peripheral) {
     console.log("\tmy TX power level is:");
     console.log("\t\t" + peripheral.advertisement.txPowerLevel);
   }
+  //stop scanning before connecting
+  noble.stopScanning();
+  connect(peripheral);
+});
 
-  peripheral.discoverAllServicesAndCharacteristics((error, services, chara) => {
-    console.log("The device have the following characteristics: ", chara);
+function connect(peripheral: noble.Peripheral) {
+  peripheral.on("disconnect", function () {
+    process.exit(0);
   });
 
-  console.log();
-});
+  peripheral.connect(() => {
+    console.log("Connecting");
+
+    peripheral.discoverServices([], (error, services) => {
+      console.log("Services ", services);
+
+      services[0].discoverCharacteristics([], (error, characteristics) => {
+        console.log(characteristics);
+      });
+    });
+  });
+  peripheral.once("connect", () => {
+    console.log("Connected!!!");
+  });
+}
 
 //Test data for scheduling
 // const workerData: IWorkerDto[] = [
