@@ -95,6 +95,10 @@ noble.on("discover", function (peripheral) {
     console.log("\t\t" + peripheral.advertisement.txPowerLevel);
   }
 
+  peripheral.discoverAllServicesAndCharacteristics((error, services, chara) => {
+    console.log("The device have the following characteristics: ", chara);
+  });
+
   console.log();
 });
 
