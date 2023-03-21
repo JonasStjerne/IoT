@@ -39,7 +39,7 @@ import noble, { Characteristic } from "@abandonware/noble";
 //   console.log("message from the server:", data);
 //   socket.emit("serverEvent", "thanks server! for sending '" + data + "'");
 // });
-
+const SERVICE_UUID = "19b10000e8f2537e4f6cd104768a1214";
 noble.on("scanStart", () => {
   console.log("Started Scanning");
 });
@@ -50,7 +50,7 @@ noble.on("warning", (warning: any) => {
 
 noble.on("stateChange", function (state) {
   if (state === "poweredOn") {
-    noble.startScanning(["19b10000e8f2537e4f6cd104768a1214"], true);
+    noble.startScanning([SERVICE_UUID], true);
   } else {
     noble.stopScanning();
   }
@@ -107,12 +107,12 @@ function connect(peripheral: noble.Peripheral) {
   peripheral.connect(() => {
     console.log("Connecting");
 
-    peripheral.discoverServices([], (error, services) => {
+    peripheral.discoverServices([SERVICE_UUID], (error, services) => {
       console.log("Services ", services);
 
       services[0].discoverCharacteristics([], (error, characteristics) => {
         console.log(characteristics);
-        characteristics[0].write(Buffer.alloc(5, "a", "ascii"), false);
+        characteristics[0].write(Buffer.alloc(1, 1), false);
 
         characteristics[0].once("write", (error: any) => {
           if (error) {
