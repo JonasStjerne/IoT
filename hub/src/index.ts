@@ -113,6 +113,14 @@ function connect(peripheral: noble.Peripheral) {
       services[0].discoverCharacteristics([], (error, characteristics) => {
         console.log(characteristics);
         characteristics[0].write(Buffer.alloc(5, "a", "ascii"), false);
+
+        characteristics[0].once("write", false, (error) => {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log("Wrote to gesture");
+          }
+        });
       });
     });
   });
