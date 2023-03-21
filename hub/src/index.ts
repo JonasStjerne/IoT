@@ -112,6 +112,7 @@ function connect(peripheral: noble.Peripheral) {
 
       services[0].discoverCharacteristics([], (error, characteristics) => {
         console.log(characteristics);
+        characteristics[0].write(Buffer.alloc(5, "a", "ascii"), false);
       });
     });
   });
