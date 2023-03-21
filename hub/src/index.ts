@@ -50,7 +50,7 @@ noble.on("warning", (warning: any) => {
 
 noble.on("stateChange", function (state) {
   if (state === "poweredOn") {
-    noble.startScanning(["19b10000-e8f2-537e-4f6c-d104768a1214"], true);
+    noble.startScanning(["19b10000e8f2537e4f6cd104768a1214"], true);
   } else {
     noble.stopScanning();
   }
