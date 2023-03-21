@@ -40,13 +40,6 @@ import noble from "@abandonware/noble";
 //   socket.emit("serverEvent", "thanks server! for sending '" + data + "'");
 // });
 
-noble.on("stateChange", async (state) => {
-  console.log(state);
-  if (state === "poweredOn") {
-    await noble.startScanningAsync([]);
-  }
-});
-
 noble.on("scanStart", () => {
   console.log("Started Scanning");
 });
