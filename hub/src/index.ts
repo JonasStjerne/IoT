@@ -85,7 +85,7 @@ function discoveredServicesAndCharacteristics(
       case "19b10001e8f2537e4f6cd104768a1214":
         characteristic.write(Buffer.alloc(1, 1, "binary"), false);
         break;
-      case "2a19":
+      case BATTERY_CHAR:
         console.log("case ran");
         characteristic.on("data", (data, isNotifaction) => {
           console.log("Battery level: ", data);
