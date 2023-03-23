@@ -88,7 +88,7 @@ function discoveredServicesAndCharacteristics(
       case BATTERY_CHAR:
         console.log("case ran");
         characteristic.on("data", (data, isNotifaction) => {
-          console.log("Battery level: ", data);
+          console.log("Battery level: ", data[0], isNotifaction);
         });
         characteristic.read((error, data) => {
           console.log("Battery level: ", data[0]);
