@@ -78,14 +78,14 @@ function discoveredServicesAndCharacteristics(
   services: noble.Service[],
   characteristics: noble.Characteristic[]
 ) {
-  console.log("Services ", services);
-  console.log("Characteristics ", characteristics);
   characteristics.forEach((characteristic) => {
+    console.log("Characteristics ", characteristic.uuid);
     switch (characteristic.uuid) {
       case "19b10001e8f2537e4f6cd104768a1214":
         characteristic.write(Buffer.alloc(1, 1, "binary"), false);
         break;
       case "2a19":
+        console.log("case ran");
         characteristic.on("data", (data, isNotifaction) => {
           console.log("Battery level: ", data);
         });
