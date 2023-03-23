@@ -18,7 +18,7 @@ noble.on("warning", (warning: any) => {
 
 noble.on("stateChange", function (state) {
   if (state === "poweredOn") {
-    noble.startScanning([SERVICE_UUID, BATTERY_SERVICE], true);
+    noble.startScanning([BATTERY_SERVICE], true);
   } else {
     noble.stopScanning();
   }
