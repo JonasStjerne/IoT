@@ -96,6 +96,7 @@ function discoveredServicesAndCharacteristics(
         characteristic.subscribe(() => {
           console.log("Subscribed to battery level");
         });
+        characteristic.notify(true);
         break;
     }
   });
