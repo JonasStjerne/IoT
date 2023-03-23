@@ -127,6 +127,7 @@ function connect(peripheral: noble.Peripheral) {
             });
           } else {
             console.log("Battery characteristic found");
+            console.log(characteristics[0]);
             characteristics[0].on("data", (data, isNotifaction) => {
               console.log("Battery level: ", data);
             });
