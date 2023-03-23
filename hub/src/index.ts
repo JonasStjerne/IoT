@@ -6,8 +6,8 @@ import { socketConnection } from "./websocket";
 import noble, { Characteristic } from "@abandonware/noble";
 
 const SERVICE_UUID = "19b10000e8f2537e4f6cd104768a1214";
-const BATTERY_SERVICE = "19b10000e8f2537e4f6cd104768a1200";
-const BATTERY_CHAR = "19b10000e8f2537e4f6cd104768a1299";
+const BATTERY_SERVICE = "180f";
+const BATTERY_CHAR = "2a19";
 noble.on("scanStart", () => {
   console.log("Started Scanning");
 });
