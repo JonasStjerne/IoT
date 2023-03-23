@@ -40,7 +40,7 @@ import noble, { Characteristic } from "@abandonware/noble";
 //   socket.emit("serverEvent", "thanks server! for sending '" + data + "'");
 // });
 const SERVICE_UUID = "19b10000e8f2537e4f6cd104768a1214";
-const BATTERY_SERVICE = "180F";
+const BATTERY_SERVICE = "180f";
 noble.on("scanStart", () => {
   console.log("Started Scanning");
 });
@@ -126,13 +126,10 @@ function connect(peripheral: noble.Peripheral) {
               }
             });
           } else {
-            console.log("Battery");
-            characteristics[0].read((error, data) => {
-              if (error) {
-                console.log(error);
-              } else {
-                console.log("Battery level: ", data[0]);
-              }
+            console.log("Battery characteristic found");
+            characteristics[0].subscribe();
+            characteristics[0].once("notify", (state) => {
+              console.log("Battery level: ", state);
             });
           }
         });
