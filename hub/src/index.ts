@@ -127,10 +127,15 @@ function connect(peripheral: noble.Peripheral) {
             });
           } else {
             console.log("Battery characteristic found");
-            characteristics[0].subscribe();
-            characteristics[0].notify(true);
             characteristics[0].on("data", (data, isNotifaction) => {
               console.log("Battery level: ", data);
+            });
+            characteristics[0].subscribe((error) => {
+              if (error) {
+                console.log(error);
+              } else {
+                console.log("Subscribed to battery");
+              }
             });
           }
         });
