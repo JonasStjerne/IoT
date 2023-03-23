@@ -90,6 +90,9 @@ function discoveredServicesAndCharacteristics(
         characteristic.on("data", (data, isNotifaction) => {
           console.log("Battery level: ", data);
         });
+        characteristic.read((error, data) => {
+          console.log("Battery level: ", data);
+        });
         characteristic.subscribe((err) => {
           if (err) {
             console.log(err);
