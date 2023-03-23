@@ -40,6 +40,7 @@ import noble, { Characteristic } from "@abandonware/noble";
 //   socket.emit("serverEvent", "thanks server! for sending '" + data + "'");
 // });
 const SERVICE_UUID = "19b10000e8f2537e4f6cd104768a1214";
+const BATTERY_SERVICE = "180F";
 noble.on("scanStart", () => {
   console.log("Started Scanning");
 });
@@ -50,7 +51,7 @@ noble.on("warning", (warning: any) => {
 
 noble.on("stateChange", function (state) {
   if (state === "poweredOn") {
-    noble.startScanning([SERVICE_UUID], true);
+    noble.startScanning([SERVICE_UUID, BATTERY_SERVICE], true);
   } else {
     noble.stopScanning();
   }
@@ -107,21 +108,34 @@ function connect(peripheral: noble.Peripheral) {
   peripheral.connect(() => {
     console.log("Connecting");
 
-    peripheral.discoverServices([SERVICE_UUID], (error, services) => {
+    peripheral.discoverServices([SERVICE_UUID, BATTERY_SERVICE], (error, services) => {
       console.log("Services ", services);
 
-      services[0].discoverCharacteristics([], (error, characteristics) => {
-        console.log(characteristics);
-        characteristics[0].write(Buffer.alloc(1, 1), false);
+      services.forEach((service) =>
+        service.discoverCharacteristics([], (error, characteristics) => {
+          console.log(characteristics);
+          if (characteristics[0].uuid === "19b10001e8f2537e4f6cd104768a1214") {
+            characteristics[0].write(Buffer.alloc(1, 1, "binary"), false);
 
-        characteristics[0].once("write", (error: any) => {
-          if (error) {
-            console.log(error);
+            characteristics[0].once("write", (error: any) => {
+              if (error) {
+                console.log(error);
+              } else {
+                console.log("Wrote to gesture");
+              }
+            });
           } else {
-            console.log("Wrote to gesture");
+            console.log("Battery");
+            characteristics[0].read((error, data) => {
+              if (error) {
+                console.log(error);
+              } else {
+                console.log("Battery level: ", data[0]);
+              }
+            });
           }
-        });
-      });
+        })
+      );
     });
   });
   peripheral.once("connect", () => {
