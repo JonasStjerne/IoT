@@ -111,7 +111,8 @@ function connect(peripheral: noble.Peripheral) {
     peripheral.discoverServices([SERVICE_UUID, BATTERY_SERVICE], (error, services) => {
       console.log("Services ", services);
 
-      services.forEach((service) =>
+      services.forEach((service) => {
+        console.log(service.uuid);
         service.discoverCharacteristics([], (error, characteristics) => {
           console.log(characteristics);
           if (characteristics[0].uuid === "19b10001e8f2537e4f6cd104768a1214") {
@@ -134,8 +135,8 @@ function connect(peripheral: noble.Peripheral) {
               }
             });
           }
-        })
-      );
+        });
+      });
     });
   });
   peripheral.once("connect", () => {
