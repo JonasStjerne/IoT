@@ -61,14 +61,29 @@ export default class bluetoothService {
   sendAction(workerUUID: string) {
     const characteristics = this.connectedDevices[workerUUID];
     if (!characteristics) {
-      console.error("Worker not connected");
+      console.error(`Worker ${workerUUID} not connected`);
       return;
     }
     const actionCharacteristic = characteristics.find((cha) => cha.uuid == this.actionChaUUID);
     if (!actionCharacteristic) {
-      console.error("Worker not exposing action characteristic");
+      console.error("Action characteristic not exposed for worker ", workerUUID);
       return;
     }
     return actionCharacteristic.writeAsync(Buffer.alloc(1, 1, "binary"), false);
+  }
+
+  async getBatteryLevel() {
+    const batteryLevels: { [workerUUID: string]: number } = {};
+    const workerUUIDS = Object.keys(this.connectedDevices);
+    for (let i = 0; i < workerUUIDS.length; i++) {
+      const characteristic = this.connectedDevices[workerUUIDS[i]].find((cha) => cha.uuid == this.batteryChaUUID);
+      if (!characteristic) {
+        console.error("Battery characteristic not exposed for worker ", workerUUIDS[i]);
+        return;
+      }
+      const batteryLevel = (await characteristic.readAsync())[0];
+      batteryLevels[workerUUIDS[i]] = batteryLevel;
+    }
+    return batteryLevels;
   }
 }
