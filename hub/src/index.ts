@@ -93,10 +93,12 @@ function discoveredServicesAndCharacteristics(
         characteristic.read((error, data) => {
           console.log("Battery level: ", data[0]);
         });
+        characteristic.notify(true, (error) => {
+          console.log(error);
+        });
         characteristic.subscribe(() => {
           console.log("Subscribed to battery level");
         });
-        characteristic.notify(true);
         break;
     }
   });
