@@ -3,14 +3,11 @@ import scheduler from "./scheduler";
 import { ActionRepeat } from "./models/action.dto";
 import { IWorkerDto, WorkerAction, WorkerState, WorkerStatus } from "./models/worker.dto";
 import { socketConnection } from "./websocket";
-import noble, { Characteristic } from "@abandonware/noble";
+import noble from "@abandonware/noble";
 
 const SERVICE_UUID = "19b10000e8f2537e4f6cd104768a1214";
 const BATTERY_SERVICE = "180f";
 const BATTERY_CHAR = "2a19";
-noble.on("scanStart", () => {
-  console.log("Started Scanning");
-});
 
 noble.on("warning", (warning: any) => {
   console.log(warning);
@@ -18,7 +15,7 @@ noble.on("warning", (warning: any) => {
 
 noble.on("stateChange", function (state) {
   if (state === "poweredOn") {
-    noble.startScanning([SERVICE_UUID], true);
+    noble.startScanning([SERVICE_UUID, BATTERY_SERVICE], true);
   } else {
     noble.stopScanning();
   }
