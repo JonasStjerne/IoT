@@ -36,8 +36,8 @@ function connectAndSetUp (peripheral) {
     console.log('Connected to', peripheral.id);
 
     // specify the services and characteristics to discover
-    const serviceUUIDs = [ECHO_SERVICE_UUID];
-    const characteristicUUIDs = [ECHO_CHARACTERISTIC_UUID];
+    const serviceUUIDs = ['180f'];
+    const characteristicUUIDs = ['2a19'];
 
     peripheral.discoverSomeServicesAndCharacteristics(
       serviceUUIDs,
