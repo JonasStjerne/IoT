@@ -9,7 +9,7 @@ export default class bluetoothService {
     noble.on("stateChange", async (state) => {
       if (state === "poweredOn") {
         console.log("Started scanning for service ", serviceUUIDs);
-        noble.startScanning(["19b10000e8f2537e4f6cd104768a1214"], true);
+        noble.startScanning(["19b10000e8f2537e4f6cd104768a1214", "180f"], true);
       } else {
         noble.stopScanningAsync();
       }
