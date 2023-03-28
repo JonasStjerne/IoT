@@ -9,7 +9,7 @@ export default class bluetoothService {
     noble.on("stateChange", async (state) => {
       if (state === "poweredOn") {
         console.log("Started scanning for service ", serviceUUIDs);
-        noble.startScanning(["19b10000e8f2537e4f6cd104768a1214", "180f"], true);
+        noble.startScanning(serviceUUIDs, true);
       } else {
         noble.stopScanningAsync();
       }
@@ -20,14 +20,13 @@ export default class bluetoothService {
         delete this.connectedDevices[peripheral.uuid];
       });
       this.logPeripheral(peripheral);
-      // await noble.stopScanningAsync();
-      // await peripheral.connectAsync();
-      // const { characteristics } = await peripheral.discoverSomeServicesAndCharacteristicsAsync(serviceUUIDs, [
-      //   batteryChaUUID,
-      //   actionChaUUID,
-      // ]);
-      // console.log("Characteristics are ", characteristics);
-      // this.connectedDevices[peripheral.uuid] = characteristics;
+      await peripheral.connectAsync();
+      const { characteristics } = await peripheral.discoverSomeServicesAndCharacteristicsAsync(serviceUUIDs, [
+        batteryChaUUID,
+        actionChaUUID,
+      ]);
+      console.log("Characteristics are ", characteristics);
+      this.connectedDevices[peripheral.uuid] = characteristics;
     });
 
     noble.on("warning", (warning: any) => {
