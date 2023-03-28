@@ -61,11 +61,7 @@ function connect(peripheral: noble.Peripheral) {
 
   peripheral.once("connect", () => {
     console.log("Connected!!!");
-    peripheral.discoverSomeServicesAndCharacteristics(
-      [SERVICE_UUID, BATTERY_SERVICE],
-      [],
-      discoveredServicesAndCharacteristics
-    );
+    peripheral.discoverSomeServicesAndCharacteristics([BATTERY_SERVICE], [], discoveredServicesAndCharacteristics);
   });
 
   peripheral.connect();
@@ -87,15 +83,9 @@ function discoveredServicesAndCharacteristics(
         characteristic.on("data", (data, isNotifaction) => {
           console.log("Battery level: ", data[0], isNotifaction);
         });
-        characteristic.read((error, data) => {
-          console.log("Battery level: ", data[0]);
-        });
-        characteristic.notify(true, (error) => {
-          console.log(error);
-        });
-        characteristic.once("notify", (state) => {
-          console.log(state);
-        });
+        // characteristic.read((error, data) => {
+        //   console.log("Battery level: ", data[0]);
+        // });
         characteristic.subscribe(() => {
           console.log("Subscribed to battery level");
         });
