@@ -6,14 +6,13 @@
 // start an interval to write data to the characteristic
 
 const noble = require('@abandonware/noble');
-import SERVICE_UUID from './index.ts'
 const ECHO_SERVICE_UUID = '180f';
 const ECHO_CHARACTERISTIC_UUID = '2a19';
 
 noble.on('stateChange', (state) => {
   if (state === 'poweredOn') {
     console.log('Scanning');
-    noble.startScanning([SERVICE_UUID], false);
+    noble.startScanning(['19b10000e8f2537e4f6cd104768a1214'], false);
   } else {
     noble.stopScanning();
   }
