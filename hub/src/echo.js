@@ -5,8 +5,7 @@
 // subscribe to be notified when the value changes
 // start an interval to write data to the characteristic
 
-import noble from "@abandonware/noble";
-// const noble = require();
+const noble = require('@abandonware/noble');
 
 const ECHO_SERVICE_UUID = '180f';
 const ECHO_CHARACTERISTIC_UUID = '2a19';
