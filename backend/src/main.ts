@@ -30,8 +30,10 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
 
-  //Save openapi spec for application
-  fs.writeFileSync('/shared/openapi-spec.json', JSON.stringify(document));
+  //Save openapi spec for application if devlopment
+  process.env.NODE_ENV == 'development'
+    ? fs.writeFileSync('/shared/openapi-spec.json', JSON.stringify(document))
+    : null;
 
   SwaggerModule.setup('/api', app, document, {
     swaggerOptions: {
