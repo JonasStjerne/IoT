@@ -6,7 +6,7 @@
 // start an interval to write data to the characteristic
 
 const noble = require('@abandonware/noble');
-import {SERVICE_UUID} from './index.ts'
+import SERVICE_UUID from './index.ts'
 const ECHO_SERVICE_UUID = '180f';
 const ECHO_CHARACTERISTIC_UUID = '2a19';
 
