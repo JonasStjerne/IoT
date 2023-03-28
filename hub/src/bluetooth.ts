@@ -1,11 +1,11 @@
 import noble from "@abandonware/noble";
 export default class bluetoothService {
-  private actionChaUUID;
-  private batteryChaUUID;
+  private static actionChaUUID: string;
+  private static batteryChaUUID: string;
 
   constructor(serviceUUIDs: string[], batteryChaUUID: string, actionChaUUID: string) {
-    this.actionChaUUID = actionChaUUID;
-    this.batteryChaUUID = batteryChaUUID;
+    actionChaUUID = actionChaUUID;
+    batteryChaUUID = batteryChaUUID;
     noble.on("stateChange", function (state) {
       if (state === "poweredOn") {
         noble.startScanningAsync(serviceUUIDs, true);
@@ -16,7 +16,7 @@ export default class bluetoothService {
 
     noble.on("discover", async (peripheral) => {
       peripheral.on("disconnect", () => {
-        delete this.connectedDevices[peripheral.uuid];
+        delete bluetoothService.connectedDevices[peripheral.uuid];
       });
 
       await peripheral.connectAsync();
@@ -25,7 +25,7 @@ export default class bluetoothService {
         batteryChaUUID,
         actionChaUUID,
       ]);
-      this.connectedDevices[peripheral.uuid] = characteristics;
+      bluetoothService.connectedDevices[peripheral.uuid] = characteristics;
     });
 
     noble.on("warning", (warning: any) => {
@@ -33,7 +33,7 @@ export default class bluetoothService {
     });
   }
 
-  connectedDevices: { [workerUUID: string]: noble.Characteristic[] } = {};
+  static connectedDevices: { [workerUUID: string]: noble.Characteristic[] } = {};
 
   private logPeripheral(peripheral: noble.Peripheral) {
     console.log(
@@ -58,7 +58,7 @@ export default class bluetoothService {
   }
 
   //Send an action to a connect worker over BLE
-  sendAction(workerUUID: string) {
+  static sendAction(workerUUID: string) {
     const characteristics = this.connectedDevices[workerUUID];
     if (!characteristics) {
       console.error(`Worker ${workerUUID} not connected`);
@@ -74,9 +74,11 @@ export default class bluetoothService {
 
   async getBatteryLevel() {
     const batteryLevels: { [workerUUID: string]: number } = {};
-    const workerUUIDS = Object.keys(this.connectedDevices);
+    const workerUUIDS = Object.keys(bluetoothService.connectedDevices);
     for (let i = 0; i < workerUUIDS.length; i++) {
-      const characteristic = this.connectedDevices[workerUUIDS[i]].find((cha) => cha.uuid == this.batteryChaUUID);
+      const characteristic = bluetoothService.connectedDevices[workerUUIDS[i]].find(
+        (cha) => cha.uuid == bluetoothService.batteryChaUUID
+      );
       if (!characteristic) {
         console.error("Battery characteristic not exposed for worker ", workerUUIDS[i]);
         return;
