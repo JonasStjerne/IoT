@@ -1,15 +1,15 @@
 import noble from "@abandonware/noble";
 export default class bluetoothService {
-  private actionChaUUID!: string;
-  private batteryChaUUID!: string;
+  private actionChaUUID: string;
+  private batteryChaUUID: string;
 
   constructor(serviceUUIDs: string[], batteryChaUUID: string, actionChaUUID: string) {
-    actionChaUUID = actionChaUUID;
-    batteryChaUUID = batteryChaUUID;
+    this.actionChaUUID = actionChaUUID;
+    this.batteryChaUUID = batteryChaUUID;
     noble.on("stateChange", async (state) => {
       if (state === "poweredOn") {
-        console.log("Started scanning");
-        await noble.startScanningAsync(serviceUUIDs, true);
+        console.log("Started scanning for service ", serviceUUIDs);
+        await noble.startScanningAsync([], true);
       } else {
         noble.stopScanningAsync();
       }
@@ -19,6 +19,7 @@ export default class bluetoothService {
       peripheral.on("disconnect", () => {
         delete this.connectedDevices[peripheral.uuid];
       });
+      this.logPeripheral(peripheral);
       await noble.stopScanningAsync();
       await peripheral.connectAsync();
       const { characteristics } = await peripheral.discoverSomeServicesAndCharacteristicsAsync(serviceUUIDs, [
