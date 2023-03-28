@@ -17,10 +17,10 @@ const BluetoothService = new bluetoothService(
   ACTION_CHAR_UUID
 );
 
-// setInterval(async () => {
-//   const batteryData = await BluetoothService.getBatteryLevel();
-//   console.log(batteryData);
-// }, 1000);
+setInterval(async () => {
+  const batteryData = await BluetoothService.getBatteryLevel();
+  console.log(batteryData);
+}, 1000);
 // const socket = socketConnection(
 //   {
 //     backendHost: "localhost",
