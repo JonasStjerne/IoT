@@ -21,6 +21,7 @@ export default class bluetoothService {
       });
       this.logPeripheral(peripheral);
       await peripheral.connectAsync();
+      console.log("Connected!!!");
       const { characteristics } = await peripheral.discoverSomeServicesAndCharacteristicsAsync(serviceUUIDs, [
         batteryChaUUID,
         actionChaUUID,
