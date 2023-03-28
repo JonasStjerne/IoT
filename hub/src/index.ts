@@ -93,9 +93,13 @@ function discoveredServicesAndCharacteristics(
         characteristic.notify(true, (error) => {
           console.log(error);
         });
+        characteristic.once("notify", (state) => {
+          console.log(state);
+        });
         characteristic.subscribe(() => {
           console.log("Subscribed to battery level");
         });
+
         break;
     }
   });
