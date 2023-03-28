@@ -5,7 +5,7 @@ import { IWorkerDto, WorkerAction, WorkerState, WorkerStatus } from "./models/wo
 import { socketConnection } from "./websocket";
 import noble from "@abandonware/noble";
 
-const SERVICE_UUID = "19b10000e8f2537e4f6cd104768a1214";
+export const SERVICE_UUID = "19b10000e8f2537e4f6cd104768a1214";
 const BATTERY_SERVICE = "180f";
 const BATTERY_CHAR = "2a19";
 
