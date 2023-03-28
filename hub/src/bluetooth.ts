@@ -1,6 +1,91 @@
+import noble from "@abandonware/noble";
 export default class bluetoothService {
-  static sendAction() {
-    //     throw new Error("Method not implemented.");
-    console.log("Action ran");
+  private static actionChaUUID: string;
+  private static batteryChaUUID: string;
+
+  constructor(serviceUUIDs: string[], batteryChaUUID: string, actionChaUUID: string) {
+    actionChaUUID = actionChaUUID;
+    batteryChaUUID = batteryChaUUID;
+    noble.on("stateChange", function (state) {
+      if (state === "poweredOn") {
+        noble.startScanningAsync(serviceUUIDs, true);
+      } else {
+        noble.stopScanningAsync();
+      }
+    });
+
+    noble.on("discover", async (peripheral) => {
+      peripheral.on("disconnect", () => {
+        delete bluetoothService.connectedDevices[peripheral.uuid];
+      });
+
+      await peripheral.connectAsync();
+      peripheral.uuid;
+      const { characteristics } = await peripheral.discoverSomeServicesAndCharacteristicsAsync(serviceUUIDs, [
+        batteryChaUUID,
+        actionChaUUID,
+      ]);
+      bluetoothService.connectedDevices[peripheral.uuid] = characteristics;
+    });
+
+    noble.on("warning", (warning: any) => {
+      console.log(warning);
+    });
+  }
+
+  static connectedDevices: { [workerUUID: string]: noble.Characteristic[] } = {};
+
+  private logPeripheral(peripheral: noble.Peripheral) {
+    console.log(
+      "peripheral discovered (" +
+        peripheral.id +
+        " with address <" +
+        peripheral.address +
+        ", " +
+        peripheral.addressType +
+        ">," +
+        " connectable " +
+        peripheral.connectable +
+        "," +
+        " RSSI " +
+        peripheral.rssi +
+        ":"
+    );
+    console.log("\thello my local name is:");
+    console.log("\t\t" + peripheral.advertisement.localName);
+    console.log("\tcan I interest you in any of the following advertised services:");
+    console.log("\t\t" + JSON.stringify(peripheral.advertisement.serviceUuids));
+  }
+
+  //Send an action to a connect worker over BLE
+  static sendAction(workerUUID: string) {
+    const characteristics = this.connectedDevices[workerUUID];
+    if (!characteristics) {
+      console.error(`Worker ${workerUUID} not connected`);
+      return;
+    }
+    const actionCharacteristic = characteristics.find((cha) => cha.uuid == this.actionChaUUID);
+    if (!actionCharacteristic) {
+      console.error("Action characteristic not exposed for worker ", workerUUID);
+      return;
+    }
+    return actionCharacteristic.writeAsync(Buffer.alloc(1, 1, "binary"), false);
+  }
+
+  async getBatteryLevel() {
+    const batteryLevels: { [workerUUID: string]: number } = {};
+    const workerUUIDS = Object.keys(bluetoothService.connectedDevices);
+    for (let i = 0; i < workerUUIDS.length; i++) {
+      const characteristic = bluetoothService.connectedDevices[workerUUIDS[i]].find(
+        (cha) => cha.uuid == bluetoothService.batteryChaUUID
+      );
+      if (!characteristic) {
+        console.error("Battery characteristic not exposed for worker ", workerUUIDS[i]);
+        return;
+      }
+      const batteryLevel = (await characteristic.readAsync())[0];
+      batteryLevels[workerUUIDS[i]] = batteryLevel;
+    }
+    return batteryLevels;
   }
 }
