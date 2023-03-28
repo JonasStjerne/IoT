@@ -3,15 +3,15 @@ import { IWorkerDto } from "./models/worker.dto";
 import { IActionDto, ActionRepeat } from "./models/action.dto";
 import bluetoothService from "./bluetooth";
 
-function scheduleAction(workerId: IWorkerDto["id"], action: IActionDto) {
+function scheduleAction(workerId: IWorkerDto["id"], action: IActionDto, BluetoothService: bluetoothService) {
   switch (action.repeat) {
     case ActionRepeat.ONCE:
-      schedule.scheduleJob(action.executeDateTime, () => bluetoothService.sendAction(workerId));
+      schedule.scheduleJob(action.executeDateTime, () => BluetoothService.sendAction(workerId));
       break;
     case ActionRepeat.DAILY:
       schedule.scheduleJob(
         { hour: action.executeDateTime.getHours(), minute: action.executeDateTime.getMinutes() },
-        () => bluetoothService.sendAction(workerId)
+        () => BluetoothService.sendAction(workerId)
       );
       break;
     case ActionRepeat.WEEKLY:
@@ -21,7 +21,7 @@ function scheduleAction(workerId: IWorkerDto["id"], action: IActionDto) {
           minute: action.executeDateTime.getMinutes(),
           dayOfWeek: action.executeDateTime.getDate(),
         },
-        () => bluetoothService.sendAction(workerId)
+        () => BluetoothService.sendAction(workerId)
       );
       break;
     case ActionRepeat.YEARLY:
@@ -32,18 +32,22 @@ function scheduleAction(workerId: IWorkerDto["id"], action: IActionDto) {
           dayOfWeek: action.executeDateTime.getDate(),
           year: action.executeDateTime.getFullYear(),
         },
-        () => bluetoothService.sendAction(workerId)
+        () => BluetoothService.sendAction(workerId)
       );
       break;
   }
 }
 
 export default class scheduler {
+  private bluetoothService: bluetoothService;
+  constructor(BluetoothService: bluetoothService) {
+    this.bluetoothService = BluetoothService;
+  }
   scheduleActions(workerData: IWorkerDto[]) {
     workerData.forEach((worker) => {
       worker.actions.forEach((action) => {
         console.log("Scheduling ", action);
-        scheduleAction(worker.id, action);
+        scheduleAction(worker.id, action, this.bluetoothService);
       });
     });
   }

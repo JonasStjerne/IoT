@@ -93,5 +93,5 @@ setInterval(async () => {
 //     ],
 //   },
 // ];
-// const sch = new scheduler();
+// const sch = new scheduler(bluetoothService);
 // sch.scheduleActions(workerData);
