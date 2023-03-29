@@ -17,6 +17,8 @@ const BluetoothService = new bluetoothService(
   ACTION_CHAR_UUID
 );
 
+BluetoothService.eventEmitter.on("workerDisconnected", (workerId: IWorkerDto["id"]) => {});
+
 setInterval(async () => {
   const batteryData = await BluetoothService.getBatteryLevel();
   console.log(batteryData);

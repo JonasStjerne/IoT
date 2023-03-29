@@ -1,7 +1,10 @@
 import noble from "@abandonware/noble";
+import events from "events";
+import { EventEmitter } from "stream";
 export default class bluetoothService {
   private actionChaUUID: string;
   private batteryChaUUID: string;
+  eventEmitter: EventEmitter = new EventEmitter();
 
   constructor(serviceUUIDs: string[], batteryChaUUID: string, actionChaUUID: string) {
     this.actionChaUUID = actionChaUUID;
@@ -17,6 +20,7 @@ export default class bluetoothService {
 
     noble.on("discover", async (peripheral) => {
       peripheral.on("disconnect", () => {
+        this.eventEmitter.emit("workerDisconnect", peripheral.uuid);
         delete this.connectedDevices[peripheral.uuid];
       });
       this.logPeripheral(peripheral);
