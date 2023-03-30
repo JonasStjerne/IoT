@@ -4,7 +4,7 @@ import { EventEmitter } from "stream";
 export default class bluetoothService {
   private actionChaUUID: string;
   private batteryChaUUID: string;
-  eventEmitter: EventEmitter = new EventEmitter();
+  subscribe: EventEmitter = new EventEmitter();
 
   constructor(serviceUUIDs: string[], batteryChaUUID: string, actionChaUUID: string) {
     this.actionChaUUID = actionChaUUID;
@@ -20,12 +20,12 @@ export default class bluetoothService {
 
     noble.on("discover", async (peripheral) => {
       peripheral.on("disconnect", () => {
-        this.eventEmitter.emit("workerDisconnect", peripheral.uuid);
+        this.subscribe.emit("workerDisconnect", peripheral.uuid);
         delete this.connectedDevices[peripheral.uuid];
       });
       this.logPeripheral(peripheral);
       await peripheral.connectAsync();
-      console.log("Connected!!!");
+      this.subscribe.emit("workerConnect", peripheral.id);
       const { characteristics } = await peripheral.discoverSomeServicesAndCharacteristicsAsync(serviceUUIDs, [
         batteryChaUUID,
         actionChaUUID,
@@ -85,7 +85,7 @@ export default class bluetoothService {
       const characteristic = this.connectedDevices[workerUUIDS[i]].find((cha) => cha.uuid == this.batteryChaUUID);
       if (!characteristic) {
         console.error("Battery characteristic not exposed for worker ", workerUUIDS[i]);
-        return;
+        continue;
       }
       const batteryLevel = (await characteristic.readAsync())[0];
       batteryLevels[workerUUIDS[i]] = batteryLevel;
