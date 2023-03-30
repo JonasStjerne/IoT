@@ -28,7 +28,6 @@ export class ActionService {
     const newAction = this.actionRepository.create(createActionDto);
     newAction.worker = worker;
     this.actionRepository.save(newAction);
-    console.log(newAction);
 
     return newAction;
   }

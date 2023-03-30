@@ -33,7 +33,7 @@ export class Worker {
   @IsNotEmpty()
   id: string;
 
-  @Column()
+  @Column({ nullable: true })
   name: string;
 
   @Column({
@@ -57,7 +57,7 @@ export class Worker {
   })
   state: WorkerState;
 
-  @Column()
+  @Column({ nullable: true })
   @Min(0)
   @Max(100)
   batteryLevel: number;

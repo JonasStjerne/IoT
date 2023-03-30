@@ -16,6 +16,7 @@ export class mysqlConfigService implements TypeOrmOptionsFactory {
       entities: ['dist/**/entities/*.entity.js'],
       synchronize: process.env.DATABASE_SYNCHRONIZE == 'true',
       migrations: ['dist/migrations/*.js'],
+      subscribers: ['dist/*/*.subscriber.js'],
       // cli: {
       //   migrationsDir: 'migrations',
       // },

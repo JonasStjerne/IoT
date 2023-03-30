@@ -12,10 +12,9 @@ import { RegisterHubDto } from './dto/register-hub.dto';
 import { UpdateHubDto } from './dto/update-hub.dto';
 import { Hub, HubState } from './entities/hub.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Worker } from '../worker/entities/worker.entity';
-import { WorkerConnectDto } from 'src/event/dto/workerConnect.dto';
 import { WorkerService } from 'src/worker/worker.service';
 import { BatteryLevelDto } from 'src/event/dto/batteryLevel.dto';
+import { WorkerConnectDto } from '../event/dto/workerConnect.dto';
 
 @Injectable()
 export class HubService {
@@ -114,7 +113,7 @@ export class HubService {
   async setWorkerOfHub(hubId: string, workerConnectDto: WorkerConnectDto) {
     let worker = await this.workerService.findOneById(workerConnectDto.id);
     if (!worker) {
-      worker = this.workerService.create(workerConnectDto);
+      worker = await this.workerService.create(workerConnectDto);
     }
     const hubDb = await this.hubsRepository.findOneBy({ id: hubId });
     hubDb.workers.push(worker);

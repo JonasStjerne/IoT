@@ -15,8 +15,9 @@ export class WorkerService {
     @InjectRepository(Worker) private workerRepository: Repository<Worker>,
   ) {}
 
-  create(createWorkerDto: CreateWorkerDto) {
-    return this.workerRepository.create(createWorkerDto);
+  async create(createWorkerDto: CreateWorkerDto) {
+    const newWorker = this.workerRepository.create(createWorkerDto);
+    return await this.workerRepository.save(newWorker);
   }
 
   findAll() {
