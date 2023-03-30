@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, Max, Min } from 'class-validator';
 import { Action } from 'src/action/entities/action.entity';
 import {
   Column,
@@ -57,6 +57,11 @@ export class Worker {
   })
   state: WorkerState;
 
+  @Column()
+  @Min(0)
+  @Max(100)
+  batteryLevel: number;
+
   @ManyToOne(() => Hub, (hub) => hub.workers)
   hub: Hub;
 
@@ -65,5 +70,4 @@ export class Worker {
     onDelete: 'CASCADE',
   })
   actions: Action[];
-  
 }

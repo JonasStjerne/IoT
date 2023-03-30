@@ -9,16 +9,15 @@ import {
   ConnectedSocket,
 } from '@nestjs/websockets';
 import { EventService } from './event.service';
-import { WorkerStateChangeDto } from './dto/workerStateChange.dto';
 import { Server, Socket } from 'socket.io';
 import { WsGuard } from 'src/auth/_guards/ws.guard';
 import { UseGuards, Request } from '@nestjs/common';
 import { HubService } from 'src/hub/hub.service';
 import { AuthService } from 'src/auth/auth.service';
-import { UnauthorizedException } from '@nestjs/common/exceptions';
 import { Hub, HubState } from 'src/hub/entities/hub.entity';
-import { ConnectedWorkersDto } from './dto/connectedWorkers.dto';
+import { WorkerConnectDto } from './dto/workerConnect.dto';
 import { AuthHub } from 'src/auth/_decorators/hub.decorator';
+import { BatteryLevelDto } from './dto/batteryLevel.dto';
 @UseGuards(WsGuard)
 @WebSocketGateway()
 export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -52,24 +51,37 @@ export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
     await this.hubsService.setState(hub.id, HubState.ONLINE);
   }
 
-  @SubscribeMessage('connectedWorkers')
-  async connectedWorkers(
+  @SubscribeMessage('workerConnect')
+  async workerConnect(
     @ConnectedSocket() client: Socket,
     @AuthHub() hub: Hub,
-    @MessageBody() connectedWorkersDto: ConnectedWorkersDto,
+    @MessageBody() workerConnectDto: WorkerConnectDto,
   ) {
     // const workerData = await this.hubsService.getWorkersOfHub(hub.id);
-    const hubDb = await this.hubsService.setWorkersOfHub(
+    const worker = await this.hubsService.setWorkerOfHub(
       hub.id,
-      connectedWorkersDto.workers,
+      workerConnectDto,
     );
 
-    return client.emit('workerData', hubDb.workers);
+    return client.emit('workerData', worker);
   }
 
-  @SubscribeMessage('workerStateChange')
-  create(@MessageBody() WorkerStateChangeDto: WorkerStateChangeDto) {
-    return 'this should update the worker state in the db';
+  @SubscribeMessage('workerDisconnect')
+  async workerDisconnect(
+    @ConnectedSocket() client: Socket,
+    @AuthHub() hub: Hub,
+    @MessageBody() workerConnectDto: WorkerConnectDto,
+  ) {
+    await this.hubsService.deleteRelationToWorker(hub.id, workerConnectDto);
+  }
+
+  @SubscribeMessage('batteryData')
+  async updateWorkerBatteryLevel(
+    @ConnectedSocket() client: Socket,
+    @AuthHub() hub: Hub,
+    @MessageBody() batteryLevelDto: BatteryLevelDto,
+  ) {
+    await this.hubsService.updateWorkerBatteryLevel(hub.id, batteryLevelDto);
   }
 
   async handleDisconnect(socket: Socket) {

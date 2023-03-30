@@ -16,7 +16,7 @@ export class WorkerService {
   ) {}
 
   create(createWorkerDto: CreateWorkerDto) {
-    return 'This action adds a new worker';
+    return this.workerRepository.create(createWorkerDto);
   }
 
   findAll() {
@@ -32,6 +32,10 @@ export class WorkerService {
       }
     }
     return null;
+  }
+
+  async findOneById(workerId: string) {
+    return await this.workerRepository.findOneBy({ id: workerId });
   }
 
   async update(
