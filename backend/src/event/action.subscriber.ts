@@ -1,5 +1,7 @@
+import { Inject, Injectable } from '@nestjs/common';
 import { Action } from 'src/action/entities/action.entity';
 import {
+  Connection,
   EntitySubscriberInterface,
   EventSubscriber,
   InsertEvent,
@@ -8,9 +10,15 @@ import {
 } from 'typeorm';
 import { EventService } from './event.service';
 
-@EventSubscriber()
+@Injectable()
 export class ActionSubscriber implements EntitySubscriberInterface<Action> {
-  constructor(private eventService: EventService) {}
+  constructor(
+    private eventService: EventService,
+    @Inject(Connection) readonly connection: Connection,
+  ) {
+    connection.subscribers.push(this);
+    console.log('Eventservice: ', this.eventService.logHey());
+  }
   /**
    * Indicates that this subscriber only listen to Action events.
    */

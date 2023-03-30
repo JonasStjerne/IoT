@@ -20,7 +20,9 @@ export class ActionService {
     workerId: string,
     createActionDto: CreateActionDto,
   ) {
-    const worker = await this.workerRepository.findOneBy({ id: workerId });
+    const worker = await this.workerRepository.findOneByOrFail({
+      id: workerId,
+    });
 
     // TODO: check that worker belongs to user
 

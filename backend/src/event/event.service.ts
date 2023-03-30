@@ -8,14 +8,16 @@ import { HubService } from 'src/hub/hub.service';
 import { Socket } from 'socket.io';
 import { AuthService } from 'src/auth/auth.service';
 import { Action } from 'src/action/entities/action.entity';
+import { WorkerService } from 'src/worker/worker.service';
 
 @Injectable()
 export class EventService {
   constructor(
     private readonly hubService: HubService,
     private readonly authService: AuthService,
+    private readonly workerService: WorkerService,
   ) {}
-  static wsClients: Socket[] = [];
+  wsClients: Socket[] = [];
 
   async workerStateChange() {
     return 'this should update the worker state in the db';
@@ -24,15 +26,13 @@ export class EventService {
   async hubConnected(hubId: Hub['id'], socket: Socket) {
     await this.hubService.setSocketId(hubId, socket.id);
     await this.hubService.setState(hubId, HubState.ONLINE);
-    EventService.wsClients.push(socket);
+    this.wsClients.push(socket);
   }
 
   async hubDisconnected(hubId: Hub['id'], socket: Socket) {
     this.hubService.setState(hubId, HubState.OFFLINE);
     this.hubService.setSocketId(hubId, null);
-    EventService.wsClients = EventService.wsClients.filter(
-      (client) => client.id !== socket.id,
-    );
+    this.wsClients = this.wsClients.filter((client) => client.id !== socket.id);
   }
 
   async getHubData(hubId: string) {
@@ -63,17 +63,20 @@ export class EventService {
       throw new InternalServerErrorException('Hub not found');
     }
     //Find the socket of the hub
-    const client = EventService.wsClients.find(
+    const client = this.wsClients.find(
       (client) => client.id === ownerHub.socketId,
     );
     //If no socket is found, the hub is not online
     if (!client) {
       return;
     }
-    //Send the new data to the client. The client expects to get the whole worker object
-    client.emit(
-      'workerData',
-      ownerHub.workers.find((w) => w.id === action.worker.id),
-    );
+    //Send the new data to the client. The client expects to get the whole worker object including actions
+    const worker = ownerHub.workers.find((w) => w.id === action.worker.id);
+    const workerExtended = await this.workerService.findOneById(worker.id);
+    client.emit('workerData', workerExtended);
+  }
+
+  logHey() {
+    console.log('hey');
   }
 }

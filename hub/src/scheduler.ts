@@ -66,6 +66,11 @@ export default class scheduler {
         job = schedule.scheduleJob(action.executeDateTime, () => this.callback(workerId));
         break;
     }
-    this.schedulContainer[workerId] = [...this.schedulContainer[workerId], job!];
+    const workerSchedule = this.schedulContainer[workerId];
+    if (workerSchedule) {
+      this.schedulContainer[workerId] = [...this.schedulContainer[workerId], job!];
+    } else {
+      this.schedulContainer[workerId] = [job!];
+    }
   }
 }
