@@ -27,46 +27,43 @@ const socket = socketConnection(
 
 //When connected to backend
 socket.on("connect", () => {
-  console.log("Connected to backend");
-  // //Initiate the bluetooth (auto connects to workers)
-  // const BluetoothService = new bluetoothService(
-  //   [ACTION_SERVICE_UUID, BATTERY_SERVICE_UUID],
-  //   BATTERY_CHAR_UUID,
-  //   ACTION_CHAR_UUID
-  // );
+  //Initiate the bluetooth (auto connects to workers)
+  const BluetoothService = new bluetoothService(
+    [ACTION_SERVICE_UUID, BATTERY_SERVICE_UUID],
+    BATTERY_CHAR_UUID,
+    ACTION_CHAR_UUID
+  );
 
-  // //Subscribe to events from the bluetooth service
-  // BluetoothService.subscribe.on("workerDisconnect", (workerId: IWorkerDto["id"]) => {
-  //   console.log("Worker disconnet, with id", workerId);
-  //   sch.cancelWorkerJobs(workerId);
-  //   socket.emit("workerDisconnect", workerId);
-  // });
+  //Subscribe to events from the bluetooth service
+  BluetoothService.subscribe.on("workerDisconnect", (workerId: IWorkerDto["id"]) => {
+    console.log("Worker disconnet, with id", workerId);
+    sch.cancelWorkerJobs(workerId);
+    socket.emit("workerDisconnect", workerId);
+  });
 
-  // BluetoothService.subscribe.on("workerConnect", (workerId: IWorkerDto["id"]) => {
-  //   console.log("Worker  connect, with id", workerId);
-  //   socket.emit("workerConnect", workerId);
-  // });
+  BluetoothService.subscribe.on("workerConnect", (workerId: IWorkerDto["id"]) => {
+    console.log("Worker  connect, with id", workerId);
+    socket.emit("workerConnect", workerId);
+  });
 
-  // //Start polling for battery updates from the workers at a interval
-  // const currentBatteryLevels: {
-  //   [workerUUID: string]: number;
-  // } = {};
-  // setInterval(async () => {
-  //   //Get battery level for all connected devices
-  //   const batteryData = await BluetoothService.getBatteryLevel();
-  //   //If there are changes to any of the battery levels send them all
-  //   if (currentBatteryLevels != batteryData) {
-  //     socket.emit("batteryData", batteryData);
-  //   }
-  // }, BATTERY_UPDATE_INTERVAL);
+  //Start polling for battery updates from the workers at a interval
+  const currentBatteryLevels: {
+    [workerUUID: string]: number;
+  } = {};
+  setInterval(async () => {
+    //Get battery level for all connected devices
+    const batteryData = await BluetoothService.getBatteryLevel();
+    //If there are changes to any of the battery levels send them all
+    if (currentBatteryLevels != batteryData) {
+      socket.emit("batteryData", batteryData);
+    }
+  }, BATTERY_UPDATE_INTERVAL);
 
   //Initiate the scheduler with a callback function which will be called when actions are firering
-  const sch = new scheduler(async (id) => console.log("Action fired", id));
-  socket.emit("workerConnect", "jksdbajkzdhsjkadbsajkdbsa");
-  console.log("workerConnect sent");
+  const sch = new scheduler((id) => BluetoothService.sendAction(id));
+
   //When getting worker data
   socket.on("workerData", (data: IWorkerDto) => {
-    console.log("workerData received", data);
     //Schedule the workers actions
     sch.scheduleActions(data);
   });
