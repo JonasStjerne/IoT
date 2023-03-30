@@ -19,11 +19,12 @@ export default class scheduler {
 
   cancelWorkerJobs(workerId: IWorkerDto["id"]) {
     //Retrieve schedueled jobs
+    console.log("current schedulContainer", this.schedulContainer);
     const workerSchedule = this.schedulContainer[workerId];
     //If the worker does, cancel the schedueld actions before scheduling the new ones
     if (workerSchedule) {
       workerSchedule.forEach((job) => {
-        job.cancel;
+        job.cancel();
       });
       delete this.schedulContainer[workerId];
     }
@@ -33,17 +34,21 @@ export default class scheduler {
     let job: schedule.Job;
     switch (action.repeat) {
       case ActionRepeat.ONCE:
+        //If event in the past dont schedule
+        if (new Date(action.executeDateTime) < new Date()) {
+          console.error("Action in the past, not scheduling");
+          return;
+        }
         job = schedule.scheduleJob(action.executeDateTime, () => this.callback(workerId));
         break;
       case ActionRepeat.DAILY:
-        schedule.scheduleJob(
+        job = schedule.scheduleJob(
           { hour: action.executeDateTime.getHours(), minute: action.executeDateTime.getMinutes() },
           () => this.callback(workerId)
         );
-        job = schedule.scheduleJob(action.executeDateTime, () => this.callback(workerId));
         break;
       case ActionRepeat.WEEKLY:
-        schedule.scheduleJob(
+        job = schedule.scheduleJob(
           {
             hour: action.executeDateTime.getHours(),
             minute: action.executeDateTime.getMinutes(),
@@ -51,10 +56,9 @@ export default class scheduler {
           },
           () => this.callback(workerId)
         );
-        job = schedule.scheduleJob(action.executeDateTime, () => this.callback(workerId));
         break;
       case ActionRepeat.YEARLY:
-        schedule.scheduleJob(
+        job = schedule.scheduleJob(
           {
             hour: action.executeDateTime.getHours(),
             minute: action.executeDateTime.getMinutes(),
@@ -63,10 +67,10 @@ export default class scheduler {
           },
           () => this.callback(workerId)
         );
-        job = schedule.scheduleJob(action.executeDateTime, () => this.callback(workerId));
         break;
     }
     const workerSchedule = this.schedulContainer[workerId];
+    console.log("workerSchedule", workerSchedule);
     if (workerSchedule) {
       this.schedulContainer[workerId] = [...this.schedulContainer[workerId], job!];
     } else {
