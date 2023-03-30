@@ -19,17 +19,17 @@ export class ActionSubscriber implements EntitySubscriberInterface<Action> {
   }
 
   afterInsert(event: InsertEvent<Action>) {
-    console.log(`BEFORE POST INSERTED: `, event.entity);
+    console.log(`AFTER ACTION INSERTED: `, event.entity);
     this.eventService.pushNewDataToClient(event.entity);
   }
 
   afterUpdate(event: UpdateEvent<Action>) {
-    console.log(`AFTER POST INSERTED: `, event.entity);
+    console.log(`AFTER ACTION UPDATE: `, event.entity);
     this.eventService.pushNewDataToClient(event.entity as Action);
   }
 
   afterRemove(event: RemoveEvent<Action>) {
-    console.log(`AFTER POST INSERTED: `, event.entity);
+    console.log(`AFTER ACTION REMOVE: `, event.entity);
     this.eventService.pushNewDataToClient(event.entity);
   }
 }
