@@ -17,7 +17,6 @@ export class ActionSubscriber implements EntitySubscriberInterface<Action> {
     @Inject(Connection) readonly connection: Connection,
   ) {
     connection.subscribers.push(this);
-    console.log('Eventservice: ', this.eventService.logHey());
   }
   /**
    * Indicates that this subscriber only listen to Action events.

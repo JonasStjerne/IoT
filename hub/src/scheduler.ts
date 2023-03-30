@@ -12,14 +12,13 @@ export default class scheduler {
   scheduleActions(workerDto: IWorkerDto) {
     this.cancelWorkerJobs(workerDto.id);
     workerDto.actions.forEach((action) => {
-      console.log("Scheduling ", action);
       this.scheduleAction(workerDto.id, action);
     });
+    console.log("Scheduled actions for worker", this.schedulContainer);
   }
 
   cancelWorkerJobs(workerId: IWorkerDto["id"]) {
     //Retrieve schedueled jobs
-    console.log("current schedulContainer", this.schedulContainer);
     const workerSchedule = this.schedulContainer[workerId];
     //If the worker does, cancel the schedueld actions before scheduling the new ones
     if (workerSchedule) {
@@ -70,7 +69,6 @@ export default class scheduler {
         break;
     }
     const workerSchedule = this.schedulContainer[workerId];
-    console.log("workerSchedule", workerSchedule);
     if (workerSchedule) {
       this.schedulContainer[workerId] = [...this.schedulContainer[workerId], job!];
     } else {

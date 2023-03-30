@@ -75,8 +75,4 @@ export class EventService {
     const workerExtended = await this.workerService.findOneById(worker.id);
     client.emit('workerData', workerExtended);
   }
-
-  logHey() {
-    console.log('hey');
-  }
 }
