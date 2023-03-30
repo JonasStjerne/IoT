@@ -47,8 +47,7 @@ export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
       throw new WsException('Wrong credentiels');
     }
     console.log('Hub authenticated');
-    await this.hubsService.setSocketId(hub.id, socket.id);
-    await this.hubsService.setState(hub.id, HubState.ONLINE);
+    await this.eventService.hubConnected(hub.id, socket);
   }
 
   @SubscribeMessage('workerConnect')
@@ -89,7 +88,6 @@ export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (!hub) {
       return;
     }
-    this.hubsService.setSocketId(hub.id, null);
-    this.hubsService.setState(hub.id, HubState.OFFLINE);
+    this.eventService.hubDisconnected(hub.id, socket);
   }
 }

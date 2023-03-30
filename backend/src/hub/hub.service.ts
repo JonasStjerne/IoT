@@ -15,6 +15,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { WorkerService } from 'src/worker/worker.service';
 import { BatteryLevelDto } from 'src/event/dto/batteryLevel.dto';
 import { WorkerConnectDto } from '../event/dto/workerConnect.dto';
+import { Worker } from 'src/worker/entities/worker.entity';
 
 @Injectable()
 export class HubService {
@@ -165,5 +166,14 @@ export class HubService {
       }
     });
     return await this.hubsRepository.save(hubDb);
+  }
+
+  async getHubByWorkerId(workerId: Worker['id']) {
+    const result = await this.hubsRepository
+      .createQueryBuilder('hub')
+      .leftJoinAndSelect('hub.workers', 'workers')
+      .where('workers.id = :id', { id: workerId })
+      .getOne();
+    return result;
   }
 }
