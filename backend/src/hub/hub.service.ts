@@ -154,6 +154,12 @@ export class HubService {
     return await this.hubsRepository.save(hubDb);
   }
 
+  async deleteRealtionToAllWorkers(hubId: Hub['id']) {
+    const hubDb = await this.hubsRepository.findOneBy({ id: hubId });
+    hubDb.workers = [];
+    await this.hubsRepository.save(hubDb);
+  }
+
   async updateWorkerBatteryLevel(
     hubId: Hub['id'],
     batteryLevelDto: BatteryLevelDto,

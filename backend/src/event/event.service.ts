@@ -30,8 +30,11 @@ export class EventService {
   }
 
   async hubDisconnected(hubId: Hub['id'], socket: Socket) {
-    this.hubService.setState(hubId, HubState.OFFLINE);
-    this.hubService.setSocketId(hubId, null);
+    await Promise.all([
+      this.hubService.setState(hubId, HubState.OFFLINE),
+      this.hubService.setSocketId(hubId, null),
+      this.hubService.deleteRealtionToAllWorkers(hubId),
+    ]);
     this.wsClients = this.wsClients.filter((client) => client.id !== socket.id);
   }
 
