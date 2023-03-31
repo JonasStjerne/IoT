@@ -28,7 +28,6 @@ export class HubService {
   async register(userId: User['id'], hub: RegisterHubDto) {
     const hubDb = await this.validateHubCredentials(hub.id, hub.secret);
     const userDb = await this.usersRepository.findOneBy({ id: userId });
-    console.log(hubDb, userDb);
     if (hubDb && userDb) {
       userDb.hubs = [...userDb.hubs, hubDb];
       await this.usersRepository.save(userDb);

@@ -47,8 +47,7 @@ export class Hub {
 
   @OneToMany(() => Worker, (worker) => worker.hub, {
     eager: true,
-    onDelete: 'CASCADE',
+    cascade: true,
   })
   workers: Worker[];
-
 }
