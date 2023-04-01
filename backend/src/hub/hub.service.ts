@@ -110,10 +110,10 @@ export class HubService {
     return hubDb.workers;
   }
 
-  async setWorkerOfHub(hubId: string, workerConnectDto: WorkerConnectDto) {
-    let worker = await this.workerService.findOneById(workerConnectDto.id);
+  async setWorkerOfHub(hubId: string, workerId: Worker['id']) {
+    let worker = await this.workerService.findOneById(workerId);
     if (!worker) {
-      worker = await this.workerService.create(workerConnectDto);
+      worker = await this.workerService.create({ id: workerId });
     }
     const hubDb = await this.hubsRepository.findOneBy({ id: hubId });
     hubDb.workers.push(worker);
@@ -142,13 +142,11 @@ export class HubService {
     return result;
   }
 
-  async deleteRelationToWorker(
-    hubId: Hub['id'],
-    workerConnectDto: WorkerConnectDto,
-  ) {
+  async deleteRelationToWorker(hubId: Hub['id'], workerConnectDto: string) {
+    console.log('The id of the disconnected worker is ', workerConnectDto);
     const hubDb = await this.hubsRepository.findOneBy({ id: hubId });
     hubDb.workers = hubDb.workers.filter(
-      (worker) => worker.id != workerConnectDto.id,
+      (worker) => worker.id != workerConnectDto,
     );
     return await this.hubsRepository.save(hubDb);
   }

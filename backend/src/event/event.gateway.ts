@@ -54,13 +54,10 @@ export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async workerConnect(
     @ConnectedSocket() client: Socket,
     @AuthHub() hub: Hub,
-    @MessageBody() workerConnectDto: WorkerConnectDto,
+    @MessageBody() workerId: string,
   ) {
     // const workerData = await this.hubsService.getWorkersOfHub(hub.id);
-    const worker = await this.hubsService.setWorkerOfHub(
-      hub.id,
-      workerConnectDto,
-    );
+    const worker = await this.hubsService.setWorkerOfHub(hub.id, workerId);
 
     return client.emit('workerData', worker);
   }
@@ -69,9 +66,9 @@ export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async workerDisconnect(
     @ConnectedSocket() client: Socket,
     @AuthHub() hub: Hub,
-    @MessageBody() workerConnectDto: WorkerConnectDto,
+    @MessageBody() workerId: string,
   ) {
-    await this.hubsService.deleteRelationToWorker(hub.id, workerConnectDto);
+    await this.hubsService.deleteRelationToWorker(hub.id, workerId);
   }
 
   @SubscribeMessage('batteryData')
