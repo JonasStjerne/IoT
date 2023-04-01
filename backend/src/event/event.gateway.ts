@@ -44,7 +44,6 @@ export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (!hub) {
       console.log('Hub not authenticated');
       socket.disconnect(true);
-      throw new WsException('Wrong credentiels');
     }
     console.log('Hub authenticated');
     await this.eventService.hubConnected(hub.id, socket);
