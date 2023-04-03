@@ -142,6 +142,11 @@ export class HubService {
     return result;
   }
 
+  async getUsersByHubId(hubId: Hub['id']) {
+    const result = await this.hubsRepository.findOneByOrFail({ id: hubId });
+    return result.users;
+  }
+
   async deleteRelationToWorker(hubId: Hub['id'], workerConnectDto: string) {
     console.log('The id of the disconnected worker is ', workerConnectDto);
     const hubDb = await this.hubsRepository.findOneBy({ id: hubId });
@@ -174,7 +179,7 @@ export class HubService {
   async getHubByWorkerId(workerId: Worker['id']) {
     const result = await this.hubsRepository
       .createQueryBuilder('hub')
-      .leftJoinAndSelect('hub.workers', 'workers')
+      .innerJoinAndSelect('hub.workers', 'workers')
       .where('workers.id = :id', { id: workerId })
       .getOne();
     return result;

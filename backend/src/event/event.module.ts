@@ -9,5 +9,6 @@ import { WorkerModule } from 'src/worker/worker.module';
 @Module({
   imports: [AuthModule, HubModule, WorkerModule],
   providers: [EventGateway, EventService, ActionSubscriber],
+  exports: [EventService],
 })
 export class EventModule {}

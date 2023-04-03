@@ -6,6 +6,7 @@ import { CreateActionDto } from './dto/create-action.dto';
 import { UpdateActionDto } from './dto/update-action.dto';
 import { Action } from './entities/action.entity';
 import { Worker } from 'src/worker/entities/worker.entity';
+import { EventService } from 'src/event/event.service';
 
 @Injectable()
 export class ActionService {
@@ -13,6 +14,7 @@ export class ActionService {
     @InjectRepository(Action) private actionRepository: Repository<Action>,
     @InjectRepository(Worker) private workerRepository: Repository<Worker>,
     @InjectRepository(User) private usersRepository: Repository<User>,
+    private eventService: EventService,
   ) {}
 
   async create(
@@ -82,5 +84,10 @@ export class ActionService {
     } else {
       throw new NotFoundException('Something went wrong');
     }
+  }
+
+  async sendInstantAction(userId: User['id'], workerId: Worker['id']) {
+    await this.eventService.instantActionToClient(userId, workerId);
+    return;
   }
 }

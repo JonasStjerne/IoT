@@ -1,7 +1,9 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   NotImplementedException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { Hub, HubState } from 'src/hub/entities/hub.entity';
 import { HubService } from 'src/hub/hub.service';
@@ -9,6 +11,8 @@ import { Socket } from 'socket.io';
 import { AuthService } from 'src/auth/auth.service';
 import { Action } from 'src/action/entities/action.entity';
 import { WorkerService } from 'src/worker/worker.service';
+import { User } from 'src/users/entities/user.entity';
+import { Worker } from 'src/worker/entities/worker.entity';
 
 @Injectable()
 export class EventService {
@@ -77,5 +81,29 @@ export class EventService {
     const worker = ownerHub.workers.find((w) => w.id === action.worker.id);
     const workerExtended = await this.workerService.findOneById(worker.id);
     client.emit('workerData', workerExtended);
+  }
+
+  async instantActionToClient(userId: User['id'], workerId: Worker['id']) {
+    //Make sure the user have relation to the hub that the worker is connected to and its online
+    const hubDb = await this.hubService.getHubByWorkerId(workerId);
+    if (!hubDb) {
+      throw new BadRequestException('Worker not online');
+    }
+    const usersOfHub = await this.hubService.getUsersByHubId(hubDb.id);
+    const user = usersOfHub.find((user) => user.id === userId);
+    if (!user) {
+      throw new UnauthorizedException("You don't have access to this worker");
+    }
+
+    //Find the socket of the hub
+    const client = this.wsClients.find(
+      (client) => client.id === hubDb.socketId,
+    );
+    //If no socket is found, the hub is not online
+    if (!client) {
+      throw new BadRequestException('Hub not online');
+    }
+    console.log('Sending instant action to client');
+    client.emit('instantAction', workerId);
   }
 }

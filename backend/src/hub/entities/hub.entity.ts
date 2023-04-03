@@ -43,7 +43,7 @@ export class Hub {
   state: HubState;
 
   @ManyToMany(() => User, (user) => user.hubs)
-  users: User[];
+  users: Promise<User[]>;
 
   @OneToMany(() => Worker, (worker) => worker.hub, {
     eager: true,

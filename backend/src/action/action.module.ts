@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Action } from './entities/action.entity';
 import { Worker } from '../worker/entities/worker.entity';
+import { EventModule } from 'src/event/event.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Action, Worker, User])],
+  imports: [TypeOrmModule.forFeature([Action, Worker, User]), EventModule],
   controllers: [ActionController],
   providers: [ActionService],
 })
