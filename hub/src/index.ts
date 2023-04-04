@@ -6,50 +6,75 @@ import { socketConnection } from "./websocket";
 import noble from "@abandonware/noble";
 import bluetoothService from "./bluetooth";
 
+//Settings - keep in code to enable them being updated for deployed hub through GitHhb
 const ACTION_SERVICE_UUID = "19b10000e8f2537e4f6cd104768a1214";
 const ACTION_CHAR_UUID = "19b10001e8f2537e4f6cd104768a1214";
 const BATTERY_SERVICE_UUID = "180f";
 const BATTERY_CHAR_UUID = "2a19";
+const BATTERY_UPDATE_INTERVAL = 10000;
 
-const BluetoothService = new bluetoothService(
-  [ACTION_SERVICE_UUID, BATTERY_SERVICE_UUID],
-  BATTERY_CHAR_UUID,
-  ACTION_CHAR_UUID
+//Connect to the backend
+const socket = socketConnection(
+  {
+    backendHost: process.env.BACKEND_HOST!,
+    backendPort: +process.env.BACKEND_PORT!,
+  },
+  {
+    hubId: process.env.HUB_ID!,
+    hubSecret: process.env.HUB_SECRET!,
+  }
 );
 
-setInterval(async () => {
-  const batteryData = await BluetoothService.getBatteryLevel();
-  console.log(batteryData);
-}, 1000);
-// const socket = socketConnection(
-//   {
-//     backendHost: "localhost",
-//     backendPort: 3000,
-//   },
-//   {
-//     hubId: process.env.HUB_ID!,
-//     hubSecret: process.env.HUB_SECRET!,
-//   }
-// );
+//When connected to backend
+socket.on("connect", () => {
+  //Initiate the bluetooth (auto connects to workers)
+  const BluetoothService = new bluetoothService(
+    [ACTION_SERVICE_UUID, BATTERY_SERVICE_UUID],
+    BATTERY_CHAR_UUID,
+    ACTION_CHAR_UUID
+  );
 
-// socket.on("connect", () => {
-//   console.log("connected to localhost:3000");
+  //Subscribe to events from the bluetooth service
+  BluetoothService.subscribe.on("workerDisconnect", (workerId: IWorkerDto["id"]) => {
+    console.log("Worker disconnet, with id", workerId);
+    sch.cancelWorkerJobs(workerId);
+    socket.emit("workerDisconnect", workerId);
+  });
 
-//   //Send connected workers to server
-//   socket.emit("connectedWorkers", []);
+  BluetoothService.subscribe.on("workerConnect", (workerId: IWorkerDto["id"]) => {
+    console.log("Worker  connect, with id", workerId);
+    socket.emit("workerConnect", workerId);
+  });
 
-//   //Get worker data (incl. actions) from server
-//   socket.on("workerData", function (data: any) {
-//     console.log("workerData from the server:", data);
-//   });
+  //Start polling for battery updates from the workers at a interval
+  const currentBatteryLevels: {
+    [workerUUID: string]: number;
+  } = {};
+  setInterval(async () => {
+    //Get battery level for all connected devices
+    const batteryData = await BluetoothService.getBatteryLevel();
+    //If there are changes to any of the battery levels send them all
+    if (currentBatteryLevels != batteryData) {
+      socket.emit("batteryData", batteryData);
+    }
+  }, BATTERY_UPDATE_INTERVAL);
 
-//   //Function for debuggin websocket connection
-//   setInterval(function () {
-//     socket.emit("serverEvent", Math.random());
-//     // socket.emit("getWorkerData");
-//     console.log("message sent to the server");
-//   }, 10000);
-// });
+  //Initiate the scheduler with a callback function which will be called when actions are firering
+  const sch = new scheduler((id) => BluetoothService.sendAction(id));
+
+  //When getting worker data
+  socket.on("workerData", (data: IWorkerDto) => {
+    //Schedule the workers actions
+    sch.scheduleActions(data);
+  });
+
+  //Function for debuggin websocket connection
+  setInterval(function () {
+    socket.emit("serverEvent", Math.random());
+    // socket.emit("getWorkerData");
+    console.log("message sent to the server");
+  }, 10000);
+});
 
 // socket.on("clientEvent", function (data: any) {
 //   console.log("message from the server:", data);
@@ -93,5 +118,4 @@ setInterval(async () => {
 //     ],
 //   },
 // ];
-// const sch = new scheduler(bluetoothService);
 // sch.scheduleActions(workerData);

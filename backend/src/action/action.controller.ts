@@ -67,4 +67,15 @@ export class ActionController {
   ) {
     return await this.actionService.remove(userId, actionId);
   }
+
+  @Post('instant-action')
+  @Auth()
+  @ApiOperation({ summary: 'Send a instant action to a worker' })
+  async sendInstantAction(
+    @AuthUser('id') userId: User['id'],
+    @Query('workerId') workerId: string,
+  ) {
+    await this.actionService.sendInstantAction(userId, workerId);
+    return;
+  }
 }

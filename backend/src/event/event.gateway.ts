@@ -9,16 +9,15 @@ import {
   ConnectedSocket,
 } from '@nestjs/websockets';
 import { EventService } from './event.service';
-import { WorkerStateChangeDto } from './dto/workerStateChange.dto';
 import { Server, Socket } from 'socket.io';
 import { WsGuard } from 'src/auth/_guards/ws.guard';
 import { UseGuards, Request } from '@nestjs/common';
 import { HubService } from 'src/hub/hub.service';
 import { AuthService } from 'src/auth/auth.service';
-import { UnauthorizedException } from '@nestjs/common/exceptions';
 import { Hub, HubState } from 'src/hub/entities/hub.entity';
-import { ConnectedWorkersDto } from './dto/connectedWorkers.dto';
+import { WorkerConnectDto } from './dto/workerConnect.dto';
 import { AuthHub } from 'src/auth/_decorators/hub.decorator';
+import { BatteryLevelDto } from './dto/batteryLevel.dto';
 @UseGuards(WsGuard)
 @WebSocketGateway()
 export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -33,9 +32,9 @@ export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @UseGuards(WsGuard)
   @SubscribeMessage('serverEvent')
   async clientEvent(@Request() req: any, @MessageBody() text: string) {
-    console.log('serverEvent: ', req.hub);
+    // console.log('serverEvent: ', req.hub);
     const result = await this.eventService.getHubData(req.hub.id);
-    console.log('result: ', result);
+    // console.log('result: ', result);
     return;
   }
 
@@ -45,31 +44,39 @@ export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (!hub) {
       console.log('Hub not authenticated');
       socket.disconnect(true);
-      throw new WsException('Wrong credentiels');
     }
     console.log('Hub authenticated');
-    await this.hubsService.setSocketId(hub.id, socket.id);
-    await this.hubsService.setState(hub.id, HubState.ONLINE);
+    await this.eventService.hubConnected(hub.id, socket);
   }
 
-  @SubscribeMessage('connectedWorkers')
-  async connectedWorkers(
+  @SubscribeMessage('workerConnect')
+  async workerConnect(
     @ConnectedSocket() client: Socket,
     @AuthHub() hub: Hub,
-    @MessageBody() connectedWorkersDto: ConnectedWorkersDto,
+    @MessageBody() workerId: string,
   ) {
     // const workerData = await this.hubsService.getWorkersOfHub(hub.id);
-    const hubDb = await this.hubsService.setWorkersOfHub(
-      hub.id,
-      connectedWorkersDto.workers,
-    );
+    const worker = await this.hubsService.setWorkerOfHub(hub.id, workerId);
 
-    return client.emit('workerData', hubDb.workers);
+    return client.emit('workerData', worker);
   }
 
-  @SubscribeMessage('workerStateChange')
-  create(@MessageBody() WorkerStateChangeDto: WorkerStateChangeDto) {
-    return 'this should update the worker state in the db';
+  @SubscribeMessage('workerDisconnect')
+  async workerDisconnect(
+    @ConnectedSocket() client: Socket,
+    @AuthHub() hub: Hub,
+    @MessageBody() workerId: string,
+  ) {
+    await this.hubsService.deleteRelationToWorker(hub.id, workerId);
+  }
+
+  @SubscribeMessage('batteryData')
+  async updateWorkerBatteryLevel(
+    @ConnectedSocket() client: Socket,
+    @AuthHub() hub: Hub,
+    @MessageBody() batteryLevelDto: BatteryLevelDto,
+  ) {
+    await this.hubsService.updateWorkerBatteryLevel(hub.id, batteryLevelDto);
   }
 
   async handleDisconnect(socket: Socket) {
@@ -77,7 +84,6 @@ export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (!hub) {
       return;
     }
-    this.hubsService.setSocketId(hub.id, null);
-    this.hubsService.setState(hub.id, HubState.OFFLINE);
+    this.eventService.hubDisconnected(hub.id, socket);
   }
 }

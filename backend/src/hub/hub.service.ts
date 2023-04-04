@@ -12,19 +12,22 @@ import { RegisterHubDto } from './dto/register-hub.dto';
 import { UpdateHubDto } from './dto/update-hub.dto';
 import { Hub, HubState } from './entities/hub.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Worker } from '../worker/entities/worker.entity';
+import { WorkerService } from 'src/worker/worker.service';
+import { BatteryLevelDto } from 'src/event/dto/batteryLevel.dto';
+import { WorkerConnectDto } from '../event/dto/workerConnect.dto';
+import { Worker } from 'src/worker/entities/worker.entity';
 
 @Injectable()
 export class HubService {
   constructor(
     @InjectRepository(Hub) private hubsRepository: Repository<Hub>,
-    @InjectRepository(User) private usersRepository: Repository<User>, // @Inject(REQUEST) private readonly request: AuthRequest,
+    @InjectRepository(User) private usersRepository: Repository<User>,
+    private workerService: WorkerService,
   ) {}
 
   async register(userId: User['id'], hub: RegisterHubDto) {
     const hubDb = await this.validateHubCredentials(hub.id, hub.secret);
     const userDb = await this.usersRepository.findOneBy({ id: userId });
-    console.log(hubDb, userDb);
     if (hubDb && userDb) {
       userDb.hubs = [...userDb.hubs, hubDb];
       await this.usersRepository.save(userDb);
@@ -107,10 +110,15 @@ export class HubService {
     return hubDb.workers;
   }
 
-  async setWorkersOfHub(hubId: string, workers: Worker[]) {
+  async setWorkerOfHub(hubId: string, workerId: Worker['id']) {
+    let worker = await this.workerService.findOneById(workerId);
+    if (!worker) {
+      worker = await this.workerService.create({ id: workerId });
+    }
     const hubDb = await this.hubsRepository.findOneBy({ id: hubId });
-    hubDb.workers = workers;
-    return await this.hubsRepository.save(hubDb);
+    hubDb.workers.push(worker);
+    await this.hubsRepository.save(hubDb);
+    return worker;
   }
 
   async setState(hubId: Hub['id'], state: HubState) {
@@ -130,6 +138,49 @@ export class HubService {
       .createQueryBuilder('hub')
       .leftJoinAndSelect('hub.workers', 'workers')
       .where('hub.id = :id', { id: hubId })
+      .getOne();
+    return result;
+  }
+
+  async getUsersByHubId(hubId: Hub['id']) {
+    const result = await this.hubsRepository.findOneByOrFail({ id: hubId });
+    return result.users;
+  }
+
+  async deleteRelationToWorker(hubId: Hub['id'], workerConnectDto: string) {
+    console.log('The id of the disconnected worker is ', workerConnectDto);
+    const hubDb = await this.hubsRepository.findOneBy({ id: hubId });
+    hubDb.workers = hubDb.workers.filter(
+      (worker) => worker.id != workerConnectDto,
+    );
+    return await this.hubsRepository.save(hubDb);
+  }
+
+  async deleteRealtionToAllWorkers(hubId: Hub['id']) {
+    const hubDb = await this.hubsRepository.findOneBy({ id: hubId });
+    hubDb.workers = [];
+    await this.hubsRepository.save(hubDb);
+  }
+
+  async updateWorkerBatteryLevel(
+    hubId: Hub['id'],
+    batteryLevelDto: BatteryLevelDto,
+  ) {
+    const hubDb = await this.hubsRepository.findOneBy({ id: hubId });
+    hubDb.workers.forEach(async (worker) => {
+      const workerBatteryLevelFromDto = batteryLevelDto[worker.id];
+      if (workerBatteryLevelFromDto) {
+        worker.batteryLevel = workerBatteryLevelFromDto;
+      }
+    });
+    return await this.hubsRepository.save(hubDb);
+  }
+
+  async getHubByWorkerId(workerId: Worker['id']) {
+    const result = await this.hubsRepository
+      .createQueryBuilder('hub')
+      .innerJoinAndSelect('hub.workers', 'workers')
+      .where('workers.id = :id', { id: workerId })
       .getOne();
     return result;
   }

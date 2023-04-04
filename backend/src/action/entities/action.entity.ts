@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Worker } from 'src/worker/entities/worker.entity';
-import { IsNotEmpty } from 'class-validator';
+import { IsDate, IsNotEmpty } from 'class-validator';
 
 export enum ActionRepeat {
   ONCE = 'once',
@@ -25,6 +25,7 @@ export class Action {
   repeat: ActionRepeat;
 
   @IsNotEmpty()
+  @IsDate()
   @Column()
   executeDateTime: Date;
 

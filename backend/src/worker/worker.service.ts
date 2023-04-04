@@ -16,8 +16,9 @@ export class WorkerService {
     @InjectRepository(Worker) private workerRepository: Repository<Worker>,
   ) {}
 
-  create(createWorkerDto: CreateWorkerDto) {
-    return 'This action adds a new worker';
+  async create(createWorkerDto: CreateWorkerDto) {
+    const newWorker = this.workerRepository.create(createWorkerDto);
+    return await this.workerRepository.save(newWorker);
   }
 
   async findAll(hubId: Hub['id']) {
@@ -34,6 +35,10 @@ export class WorkerService {
       }
     }
     return null;
+  }
+
+  async findOneById(workerId: string) {
+    return await this.workerRepository.findOneBy({ id: workerId });
   }
 
   async update(
