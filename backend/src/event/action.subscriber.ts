@@ -3,7 +3,6 @@ import { Action } from 'src/action/entities/action.entity';
 import {
   Connection,
   EntitySubscriberInterface,
-  EventSubscriber,
   InsertEvent,
   RemoveEvent,
   UpdateEvent,
@@ -35,8 +34,8 @@ export class ActionSubscriber implements EntitySubscriberInterface<Action> {
     this.eventService.pushNewDataToClient(event.entity as Action);
   }
 
-  afterRemove(event: RemoveEvent<Action>) {
-    console.log(`AFTER ACTION REMOVE: `, event.entity);
+  async beforeSoftRemove(event: RemoveEvent<Action>) {
+    console.log(`BEFORE ACTION REMOVE: `, event.entity);
     this.eventService.pushNewDataToClient(event.entity);
   }
 }
