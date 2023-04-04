@@ -1,0 +1,22 @@
+
+<!-- Option for setting a new action for a worker -->
+<!-- <input type="datetime-local">
+<input type="number" name="duration" placeholder="duration" id="">
+<button class="btn btn-success">Save action</button> -->
+
+
+<form class="w-50 mx-auto">
+    <div class="mb-3">
+          <label class="form-label">Repeat</label>
+          <input name="repeat" [(ngModel)]="repeat" type="string" class="form-control">
+    </div>
+    <div class="mb-3">
+          <label class="form-label">Date Time</label>
+          <input name="executeDateTime" [(ngModel)]="executeDateTime" type="datetime-local" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Duration</label>
+        <input name="durationSeconds" [(ngModel)]="durationSeconds" type="number" class="form-control">
+  </div>
+    <button type="submit" (click)="addAction()" class="btn btn-primary">Add Action</button>
+</form>

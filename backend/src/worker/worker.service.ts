@@ -12,6 +12,7 @@ import { UpdateWorkerDto } from './dto/update-worker.dto';
 export class WorkerService {
   constructor(
     @InjectRepository(User) private usersRepository: Repository<User>,
+    @InjectRepository(Hub) private hubsRepository: Repository<Hub>,
     @InjectRepository(Worker) private workerRepository: Repository<Worker>,
   ) {}
 
@@ -19,8 +20,9 @@ export class WorkerService {
     return 'This action adds a new worker';
   }
 
-  findAll() {
-    return `This action returns all worker`;
+  async findAll(hubId: Hub['id']) {
+    const hubDb = await this.hubsRepository.findOneBy({ id: hubId });
+    return hubDb.workers;
   }
 
   async findOneBy(userId: string, workerId: string) {

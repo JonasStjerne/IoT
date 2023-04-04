@@ -1,0 +1,36 @@
+<li class="list-group-item">
+    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+          <div class="input-group">
+
+                <span class="input-group-text" id="basic-addon1">Action id</span>
+                <input [(ngModel)]="action.id" type="text" readonly class="form-control" placeholder="Washer starter"
+                      aria-label="action id" aria-describedby="basic-addon1">
+
+                      <span class="input-group-text" id="basic-addon1">Action executeDateTime</span>
+                <input [(ngModel)]="action.executeDateTime" type="text" class="form-control" placeholder="Give me a name"
+                      aria-label="action executeDateTime" aria-describedby="basic-addon1">
+
+                      <span class="input-group-text" id="basic-addon1">Action durationSeconds</span>
+                <input [(ngModel)]="action.durationSeconds" type="text" class="form-control" placeholder="Washer starter"
+                      aria-label="action durationSeconds" aria-describedby="basic-addon1">
+
+                      <span class="input-group-text" id="basic-addon1">Action repeat</span>
+                <input [(ngModel)]="action.repeat" type="text" class="form-control" placeholder="Washer starter"
+                      aria-label="action repeat" aria-describedby="basic-addon1">
+                      
+          </div>
+          <button (click)="this.changeName()" type="button" class="btn btn-success">Save</button>
+          <button (click)="this.deleteAction(content)" type="button" class="btn btn-danger">Delete</button>
+    </div>
+</li>
+<!-- Modal content -->
+<ng-template #content let-modal>
+    <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Are you sure you want to delete this action?</h4>
+          <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-footer">
+          <button type="button" class="btn btn-success" (click)="modal.close('no')">No</button>
+          <button type="button" class="btn btn-danger" (click)="modal.close('delete')">Delete</button>
+    </div>
+</ng-template>

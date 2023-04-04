@@ -30,18 +30,24 @@ export class ActionApiService extends BaseService {
   static readonly ActionControllerFindAllPath = '/action';
 
   /**
+   * Return all actions connected to a worker.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `actionControllerFindAll()` instead.
    *
    * This method doesn't expect any request body.
    */
-  actionControllerFindAll$Response(params?: {
+  actionControllerFindAll$Response(params: {
+    id: string;
     context?: HttpContext
   }
-): Observable<StrictHttpResponse<string>> {
+): Observable<StrictHttpResponse<Array<Action>>> {
 
     const rb = new RequestBuilder(this.rootUrl, ActionApiService.ActionControllerFindAllPath, 'get');
     if (params) {
+      rb.path('id', params.id, {});
     }
 
     return this.http.request(rb.build({
@@ -51,24 +57,29 @@ export class ActionApiService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
+        return r as StrictHttpResponse<Array<Action>>;
       })
     );
   }
 
   /**
+   * Return all actions connected to a worker.
+   *
+   *
+   *
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `actionControllerFindAll$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  actionControllerFindAll(params?: {
+  actionControllerFindAll(params: {
+    id: string;
     context?: HttpContext
   }
-): Observable<string> {
+): Observable<Array<Action>> {
 
     return this.actionControllerFindAll$Response(params).pipe(
-      map((r: StrictHttpResponse<string>) => r.body as string)
+      map((r: StrictHttpResponse<Array<Action>>) => r.body as Array<Action>)
     );
   }
 

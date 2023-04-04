@@ -30,8 +30,9 @@ export class WorkerController {
   }
 
   @Get()
-  findAll() {
-    return this.workerService.findAll();
+  @ApiOperation({ summary: 'Return all worker connected to a hub' })
+  async findAll(@Param('id') id: string) {
+    return await this.workerService.findAll(id);
   }
 
   @Get(':id')

@@ -33,8 +33,11 @@ export class ActionService {
     return newAction;
   }
 
-  findAll() {
-    return `This action returns all action`;
+  async findAll(workerId: Worker['id']) {
+    const workerDb = await this.workerRepository.findOneBy({ id: workerId });
+    console.log(workerDb);
+    console.log(workerDb.actions);
+    return workerDb.actions;
   }
 
   async findOneBy(actionId: string) {

@@ -35,8 +35,9 @@ export class ActionController {
   }
 
   @Get()
-  findAll() {
-    return this.actionService.findAll();
+  @ApiOperation({ summary: 'Return all actions connected to a worker' })
+  async findAll(@Param('id') id: string) {
+    return await this.actionService.findAll(id);
   }
 
   @Get(':id')

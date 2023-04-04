@@ -30,18 +30,24 @@ export class WorkerApiService extends BaseService {
   static readonly WorkerControllerFindAllPath = '/worker';
 
   /**
+   * Return all worker connected to a hub.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `workerControllerFindAll()` instead.
    *
    * This method doesn't expect any request body.
    */
-  workerControllerFindAll$Response(params?: {
+  workerControllerFindAll$Response(params: {
+    id: string;
     context?: HttpContext
   }
-): Observable<StrictHttpResponse<string>> {
+): Observable<StrictHttpResponse<Array<Worker>>> {
 
     const rb = new RequestBuilder(this.rootUrl, WorkerApiService.WorkerControllerFindAllPath, 'get');
     if (params) {
+      rb.path('id', params.id, {});
     }
 
     return this.http.request(rb.build({
@@ -51,24 +57,29 @@ export class WorkerApiService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
+        return r as StrictHttpResponse<Array<Worker>>;
       })
     );
   }
 
   /**
+   * Return all worker connected to a hub.
+   *
+   *
+   *
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `workerControllerFindAll$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  workerControllerFindAll(params?: {
+  workerControllerFindAll(params: {
+    id: string;
     context?: HttpContext
   }
-): Observable<string> {
+): Observable<Array<Worker>> {
 
     return this.workerControllerFindAll$Response(params).pipe(
-      map((r: StrictHttpResponse<string>) => r.body as string)
+      map((r: StrictHttpResponse<Array<Worker>>) => r.body as Array<Worker>)
     );
   }
 
