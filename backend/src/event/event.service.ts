@@ -1,8 +1,7 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
-  InternalServerErrorException,
-  NotImplementedException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Hub, HubState } from 'src/hub/entities/hub.entity';
@@ -62,12 +61,14 @@ export class EventService {
   }
 
   async pushNewDataToClient(action: Action) {
+    console.log('Finding action', action.worker.id);
+    // const actionDb = await this.actionService.findOneBy(action.id);
     //Find the owning hub
     const ownerHub = await this.hubService.getHubByWorkerId(action.worker.id);
     //If no hub owns the worker, the worker should not be able to get altered by a user.
     //If this happens, it's a bug
     if (!ownerHub) {
-      throw new InternalServerErrorException('Hub not found');
+      throw new ConflictException('Worker not online anymore');
     }
     //Find the socket of the hub
     const client = this.wsClients.find(
