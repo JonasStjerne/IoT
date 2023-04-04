@@ -330,4 +330,63 @@ export class ActionApiService extends BaseService {
     );
   }
 
+  /**
+   * Path part for operation actionControllerSendInstantAction
+   */
+  static readonly ActionControllerSendInstantActionPath = '/action/instant-action';
+
+  /**
+   * Send a instant action to a worker.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `actionControllerSendInstantAction()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  actionControllerSendInstantAction$Response(params: {
+    workerId: string;
+    context?: HttpContext
+  }
+): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ActionApiService.ActionControllerSendInstantActionPath, 'post');
+    if (params) {
+      rb.query('workerId', params.workerId, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*',
+      context: params?.context
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * Send a instant action to a worker.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `actionControllerSendInstantAction$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  actionControllerSendInstantAction(params: {
+    workerId: string;
+    context?: HttpContext
+  }
+): Observable<void> {
+
+    return this.actionControllerSendInstantAction$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
+    );
+  }
+
 }
