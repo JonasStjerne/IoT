@@ -1,4 +1,5 @@
 import {
+  HttpErrorResponse,
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
@@ -34,8 +35,10 @@ export class ErrorInterceptor implements HttpInterceptor {
         (event) => {
           observer.next(event);
         },
-        (err) => {
-          this.errorService.handleError(err);
+        (err: HttpErrorResponse) => {
+          if (err.status !== 200) {
+            this.errorService.handleError(err);
+          }
         },
         () => {
           observer.complete();
