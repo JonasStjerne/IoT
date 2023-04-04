@@ -98,7 +98,7 @@ export class WorkerApiService extends BaseService {
     context?: HttpContext
     body: CreateWorkerDto
   }
-): Observable<StrictHttpResponse<Worker>> {
+): Observable<StrictHttpResponse<string>> {
 
     const rb = new RequestBuilder(this.rootUrl, WorkerApiService.WorkerControllerCreatePath, 'post');
     if (params) {
@@ -112,7 +112,7 @@ export class WorkerApiService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Worker>;
+        return r as StrictHttpResponse<string>;
       })
     );
   }
@@ -127,10 +127,10 @@ export class WorkerApiService extends BaseService {
     context?: HttpContext
     body: CreateWorkerDto
   }
-): Observable<Worker> {
+): Observable<string> {
 
     return this.workerControllerCreate$Response(params).pipe(
-      map((r: StrictHttpResponse<Worker>) => r.body as Worker)
+      map((r: StrictHttpResponse<string>) => r.body as string)
     );
   }
 
