@@ -68,7 +68,7 @@ export class EventService {
     //If no hub owns the worker, the worker should not be able to get altered by a user.
     //If this happens, it's a bug
     if (!ownerHub) {
-      throw new ConflictException('Worker not online anymore');
+      throw new BadRequestException('Worker not online anymore');
     }
     //Find the socket of the hub
     const client = this.wsClients.find(
