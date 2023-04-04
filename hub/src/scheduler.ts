@@ -37,11 +37,17 @@ export default class scheduler {
           console.error("Action in the past, not scheduling");
           return;
         }
-        job = schedule.scheduleJob({ ...action.executeDateTime, tz: "CEST" }, () => this.callback(workerId));
+        job = schedule.scheduleJob({ ...action.executeDateTime, tz: "Europe/Copenhagen" }, () =>
+          this.callback(workerId)
+        );
         break;
       case ActionRepeat.DAILY:
         job = schedule.scheduleJob(
-          { hour: action.executeDateTime.getHours(), minute: action.executeDateTime.getMinutes() },
+          {
+            hour: action.executeDateTime.getHours(),
+            minute: action.executeDateTime.getMinutes(),
+            tz: "Europe/Copenhagen",
+          },
           () => this.callback(workerId)
         );
         break;
@@ -51,6 +57,7 @@ export default class scheduler {
             hour: action.executeDateTime.getHours(),
             minute: action.executeDateTime.getMinutes(),
             dayOfWeek: action.executeDateTime.getDate(),
+            tz: "Europe/Copenhagen",
           },
           () => this.callback(workerId)
         );
@@ -62,6 +69,7 @@ export default class scheduler {
             minute: action.executeDateTime.getMinutes(),
             dayOfWeek: action.executeDateTime.getDate(),
             year: action.executeDateTime.getFullYear(),
+            tz: "Europe/Copenhagen",
           },
           () => this.callback(workerId)
         );
