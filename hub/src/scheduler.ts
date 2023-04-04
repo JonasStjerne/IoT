@@ -37,7 +37,7 @@ export default class scheduler {
           console.error("Action in the past, not scheduling");
           return;
         }
-        job = schedule.scheduleJob(action.executeDateTime, () => this.callback(workerId));
+        job = schedule.scheduleJob({ ...action.executeDateTime, tz: "CEST" }, () => this.callback(workerId));
         break;
       case ActionRepeat.DAILY:
         job = schedule.scheduleJob(
