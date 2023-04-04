@@ -51,7 +51,7 @@ export class AddActionComponent implements OnInit {
       .actionControllerCreate({ workerId: this.workerId!, body: {repeat: this.toRepeatEnum(this.repeat), executeDateTime: this.executeDateTime , durationSeconds: this.durationSeconds} })
       .subscribe({
         next: (res) => {
-          this.toastService.success('Hub registered successfully');
+          this.toastService.success('Action created successfully');
           this.router.navigate(['hub', this.hubId!, 'worker', this.workerId!]);
         },
       });

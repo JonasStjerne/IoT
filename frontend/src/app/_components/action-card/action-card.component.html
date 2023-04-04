@@ -1,26 +1,35 @@
 <li class="list-group-item">
     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-          <div class="input-group">
+          <div class="input-group" >
 
-                <span class="input-group-text" id="basic-addon1">Action id</span>
+            <div  class="list-group list-group-horizontal">
+                <span class="input-group-text" id="basic-addon1">id</span>
                 <input [(ngModel)]="action.id" type="text" readonly class="form-control" placeholder="Washer starter"
                       aria-label="action id" aria-describedby="basic-addon1">
+          </div>
+          <div  class="list-group list-group-horizontal">
 
-                      <span class="input-group-text" id="basic-addon1">Action executeDateTime</span>
-                <input [(ngModel)]="action.executeDateTime" type="text" class="form-control" placeholder="Give me a name"
+                      <span class="input-group-text" id="basic-addon1">executeDateTime</span>
+                <input [(ngModel)]="action.executeDateTime" type="datetime-local" class="form-control" placeholder="Give me a name"
                       aria-label="action executeDateTime" aria-describedby="basic-addon1">
-
-                      <span class="input-group-text" id="basic-addon1">Action durationSeconds</span>
+          </div>
+          <div  class="list-group list-group-horizontal">
+                      <span class="input-group-text" id="basic-addon1">durationSeconds</span>
                 <input [(ngModel)]="action.durationSeconds" type="text" class="form-control" placeholder="Washer starter"
                       aria-label="action durationSeconds" aria-describedby="basic-addon1">
+       </div>
+       <div  class="list-group list-group-horizontal">
 
-                      <span class="input-group-text" id="basic-addon1">Action repeat</span>
+                      <span class="input-group-text" id="basic-addon1">repeat</span>
                 <input [(ngModel)]="action.repeat" type="text" class="form-control" placeholder="Washer starter"
                       aria-label="action repeat" aria-describedby="basic-addon1">
+      </div>
                       
           </div>
+         
           <button (click)="this.changeName()" type="button" class="btn btn-success">Save</button>
           <button (click)="this.deleteAction(content)" type="button" class="btn btn-danger">Delete</button>
+      
     </div>
 </li>
 <!-- Modal content -->
