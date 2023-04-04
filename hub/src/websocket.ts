@@ -4,7 +4,7 @@ export function socketConnection(
   { hubId, hubSecret }: { hubId: string; hubSecret: string }
 ) {
   console.log("connecting");
-  const socket = io.connect(`http://${backendHost}:${backendPort}`, {
+  const socket = io.connect(`${backendHost}:${backendPort}`, {
     reconnection: true,
     extraHeaders: {
       Authorization: `Basic ${hubId}.${hubSecret}`,

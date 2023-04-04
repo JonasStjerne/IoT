@@ -14,7 +14,6 @@ export default class scheduler {
     workerDto.actions.forEach((action) => {
       this.scheduleAction(workerDto.id, action);
     });
-    console.log("Scheduled actions for worker", this.schedulContainer);
   }
 
   cancelWorkerJobs(workerId: IWorkerDto["id"]) {
@@ -68,6 +67,7 @@ export default class scheduler {
         );
         break;
     }
+    console.log("Scheduled action for time: ", job!.nextInvocation());
     const workerSchedule = this.schedulContainer[workerId];
     if (workerSchedule) {
       this.schedulContainer[workerId] = [...this.schedulContainer[workerId], job!];

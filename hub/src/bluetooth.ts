@@ -23,14 +23,12 @@ export default class bluetoothService {
         this.subscribe.emit("workerDisconnect", peripheral.uuid);
         delete this.connectedDevices[peripheral.uuid];
       });
-      this.logPeripheral(peripheral);
       await peripheral.connectAsync();
       this.subscribe.emit("workerConnect", peripheral.id);
       const { characteristics } = await peripheral.discoverSomeServicesAndCharacteristicsAsync(serviceUUIDs, [
         batteryChaUUID,
         actionChaUUID,
       ]);
-      console.log("Characteristics are ", characteristics);
       this.connectedDevices[peripheral.uuid] = characteristics;
     });
 
