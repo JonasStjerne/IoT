@@ -1,23 +1,22 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
   ForbiddenException,
+  Get,
+  Param,
+  Patch,
+  Post,
   ValidationPipe,
 } from '@nestjs/common';
-import { HubService } from './hub.service';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Auth } from '../auth/_decorators/auth.decorator';
+import { AuthUser } from '../auth/_decorators/user.decorator';
+import { User, UserType } from '../users/entities/user.entity';
 import { CreateHubDto } from './dto/create-hub.dto';
-import { UpdateHubDto } from './dto/update-hub.dto';
 import { RegisterHubDto } from './dto/register-hub.dto';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { UserType } from 'src/users/entities/user.entity';
-import { Auth } from 'src/auth/_decorators/auth.decorator';
-import { AuthUser } from 'src/auth/_decorators/user.decorator';
-import { User } from 'src/users/entities/user.entity';
+import { UpdateHubDto } from './dto/update-hub.dto';
+import { HubService } from './hub.service';
 
 @ApiTags('Hub')
 @Controller('hub')

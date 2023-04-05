@@ -1,19 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
+import { EventService } from '../event/event.service';
+import { User } from '../users/entities/user.entity';
+import { Worker } from '../worker/entities/worker.entity';
 import { CreateActionDto } from './dto/create-action.dto';
 import { UpdateActionDto } from './dto/update-action.dto';
 import { Action } from './entities/action.entity';
-import { Worker } from 'src/worker/entities/worker.entity';
-import { EventService } from 'src/event/event.service';
 
 @Injectable()
 export class ActionService {
   constructor(
     @InjectRepository(Action) private actionRepository: Repository<Action>,
     @InjectRepository(Worker) private workerRepository: Repository<Worker>,
-    @InjectRepository(User) private usersRepository: Repository<User>,
     private eventService: EventService,
   ) {}
 

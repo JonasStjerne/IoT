@@ -1,10 +1,9 @@
-import { Worker } from 'src/worker/entities/worker.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Hub } from 'src/hub/entities/hub.entity';
-import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
-import { HubService } from 'src/hub/hub.service';
+import { Hub } from '../hub/entities/hub.entity';
+import { User } from '../users/entities/user.entity';
+import { Worker } from '../worker/entities/worker.entity';
 import { CreateWorkerDto } from './dto/create-worker.dto';
 import { UpdateWorkerDto } from './dto/update-worker.dto';
 

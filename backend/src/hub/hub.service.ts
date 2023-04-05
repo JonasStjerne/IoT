@@ -1,21 +1,18 @@
 import {
   ForbiddenException,
-  Inject,
   Injectable,
   NotFoundException,
-  Scope,
 } from '@nestjs/common';
-import { User } from 'src/users/entities/user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { BatteryLevelDto } from '../event/dto/batteryLevel.dto';
+import { User } from '../users/entities/user.entity';
+import { Worker } from '../worker/entities/worker.entity';
+import { WorkerService } from '../worker/worker.service';
 import { CreateHubDto } from './dto/create-hub.dto';
 import { RegisterHubDto } from './dto/register-hub.dto';
 import { UpdateHubDto } from './dto/update-hub.dto';
 import { Hub, HubState } from './entities/hub.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { WorkerService } from 'src/worker/worker.service';
-import { BatteryLevelDto } from 'src/event/dto/batteryLevel.dto';
-import { WorkerConnectDto } from '../event/dto/workerConnect.dto';
-import { Worker } from 'src/worker/entities/worker.entity';
 
 @Injectable()
 export class HubService {

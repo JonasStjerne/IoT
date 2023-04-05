@@ -1,15 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from 'src/users/users.service';
-import { User } from '../users/entities/user.entity';
-import * as bcrypt from 'bcrypt';
-import { UnprocessableEntityException } from '@nestjs/common/exceptions/unprocessable-entity.exception';
 import { ApiProperty } from '@nestjs/swagger';
-import { AuthUser, IJwtPayload, IAuthHub } from './auth.model';
-import { Hub } from 'src/hub/entities/hub.entity';
-import { UnauthorizedException } from '@nestjs/common/exceptions';
-import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
+import { Repository } from 'typeorm';
+import { Hub } from '../hub/entities/hub.entity';
+import { User } from '../users/entities/user.entity';
+import { UsersService } from '../users/users.service';
+import { AuthUser, IAuthHub, IJwtPayload } from './auth.model';
 
 @Injectable()
 export class AuthService {

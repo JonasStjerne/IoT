@@ -1,14 +1,12 @@
 import { IsNotEmpty, Max, Min } from 'class-validator';
-import { Action } from 'src/action/entities/action.entity';
 import {
   Column,
   Entity,
-  Generated,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Action } from '../../action/entities/action.entity';
 
 import { Hub } from '../../hub/entities/hub.entity';
 

@@ -1,17 +1,16 @@
 import {
   BadRequestException,
-  ConflictException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Hub, HubState } from 'src/hub/entities/hub.entity';
-import { HubService } from 'src/hub/hub.service';
 import { Socket } from 'socket.io';
-import { AuthService } from 'src/auth/auth.service';
-import { Action } from 'src/action/entities/action.entity';
-import { WorkerService } from 'src/worker/worker.service';
-import { User } from 'src/users/entities/user.entity';
-import { Worker } from 'src/worker/entities/worker.entity';
+import { Action } from '../action/entities/action.entity';
+import { AuthService } from '../auth/auth.service';
+import { Hub, HubState } from '../hub/entities/hub.entity';
+import { HubService } from '../hub/hub.service';
+import { User } from '../users/entities/user.entity';
+import { Worker } from '../worker/entities/worker.entity';
+import { WorkerService } from '../worker/worker.service';
 
 @Injectable()
 export class EventService {

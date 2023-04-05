@@ -1,14 +1,13 @@
 import {
   Body,
-  Controller,
-  Post,
-  UseGuards,
-  Request,
-  Delete,
   ConflictException,
+  Controller,
+  Delete,
+  Post,
+  Request,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Auth } from 'src/auth/_decorators/auth.decorator';
+import { Auth } from '../auth/_decorators/auth.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 

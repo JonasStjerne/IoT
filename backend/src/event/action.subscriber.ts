@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Action } from 'src/action/entities/action.entity';
 import {
   Connection,
   EntitySubscriberInterface,
@@ -7,6 +6,7 @@ import {
   RemoveEvent,
   UpdateEvent,
 } from 'typeorm';
+import { Action } from '../action/entities/action.entity';
 import { EventService } from './event.service';
 
 @Injectable()
