@@ -19,16 +19,19 @@ export class EventService {
     private readonly authService: AuthService,
     private readonly workerService: WorkerService,
   ) {}
-  wsClients: Socket[] = [];
+
+  wsClients: Map<string, Socket> = new Map();
 
   async workerStateChange() {
     return 'this should update the worker state in the db';
   }
 
   async hubConnected(hubId: Hub['id'], socket: Socket) {
-    await this.hubService.setSocketId(hubId, socket.id);
-    await this.hubService.setState(hubId, HubState.ONLINE);
-    this.wsClients.push(socket);
+    await Promise.all([
+      this.hubService.setSocketId(hubId, socket.id),
+      this.hubService.setState(hubId, HubState.ONLINE),
+    ]);
+    this.wsClients.set(socket.id, socket);
   }
 
   async hubDisconnected(hubId: Hub['id'], socket: Socket) {
@@ -37,7 +40,7 @@ export class EventService {
       this.hubService.setSocketId(hubId, null),
       this.hubService.deleteRealtionToAllWorkers(hubId),
     ]);
-    this.wsClients = this.wsClients.filter((client) => client.id !== socket.id);
+    this.wsClients.delete(socket.id);
   }
 
   async getHubData(hubId: string) {
@@ -60,8 +63,6 @@ export class EventService {
   }
 
   async pushNewDataToClient(action: Action) {
-    console.log('Finding action', action.worker.id);
-    // const actionDb = await this.actionService.findOneBy(action.id);
     //Find the owning hub
     const ownerHub = await this.hubService.getHubByWorkerId(action.worker.id);
     //If no hub owns the worker, the worker should not be able to get altered by a user.
@@ -70,9 +71,8 @@ export class EventService {
       throw new BadRequestException('Worker not online anymore');
     }
     //Find the socket of the hub
-    const client = this.wsClients.find(
-      (client) => client.id === ownerHub.socketId,
-    );
+    const client = this.wsClients.get(ownerHub.socketId);
+
     //If no socket is found, the hub is not online
     if (!client) {
       return;
@@ -96,9 +96,7 @@ export class EventService {
     }
 
     //Find the socket of the hub
-    const client = this.wsClients.find(
-      (client) => client.id === hubDb.socketId,
-    );
+    const client = this.wsClients.get(hubDb.socketId);
     //If no socket is found, the hub is not online
     if (!client) {
       throw new BadRequestException('Hub not online');
