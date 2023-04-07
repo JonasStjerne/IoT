@@ -9,11 +9,19 @@ import { ActionApiService } from 'src/app/_api/services';
   styleUrls: ['./add-action.component.css']
 })
 export class AddActionComponent implements OnInit {
-  repeat : string = '';
+  repeat : string = 'once';
   executeDateTime = '';
   durationSeconds = 0;
   workerId: string | null = null;
   hubId: string | null = null;
+
+  repeats = [
+    {id: 'once', name: "Once"},
+    {id: 'daily', name: "Daily"},
+    {id: 'weekly', name: "Weekly"},
+    {id: 'monthly', name: "Monthly"},
+    {id: 'yealy', name: "Yearly"}
+ ];
 
   constructor(
     private actionApiService: ActionApiService,
