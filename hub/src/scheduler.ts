@@ -14,7 +14,6 @@ export default class scheduler {
     workerDto.actions.forEach((action) => {
       this.scheduleAction(workerDto.id, action);
     });
-    console.log("Scheduled actions for worker", this.schedulContainer);
   }
 
   cancelWorkerJobs(workerId: IWorkerDto["id"]) {
@@ -38,11 +37,17 @@ export default class scheduler {
           console.error("Action in the past, not scheduling");
           return;
         }
-        job = schedule.scheduleJob(action.executeDateTime, () => this.callback(workerId));
+        job = schedule.scheduleJob({ ...action.executeDateTime, tz: "Europe/Copenhagen" }, () =>
+          this.callback(workerId)
+        );
         break;
       case ActionRepeat.DAILY:
         job = schedule.scheduleJob(
-          { hour: action.executeDateTime.getHours(), minute: action.executeDateTime.getMinutes() },
+          {
+            hour: action.executeDateTime.getHours(),
+            minute: action.executeDateTime.getMinutes(),
+            tz: "Europe/Copenhagen",
+          },
           () => this.callback(workerId)
         );
         break;
@@ -52,6 +57,7 @@ export default class scheduler {
             hour: action.executeDateTime.getHours(),
             minute: action.executeDateTime.getMinutes(),
             dayOfWeek: action.executeDateTime.getDate(),
+            tz: "Europe/Copenhagen",
           },
           () => this.callback(workerId)
         );
@@ -63,11 +69,13 @@ export default class scheduler {
             minute: action.executeDateTime.getMinutes(),
             dayOfWeek: action.executeDateTime.getDate(),
             year: action.executeDateTime.getFullYear(),
+            tz: "Europe/Copenhagen",
           },
           () => this.callback(workerId)
         );
         break;
     }
+    console.log("Scheduled action for time: ", job!.nextInvocation());
     const workerSchedule = this.schedulContainer[workerId];
     if (workerSchedule) {
       this.schedulContainer[workerId] = [...this.schedulContainer[workerId], job!];

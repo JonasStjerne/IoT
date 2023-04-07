@@ -68,6 +68,10 @@ socket.on("connect", () => {
     sch.scheduleActions(data);
   });
 
+  socket.on("instantAction", (workerId: string) => {
+    BluetoothService.sendAction(workerId);
+  });
+
   //Function for debuggin websocket connection
   setInterval(function () {
     socket.emit("serverEvent", Math.random());

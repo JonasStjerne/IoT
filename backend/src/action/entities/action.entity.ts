@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Worker } from 'src/worker/entities/worker.entity';
-import { IsDate, IsDateString, IsNotEmpty, MinDate } from 'class-validator';
+import { Worker } from '../../worker/entities/worker.entity';
+import { IsDate, IsNotEmpty, MinDate } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export enum ActionRepeat {

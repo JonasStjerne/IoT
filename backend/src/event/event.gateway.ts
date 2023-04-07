@@ -1,23 +1,20 @@
+import { Request, UseGuards } from '@nestjs/common';
 import {
-  WebSocketGateway,
-  SubscribeMessage,
-  MessageBody,
-  WebSocketServer,
-  OnGatewayConnection,
-  WsException,
-  OnGatewayDisconnect,
   ConnectedSocket,
+  MessageBody,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
 } from '@nestjs/websockets';
-import { EventService } from './event.service';
 import { Server, Socket } from 'socket.io';
-import { WsGuard } from 'src/auth/_guards/ws.guard';
-import { UseGuards, Request } from '@nestjs/common';
-import { HubService } from 'src/hub/hub.service';
-import { AuthService } from 'src/auth/auth.service';
-import { Hub, HubState } from 'src/hub/entities/hub.entity';
-import { WorkerConnectDto } from './dto/workerConnect.dto';
-import { AuthHub } from 'src/auth/_decorators/hub.decorator';
+import { AuthHub } from '../auth/_decorators/hub.decorator';
+import { WsGuard } from '../auth/_guards/ws.guard';
+import { Hub } from '../hub/entities/hub.entity';
+import { HubService } from '../hub/hub.service';
 import { BatteryLevelDto } from './dto/batteryLevel.dto';
+import { EventService } from './event.service';
 @UseGuards(WsGuard)
 @WebSocketGateway()
 export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -25,7 +22,6 @@ export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private readonly eventService: EventService,
     private readonly hubsService: HubService,
-    private readonly authService: AuthService,
   ) {}
 
   //Event for testing
