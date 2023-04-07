@@ -4,25 +4,25 @@
 
             <div  class="list-group list-group-horizontal">
                 <span class="input-group-text" id="basic-addon1">id</span>
-                <input [(ngModel)]="action.id" type="text" readonly class="form-control" placeholder="Washer starter"
+                <input [(ngModel)]="action.id" type="text" readonly class="form-control" placeholder="id"
                       aria-label="action id" aria-describedby="basic-addon1">
           </div>
           <div  class="list-group list-group-horizontal">
 
                       <span class="input-group-text" id="basic-addon1">executeDateTime</span>
-                <input [(ngModel)]="action.executeDateTime" type="datetime-local" class="form-control" placeholder="Give me a name"
+                <input [(ngModel)]="action.executeDateTime" type="datetime-local" class="form-control" placeholder="Give me a date"
                       aria-label="action executeDateTime" aria-describedby="basic-addon1">
           </div>
           <div  class="list-group list-group-horizontal">
                       <span class="input-group-text" id="basic-addon1">durationSeconds</span>
-                <input [(ngModel)]="action.durationSeconds" type="text" class="form-control" placeholder="Washer starter"
+                <input [(ngModel)]="action.durationSeconds" type="text" class="form-control" placeholder="Give me a duration"
                       aria-label="action durationSeconds" aria-describedby="basic-addon1">
        </div>
        <div  class="list-group list-group-horizontal">
-
                       <span class="input-group-text" id="basic-addon1">repeat</span>
-                <input [(ngModel)]="action.repeat" type="text" class="form-control" placeholder="Washer starter"
-                      aria-label="action repeat" aria-describedby="basic-addon1">
+                      <select [(ngModel)]="action.repeat" class="form-control">
+                        <option *ngFor="let r of repeats" [ngValue]="r.id">{{r.name}}</option>
+                     </select>
       </div>
                       
           </div>

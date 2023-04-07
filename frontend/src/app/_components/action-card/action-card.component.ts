@@ -12,6 +12,15 @@ import { ActionApiService } from 'src/app/_api/services';
 export class ActionCardComponent implements OnInit {
   @Input() action!: Action; 
   @Input() workerId!:Worker['id'];
+
+  repeats = [
+    {id: 'once', name: "Once"},
+    {id: 'daily', name: "Daily"},
+    {id: 'weekly', name: "Weekly"},
+    {id: 'monthly', name: "Monthly"},
+    {id: 'yealy', name: "Yearly"}
+ ];
+
   constructor(
     private actionApiService: ActionApiService,
     private toastService: ToastrService,
@@ -22,9 +31,13 @@ export class ActionCardComponent implements OnInit {
   }
   changeName() {
     this.actionApiService
-      .actionControllerUpdate({id: this.action.id, body: {} })
+      .actionControllerUpdate({id: this.action.id, body: {
+        durationSeconds: this.action.durationSeconds,
+        executeDateTime: this.action.executeDateTime,
+        repeat: this.action.repeat
+      } })
       .subscribe((res) => {
-        this.toastService.success('Action name changed');
+        this.toastService.success('Action changed');
         console.log(res);
       });
   }

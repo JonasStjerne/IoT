@@ -8,7 +8,9 @@
 <form class="w-50 mx-auto">
     <div class="mb-3">
           <label class="form-label">Repeat</label>
-          <input name="repeat" [(ngModel)]="repeat" type="string" class="form-control">
+          <select name="repeat" [(ngModel)]="repeat" class="form-control">
+            <option *ngFor="let r of repeats" [ngValue]="r.id">{{r.name}}</option>
+         </select>
     </div>
     <div class="mb-3">
           <label class="form-label">Date Time</label>
