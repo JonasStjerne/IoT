@@ -32,6 +32,7 @@ export class Worker {
   id: string;
 
   @Column({ nullable: true })
+  @IsNotEmpty()
   name: string;
 
   @Column({
