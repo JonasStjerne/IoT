@@ -1,10 +1,8 @@
 require("dotenv").config();
-import scheduler from "./scheduler";
-import { ActionRepeat } from "./models/action.dto";
-import { IWorkerDto, WorkerAction, WorkerState, WorkerStatus } from "./models/worker.dto";
-import { socketConnection } from "./websocket";
-import noble from "@abandonware/noble";
 import bluetoothService from "./bluetooth";
+import { IWorkerDto } from "./models/worker.dto";
+import scheduler from "./scheduler";
+import { socketConnection } from "./websocket";
 
 //Settings - keep in code to enable them being updated for deployed hub through GitHhb
 const ACTION_SERVICE_UUID = "19b10000e8f2537e4f6cd104768a1214";
@@ -35,19 +33,25 @@ socket.on("connect", () => {
   );
 
   //Subscribe to events from the bluetooth service
-  BluetoothService.subscribe.on("workerDisconnect", (workerId: IWorkerDto["id"]) => {
-    console.log("Worker disconnet, with id", workerId);
-    sch.cancelWorkerJobs(workerId);
-    socket.emit("workerDisconnect", workerId);
-  });
+  BluetoothService.subscribe.on(
+    "workerDisconnect",
+    (workerId: IWorkerDto["id"]) => {
+      console.log("Worker disconnet, with id", workerId);
+      sch.cancelWorkerJobs(workerId);
+      socket.emit("workerDisconnect", workerId);
+    }
+  );
 
-  BluetoothService.subscribe.on("workerConnect", (workerId: IWorkerDto["id"]) => {
-    console.log("Worker  connect, with id", workerId);
-    socket.emit("workerConnect", workerId);
-  });
+  BluetoothService.subscribe.on(
+    "workerConnect",
+    (workerId: IWorkerDto["id"]) => {
+      console.log("Worker  connect, with id", workerId);
+      socket.emit("workerConnect", workerId);
+    }
+  );
 
   //Start polling for battery updates from the workers at a interval
-  const currentBatteryLevels: {
+  let currentBatteryLevels: {
     [workerUUID: string]: number;
   } = {};
   setInterval(async () => {
@@ -55,6 +59,7 @@ socket.on("connect", () => {
     const batteryData = await BluetoothService.getBatteryLevel();
     //If there are changes to any of the battery levels send them all
     if (currentBatteryLevels != batteryData) {
+      currentBatteryLevels = batteryData;
       socket.emit("batteryData", batteryData);
     }
   }, BATTERY_UPDATE_INTERVAL);
