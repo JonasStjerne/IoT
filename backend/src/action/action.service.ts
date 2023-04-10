@@ -29,7 +29,7 @@ export class ActionService {
 
     // Create new action
     const newAction = this.actionRepository.create(createActionDto);
-    newAction.worker = worker;
+    newAction.worker = Promise.resolve(worker);
     this.actionRepository.save(newAction);
 
     return newAction;
@@ -37,8 +37,6 @@ export class ActionService {
 
   async findAll(workerId: Worker['id']) {
     const workerDb = await this.workerRepository.findOneBy({ id: workerId });
-    console.log(workerDb);
-    console.log(workerDb.actions);
     return workerDb.actions;
   }
 

@@ -3,7 +3,9 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Socket } from 'socket.io';
+import { Repository } from 'typeorm';
 import { Action } from '../action/entities/action.entity';
 import { AuthService } from '../auth/auth.service';
 import { Hub, HubState } from '../hub/entities/hub.entity';
@@ -18,6 +20,7 @@ export class EventService {
     private readonly hubService: HubService,
     private readonly authService: AuthService,
     private readonly workerService: WorkerService,
+    @InjectRepository(Action) private actionRepository: Repository<Action>,
   ) {}
 
   wsClients: Map<string, Socket> = new Map();
@@ -63,8 +66,9 @@ export class EventService {
   }
 
   async pushNewDataToClient(action: Action) {
+    const workerDb = await action.worker;
     //Find the owning hub
-    const ownerHub = await this.hubService.getHubByWorkerId(action.worker.id);
+    const ownerHub = await this.hubService.getHubByWorkerId(workerDb.id);
     //If no hub owns the worker, the worker should not be able to get altered by a user.
     //If this happens, it's a bug
     if (!ownerHub) {
@@ -78,8 +82,8 @@ export class EventService {
       return;
     }
     //Send the new data to the client. The client expects to get the whole worker object including actions
-    const worker = ownerHub.workers.find((w) => w.id === action.worker.id);
-    const workerExtended = await this.workerService.findOneById(worker.id);
+    // const worker = ownerHub.workers.find((w) => w.id === wokerDb.id);
+    const workerExtended = await this.workerService.findOneById(workerDb.id);
     client.emit('workerData', workerExtended);
   }
 

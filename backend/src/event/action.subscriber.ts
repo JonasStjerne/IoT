@@ -24,18 +24,18 @@ export class ActionSubscriber implements EntitySubscriberInterface<Action> {
     return Action;
   }
 
-  afterInsert(event: InsertEvent<Action>) {
+  async afterInsert(event: InsertEvent<Action>) {
     console.log(`AFTER ACTION INSERTED: `, event.entity);
-    this.eventService.pushNewDataToClient(event.entity);
+    await this.eventService.pushNewDataToClient(event.entity);
   }
 
-  afterUpdate(event: UpdateEvent<Action>) {
+  async afterUpdate(event: UpdateEvent<Action>) {
     console.log(`AFTER ACTION UPDATE: `, event.entity);
-    this.eventService.pushNewDataToClient(event.entity as Action);
+    await this.eventService.pushNewDataToClient(event.entity as Action);
   }
 
-  async beforeSoftRemove(event: RemoveEvent<Action>) {
+  async beforeRemove(event: RemoveEvent<Action>) {
     console.log(`BEFORE ACTION REMOVE: `, event.entity);
-    this.eventService.pushNewDataToClient(event.entity);
+    await this.eventService.pushNewDataToClient(event.entity);
   }
 }
