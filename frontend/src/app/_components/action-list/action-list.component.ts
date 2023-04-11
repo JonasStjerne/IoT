@@ -4,11 +4,10 @@ import { Action } from 'src/app/_api/models';
 import { ActionApiService } from 'src/app/_api/services';
 import { UserService } from 'src/app/_services/user.service';
 
-
 @Component({
   selector: 'app-action-list',
   templateUrl: './action-list.component.html',
-  styleUrls: ['./action-list.component.css']
+  styleUrls: ['./action-list.component.css'],
 })
 export class ActionListComponent implements OnInit {
   constructor(
@@ -19,22 +18,18 @@ export class ActionListComponent implements OnInit {
   workerId: string | null = null;
   actions: Action[] = [];
 
-
   ngOnInit(): void {
     this.workerId = this.route.snapshot.paramMap.get('workerId');
 
     if (this.workerId) {
-      this.actionApiService.actionControllerFindAll({ id: this.workerId}).subscribe({
-        next: (res) => {
-          this.actions = res;
-        },
-      }); 
+      console.log(this.workerId);
+      this.actionApiService
+        .actionControllerFindAll({ workerId: this.workerId! })
+        .subscribe({
+          next: (res) => {
+            this.actions = res;
+          },
+        });
     }
   }
-
 }
-
-
-
-
-
