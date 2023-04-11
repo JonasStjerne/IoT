@@ -76,13 +76,6 @@ socket.on("connect", () => {
   socket.on("instantAction", (workerId: string) => {
     BluetoothService.sendAction(workerId);
   });
-
-  //Function for debuggin websocket connection
-  setInterval(function () {
-    socket.emit("serverEvent", Math.random());
-    // socket.emit("getWorkerData");
-    console.log("message sent to the server");
-  }, 10000);
 });
 
 // socket.on("clientEvent", function (data: any) {

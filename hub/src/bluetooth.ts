@@ -1,20 +1,21 @@
 import noble from "@abandonware/noble";
-import events from "events";
 import { EventEmitter } from "stream";
 export default class bluetoothService {
   private actionChaUUID: string;
   private batteryChaUUID: string;
   subscribe: EventEmitter = new EventEmitter();
 
-  constructor(serviceUUIDs: string[], batteryChaUUID: string, actionChaUUID: string) {
+  constructor(
+    serviceUUIDs: string[],
+    batteryChaUUID: string,
+    actionChaUUID: string
+  ) {
     this.actionChaUUID = actionChaUUID;
     this.batteryChaUUID = batteryChaUUID;
     noble.on("stateChange", async (state) => {
       if (state === "poweredOn") {
         console.log("Started scanning for service ", serviceUUIDs);
         noble.startScanning(serviceUUIDs, true);
-      } else {
-        noble.stopScanningAsync();
       }
     });
 
@@ -25,10 +26,11 @@ export default class bluetoothService {
       });
       await peripheral.connectAsync();
       this.subscribe.emit("workerConnect", peripheral.id);
-      const { characteristics } = await peripheral.discoverSomeServicesAndCharacteristicsAsync(serviceUUIDs, [
-        batteryChaUUID,
-        actionChaUUID,
-      ]);
+      const { characteristics } =
+        await peripheral.discoverSomeServicesAndCharacteristicsAsync(
+          serviceUUIDs,
+          [batteryChaUUID, actionChaUUID]
+        );
       this.connectedDevices[peripheral.uuid] = characteristics;
     });
 
@@ -57,7 +59,9 @@ export default class bluetoothService {
     );
     console.log("\thello my local name is:");
     console.log("\t\t" + peripheral.advertisement.localName);
-    console.log("\tcan I interest you in any of the following advertised services:");
+    console.log(
+      "\tcan I interest you in any of the following advertised services:"
+    );
     console.log("\t\t" + JSON.stringify(peripheral.advertisement.serviceUuids));
   }
 
@@ -68,9 +72,14 @@ export default class bluetoothService {
       console.error(`Worker ${workerUUID} not connected`);
       return;
     }
-    const actionCharacteristic = characteristics.find((cha) => cha.uuid == this.actionChaUUID);
+    const actionCharacteristic = characteristics.find(
+      (cha) => cha.uuid == this.actionChaUUID
+    );
     if (!actionCharacteristic) {
-      console.error("Action characteristic not exposed for worker ", workerUUID);
+      console.error(
+        "Action characteristic not exposed for worker ",
+        workerUUID
+      );
       return;
     }
     return actionCharacteristic.writeAsync(Buffer.alloc(1, 1, "binary"), false);
@@ -80,9 +89,14 @@ export default class bluetoothService {
     const batteryLevels: { [workerUUID: string]: number } = {};
     const workerUUIDS = Object.keys(this.connectedDevices);
     for (let i = 0; i < workerUUIDS.length; i++) {
-      const characteristic = this.connectedDevices[workerUUIDS[i]].find((cha) => cha.uuid == this.batteryChaUUID);
+      const characteristic = this.connectedDevices[workerUUIDS[i]].find(
+        (cha) => cha.uuid == this.batteryChaUUID
+      );
       if (!characteristic) {
-        console.error("Battery characteristic not exposed for worker ", workerUUIDS[i]);
+        console.error(
+          "Battery characteristic not exposed for worker ",
+          workerUUIDS[i]
+        );
         continue;
       }
       const batteryLevel = (await characteristic.readAsync())[0];
