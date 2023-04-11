@@ -1,20 +1,20 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
-  Query,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ActionService } from './action.service';
-import { CreateActionDto } from './dto/create-action.dto';
-import { UpdateActionDto } from './dto/update-action.dto';
 import { Auth } from '../auth/_decorators/auth.decorator';
 import { AuthUser } from '../auth/_decorators/user.decorator';
 import { User } from '../users/entities/user.entity';
+import { ActionService } from './action.service';
+import { CreateActionDto } from './dto/create-action.dto';
+import { UpdateActionDto } from './dto/update-action.dto';
 
 @ApiTags('Action')
 @Controller('action')
@@ -34,7 +34,8 @@ export class ActionController {
 
   @Get()
   @ApiOperation({ summary: 'Return all actions connected to a worker' })
-  async findAll(@Param('id') id: string) {
+  async findAll(@Query('workerId') id: string) {
+    console.log('id is:', id);
     return await this.actionService.findAll(id);
   }
 

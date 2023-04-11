@@ -40,6 +40,10 @@ export class ActionApiService extends BaseService {
    * This method doesn't expect any request body.
    */
   actionControllerFindAll$Response(params: {
+
+    /**
+     * Worker id
+     */
     id: string;
     context?: HttpContext
   }
@@ -73,6 +77,10 @@ export class ActionApiService extends BaseService {
    * This method doesn't expect any request body.
    */
   actionControllerFindAll(params: {
+
+    /**
+     * Worker id
+     */
     id: string;
     context?: HttpContext
   }
