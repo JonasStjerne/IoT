@@ -12,6 +12,18 @@ const BATTERY_CHAR_UUID = "2a19";
 const BATTERY_UPDATE_INTERVAL = 10000;
 
 //Connect to the backend
+if (
+  !process.env.BACKEND_HOST ||
+  !process.env.BACKEND_PORT ||
+  !process.env.HUB_ID ||
+  process.env.HUB_SECRET
+) {
+  console.error("The following properties are not set in .env file:");
+  !process.env.BACKEND_HOST ?? console.error("BACKEND_HOST");
+  !process.env.BACKEND_PORT ?? console.error("BACKEND_PORT");
+  !process.env.HUB_ID ?? console.error("HUB_ID");
+  !process.env.HUB_SECRET ?? console.error("HUB_SECRET");
+}
 const socket = socketConnection(
   {
     backendHost: process.env.BACKEND_HOST!,
