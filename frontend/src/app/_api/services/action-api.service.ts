@@ -40,18 +40,14 @@ export class ActionApiService extends BaseService {
    * This method doesn't expect any request body.
    */
   actionControllerFindAll$Response(params: {
-
-    /**
-     * Worker id
-     */
-    id: string;
+    workerId: string;
     context?: HttpContext
   }
 ): Observable<StrictHttpResponse<Array<Action>>> {
 
     const rb = new RequestBuilder(this.rootUrl, ActionApiService.ActionControllerFindAllPath, 'get');
     if (params) {
-      rb.path('id', params.id, {});
+      rb.query('workerId', params.workerId, {});
     }
 
     return this.http.request(rb.build({
@@ -77,11 +73,7 @@ export class ActionApiService extends BaseService {
    * This method doesn't expect any request body.
    */
   actionControllerFindAll(params: {
-
-    /**
-     * Worker id
-     */
-    id: string;
+    workerId: string;
     context?: HttpContext
   }
 ): Observable<Array<Action>> {
