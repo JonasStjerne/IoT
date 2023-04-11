@@ -20,7 +20,7 @@ export class AddActionComponent implements OnInit {
     {id: 'daily', name: "Daily"},
     {id: 'weekly', name: "Weekly"},
     {id: 'monthly', name: "Monthly"},
-    {id: 'yealy', name: "Yearly"}
+    {id: 'yearly', name: "Yearly"}
  ];
 
   constructor(
