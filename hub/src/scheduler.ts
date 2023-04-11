@@ -33,24 +33,24 @@ export default class scheduler {
 
   private scheduleAction(workerId: IWorkerDto["id"], action: IActionDto) {
     let job: schedule.Job;
-    console.log(action.executeDateTime);
+    const executeDateTime = new Date(action.executeDateTime);
     switch (action.repeat) {
       case ActionRepeat.ONCE:
         //If event in the past dont schedule
-        if (new Date(action.executeDateTime) < new Date()) {
+        if (new Date(executeDateTime) < new Date()) {
           console.error("Action in the past, not scheduling");
           return;
         }
         job = schedule.scheduleJob(
-          { ...action.executeDateTime, tz: "Europe/Copenhagen" },
+          { ...executeDateTime, tz: "Europe/Copenhagen" },
           () => this.callback(workerId)
         );
         break;
       case ActionRepeat.DAILY:
         job = schedule.scheduleJob(
           {
-            hour: action.executeDateTime.getHours(),
-            minute: action.executeDateTime.getMinutes(),
+            hour: executeDateTime.getHours(),
+            minute: executeDateTime.getMinutes(),
             tz: "Europe/Copenhagen",
           },
           () => this.callback(workerId)
@@ -59,9 +59,9 @@ export default class scheduler {
       case ActionRepeat.WEEKLY:
         job = schedule.scheduleJob(
           {
-            hour: action.executeDateTime.getHours(),
-            minute: action.executeDateTime.getMinutes(),
-            dayOfWeek: action.executeDateTime.getDate(),
+            hour: executeDateTime.getHours(),
+            minute: executeDateTime.getMinutes(),
+            dayOfWeek: executeDateTime.getDate(),
             tz: "Europe/Copenhagen",
           },
           () => this.callback(workerId)
@@ -70,10 +70,10 @@ export default class scheduler {
       case ActionRepeat.YEARLY:
         job = schedule.scheduleJob(
           {
-            hour: action.executeDateTime.getHours(),
-            minute: action.executeDateTime.getMinutes(),
-            dayOfWeek: action.executeDateTime.getDate(),
-            year: action.executeDateTime.getFullYear(),
+            hour: executeDateTime.getHours(),
+            minute: executeDateTime.getMinutes(),
+            dayOfWeek: executeDateTime.getDate(),
+            year: executeDateTime.getFullYear(),
             tz: "Europe/Copenhagen",
           },
           () => this.callback(workerId)
