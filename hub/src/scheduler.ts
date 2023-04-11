@@ -33,7 +33,7 @@ export default class scheduler {
 
   private scheduleAction(workerId: IWorkerDto["id"], action: IActionDto) {
     let job: schedule.Job;
-    console.log(action.executeDateTime.toDateString());
+    console.log(action.executeDateTime);
     switch (action.repeat) {
       case ActionRepeat.ONCE:
         //If event in the past dont schedule
