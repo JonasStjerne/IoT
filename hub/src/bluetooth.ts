@@ -16,12 +16,12 @@ export default class bluetoothService {
       if (state === "poweredOn") {
         console.log("State: ", state);
         console.log("Started scanning for service ", serviceUUIDs);
-        noble.startScanning(serviceUUIDs, true);
+        noble.startScanning(serviceUUIDs, false);
       }
     });
 
     noble.on("discover", async (peripheral) => {
-      noble.stopScanning();
+      await noble.stopScanningAsync();
       peripheral.on("disconnect", () => {
         this.subscribe.emit("workerDisconnect", peripheral.uuid);
         delete this.connectedDevices[peripheral.uuid];
@@ -34,7 +34,7 @@ export default class bluetoothService {
           [batteryChaUUID, actionChaUUID]
         );
       this.connectedDevices[peripheral.uuid] = characteristics;
-      noble.startScanning(serviceUUIDs, true);
+      noble.startScanning(serviceUUIDs, false);
     });
 
     noble.on("warning", (warning: any) => {
