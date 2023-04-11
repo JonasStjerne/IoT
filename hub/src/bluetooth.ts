@@ -33,6 +33,7 @@ export default class bluetoothService {
           [batteryChaUUID, actionChaUUID]
         );
       this.connectedDevices[peripheral.uuid] = characteristics;
+      noble.startScanning(serviceUUIDs, true);
     });
 
     noble.on("warning", (warning: any) => {
