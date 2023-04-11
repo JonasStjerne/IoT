@@ -21,6 +21,7 @@ export default class bluetoothService {
     });
 
     noble.on("discover", async (peripheral) => {
+      noble.stopScanning();
       peripheral.on("disconnect", () => {
         this.subscribe.emit("workerDisconnect", peripheral.uuid);
         delete this.connectedDevices[peripheral.uuid];
