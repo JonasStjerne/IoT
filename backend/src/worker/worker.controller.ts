@@ -1,23 +1,21 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  Query,
   ForbiddenException,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
 } from '@nestjs/common';
-import { WorkerService } from './worker.service';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Auth } from '../auth/_decorators/auth.decorator';
+import { AuthUser } from '../auth/_decorators/user.decorator';
+import { User } from '../users/entities/user.entity';
 import { CreateWorkerDto } from './dto/create-worker.dto';
 import { UpdateWorkerDto } from './dto/update-worker.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Auth } from 'src/auth/_decorators/auth.decorator';
-import { AuthUser } from 'src/auth/_decorators/user.decorator';
-import { User } from 'src/users/entities/user.entity';
-import { Hub } from 'src/hub/entities/hub.entity';
-import { Worker } from './entities/worker.entity';
+import { WorkerService } from './worker.service';
 
 @ApiTags('Worker')
 @Controller('worker')
@@ -30,8 +28,9 @@ export class WorkerController {
   }
 
   @Get()
-  findAll() {
-    return this.workerService.findAll();
+  @ApiOperation({ summary: 'Return all worker connected to a hub' })
+  async findAll(@Param('id') id: string) {
+    return await this.workerService.findAll(id);
   }
 
   @Get(':id')

@@ -1,10 +1,9 @@
-import { Worker } from 'src/worker/entities/worker.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Hub } from 'src/hub/entities/hub.entity';
-import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
-import { HubService } from 'src/hub/hub.service';
+import { Hub } from '../hub/entities/hub.entity';
+import { User } from '../users/entities/user.entity';
+import { Worker } from '../worker/entities/worker.entity';
 import { CreateWorkerDto } from './dto/create-worker.dto';
 import { UpdateWorkerDto } from './dto/update-worker.dto';
 
@@ -12,15 +11,18 @@ import { UpdateWorkerDto } from './dto/update-worker.dto';
 export class WorkerService {
   constructor(
     @InjectRepository(User) private usersRepository: Repository<User>,
+    @InjectRepository(Hub) private hubsRepository: Repository<Hub>,
     @InjectRepository(Worker) private workerRepository: Repository<Worker>,
   ) {}
 
-  create(createWorkerDto: CreateWorkerDto) {
-    return 'This action adds a new worker';
+  async create(createWorkerDto: CreateWorkerDto) {
+    const newWorker = this.workerRepository.create(createWorkerDto);
+    return await this.workerRepository.save(newWorker);
   }
 
-  findAll() {
-    return `This action returns all worker`;
+  async findAll(hubId: Hub['id']) {
+    const hubDb = await this.hubsRepository.findOneBy({ id: hubId });
+    return hubDb.workers;
   }
 
   async findOneBy(userId: string, workerId: string) {
@@ -32,6 +34,10 @@ export class WorkerService {
       }
     }
     return null;
+  }
+
+  async findOneById(workerId: string) {
+    return await this.workerRepository.findOneBy({ id: workerId });
   }
 
   async update(

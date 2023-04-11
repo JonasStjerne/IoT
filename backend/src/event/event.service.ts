@@ -1,27 +1,49 @@
-import { Injectable, NotImplementedException } from '@nestjs/common';
-import { Hub, HubState } from 'src/hub/entities/hub.entity';
-import { HubService } from 'src/hub/hub.service';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Socket } from 'socket.io';
-import { AuthService } from 'src/auth/auth.service';
+import { Repository } from 'typeorm';
+import { Action } from '../action/entities/action.entity';
+import { AuthService } from '../auth/auth.service';
+import { Hub, HubState } from '../hub/entities/hub.entity';
+import { HubService } from '../hub/hub.service';
+import { User } from '../users/entities/user.entity';
+import { Worker } from '../worker/entities/worker.entity';
+import { WorkerService } from '../worker/worker.service';
 
 @Injectable()
 export class EventService {
   constructor(
     private readonly hubService: HubService,
     private readonly authService: AuthService,
+    private readonly workerService: WorkerService,
+    @InjectRepository(Action) private actionRepository: Repository<Action>,
   ) {}
+
+  wsClients: Map<string, Socket> = new Map();
 
   async workerStateChange() {
     return 'this should update the worker state in the db';
   }
 
-  async hubConnected(hubId: Hub['id'], socketId: string) {
-    throw new NotImplementedException();
+  async hubConnected(hubId: Hub['id'], socket: Socket) {
+    await Promise.all([
+      this.hubService.setSocketId(hubId, socket.id),
+      this.hubService.setState(hubId, HubState.ONLINE),
+    ]);
+    this.wsClients.set(socket.id, socket);
   }
 
-  async hubDisconnected(hubId: Hub['id']) {
-    this.hubService.setState(hubId, HubState.OFFLINE);
-    this.hubService.setSocketId(hubId, null);
+  async hubDisconnected(hubId: Hub['id'], socket: Socket) {
+    await Promise.all([
+      this.hubService.setState(hubId, HubState.OFFLINE),
+      this.hubService.setSocketId(hubId, null),
+      this.hubService.deleteRealtionToAllWorkers(hubId),
+    ]);
+    this.wsClients.delete(socket.id);
   }
 
   async getHubData(hubId: string) {
@@ -41,5 +63,49 @@ export class EventService {
       return null;
     }
     return hub;
+  }
+
+  async pushNewDataToClient(action: Action) {
+    const workerDb = await action.worker;
+    //Find the owning hub
+    const ownerHub = await this.hubService.getHubByWorkerId(workerDb.id);
+    //If no hub owns the worker, the worker should not be able to get altered by a user.
+    //If this happens, it's a bug
+    if (!ownerHub) {
+      throw new BadRequestException('Worker not online anymore');
+    }
+    //Find the socket of the hub
+    const client = this.wsClients.get(ownerHub.socketId);
+
+    //If no socket is found, the hub is not online
+    if (!client) {
+      return;
+    }
+    //Send the new data to the client. The client expects to get the whole worker object including actions
+    // const worker = ownerHub.workers.find((w) => w.id === wokerDb.id);
+    const workerExtended = await this.workerService.findOneById(workerDb.id);
+    client.emit('workerData', workerExtended);
+  }
+
+  async instantActionToClient(userId: User['id'], workerId: Worker['id']) {
+    //Make sure the user have relation to the hub that the worker is connected to and its online
+    const hubDb = await this.hubService.getHubByWorkerId(workerId);
+    if (!hubDb) {
+      throw new BadRequestException('Worker not online');
+    }
+    const usersOfHub = await this.hubService.getUsersByHubId(hubDb.id);
+    const user = usersOfHub.find((user) => user.id === userId);
+    if (!user) {
+      throw new UnauthorizedException("You don't have access to this worker");
+    }
+
+    //Find the socket of the hub
+    const client = this.wsClients.get(hubDb.socketId);
+    //If no socket is found, the hub is not online
+    if (!client) {
+      throw new BadRequestException('Hub not online');
+    }
+    console.log('Sending instant action to client');
+    client.emit('instantAction', workerId);
   }
 }

@@ -1,18 +1,19 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
+import { EventService } from '../event/event.service';
+import { User } from '../users/entities/user.entity';
+import { Worker } from '../worker/entities/worker.entity';
 import { CreateActionDto } from './dto/create-action.dto';
 import { UpdateActionDto } from './dto/update-action.dto';
 import { Action } from './entities/action.entity';
-import { Worker } from 'src/worker/entities/worker.entity';
 
 @Injectable()
 export class ActionService {
   constructor(
     @InjectRepository(Action) private actionRepository: Repository<Action>,
     @InjectRepository(Worker) private workerRepository: Repository<Worker>,
-    @InjectRepository(User) private usersRepository: Repository<User>,
+    private eventService: EventService,
   ) {}
 
   async create(
@@ -20,21 +21,23 @@ export class ActionService {
     workerId: string,
     createActionDto: CreateActionDto,
   ) {
-    const worker = await this.workerRepository.findOneBy({ id: workerId });
+    const worker = await this.workerRepository.findOneByOrFail({
+      id: workerId,
+    });
 
     // TODO: check that worker belongs to user
 
     // Create new action
     const newAction = this.actionRepository.create(createActionDto);
-    newAction.worker = worker;
+    newAction.worker = Promise.resolve(worker);
     this.actionRepository.save(newAction);
-    console.log(newAction);
 
     return newAction;
   }
 
-  findAll() {
-    return `This action returns all action`;
+  async findAll(workerId: Worker['id']) {
+    const workerDb = await this.workerRepository.findOneBy({ id: workerId });
+    return workerDb.actions;
   }
 
   async findOneBy(actionId: string) {
@@ -81,5 +84,10 @@ export class ActionService {
     } else {
       throw new NotFoundException('Something went wrong');
     }
+  }
+
+  async sendInstantAction(userId: User['id'], workerId: Worker['id']) {
+    await this.eventService.instantActionToClient(userId, workerId);
+    return;
   }
 }

@@ -21,6 +21,12 @@ import { HubCardComponent } from './_components/hub-card/hub-card.component';
 import { HubListComponent } from './_components/hub-list/hub-list.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HubComponent } from './_pages/hub/hub.component';
+import { WorkerCardComponent } from './_components/worker-card/worker-card.component';
+import { WorkerListComponent } from './_components/worker-list/worker-list.component';
+import { WorkerComponent } from './_pages/worker/worker.component';
+import { ActionCardComponent } from './_components/action-card/action-card.component';
+import { ActionListComponent } from './_components/action-list/action-list.component';
+import { AddActionComponent } from './_pages/add-action/add-action.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +39,12 @@ import { HubComponent } from './_pages/hub/hub.component';
     HubCardComponent,
     HubListComponent,
     HubComponent,
+    WorkerCardComponent,
+    WorkerListComponent,
+    WorkerComponent,
+    ActionCardComponent,
+    ActionListComponent,
+    AddActionComponent,
   ],
   imports: [
     BrowserModule,

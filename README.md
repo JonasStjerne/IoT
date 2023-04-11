@@ -13,7 +13,7 @@ The application consists of the following architectural components which are con
 
 The front end consists of an Angular application. The front end supports user registration/log-in, registering hubs, and scheduling actions. Global interceptors catch HTTP errors and handle attaching access tokens.
 
-The back end is built using NestJS and uses Swagger for documentation, providing endpoints to perform CRUD operations on hubs, workers, and actions. All endpoints are authenticated and authorized using Json Web Token, and user passwords are hashed with bcrypt. The backend uses TypeORM as an ORM and validates and sanitizes incoming data.
+The back end is built using NestJS and uses Swagger for documentation, providing endpoints to perform CRUD operations on hubs, workers, and actions. All endpoints are authenticated and authorized using JSON Web Token, and user passwords are hashed with bcrypt. The backend uses TypeORM as an ORM and validates and sanitizes incoming data.
 
 The hub runs a Node.js server which connects to the back end over a WebSocket connection. The back end shares information about the workers connected to the hub and their scheduled actions. The hub connects to the workers (Arduinos) with Bluetooth Low Energy (BLE) and can schedule actions for the workers to execute.
 

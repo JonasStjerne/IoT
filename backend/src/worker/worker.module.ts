@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { WorkerService } from './worker.service';
-import { WorkerController } from './worker.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Hub } from '../hub/entities/hub.entity';
+import { User } from '../users/entities/user.entity';
 import { Worker } from './entities/worker.entity';
-import { Hub } from 'src/hub/entities/hub.entity';
-import { User } from 'src/users/entities/user.entity';
+import { WorkerController } from './worker.controller';
+import { WorkerService } from './worker.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Worker, Hub, User])],

@@ -1,14 +1,12 @@
-import { IsNotEmpty } from 'class-validator';
-import { Action } from 'src/action/entities/action.entity';
+import { IsNotEmpty, Max, Min } from 'class-validator';
 import {
   Column,
   Entity,
-  Generated,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Action } from '../../action/entities/action.entity';
 
 import { Hub } from '../../hub/entities/hub.entity';
 
@@ -33,7 +31,8 @@ export class Worker {
   @IsNotEmpty()
   id: string;
 
-  @Column()
+  @Column({ nullable: true })
+  @IsNotEmpty()
   name: string;
 
   @Column({
@@ -57,6 +56,11 @@ export class Worker {
   })
   state: WorkerState;
 
+  @Column({ nullable: true })
+  @Min(0)
+  @Max(100)
+  batteryLevel: number;
+
   @ManyToOne(() => Hub, (hub) => hub.workers)
   hub: Hub;
 
@@ -65,5 +69,4 @@ export class Worker {
     onDelete: 'CASCADE',
   })
   actions: Action[];
-  
 }

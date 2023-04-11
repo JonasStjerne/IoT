@@ -19,7 +19,11 @@ export class ErrorService {
       errorMessage = `Error: ${error.error.message}`;
     } else {
       // server-side error
-      errorMessage = `${error.error.message}`;
+      if (error.status == 0) {
+        errorMessage = `Backend could not be reached. Please check your internet connection."`;
+      } else {
+        errorMessage = `${error.error.message}`;
+      }
       if (error.status == 401) {
         this.userService.logOut();
       }

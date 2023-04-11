@@ -2,13 +2,13 @@
       <div class="btn-group" role="group" aria-label="Basic mixed styles example">
             <div class="input-group">
                   <span class="input-group-text" id="basic-addon1">Hub name</span>
-                  <input [(ngModel)]="hub.name" type="text" class="form-control" placeholder="Washer starter"
+                  <input [(ngModel)]="hub.name" type="text" class="form-control" placeholder="Give me a name"
                         aria-label="hub name" aria-describedby="basic-addon1">
             </div>
             <button (click)="this.changeName()" type="button" class="btn btn-success">Save</button>
             <button (click)="this.deleteHub(content)" type="button" class="btn btn-danger">Delete</button>
       </div>
-      <a class="text-center d-block" [routerLink]="['/hub', hub.id]">See hub</a>
+      <a class="text-center d-block" [routerLink]="['/hub', hub.id]">See workers for this hub</a>
 </li>
 <!-- Modal content -->
 <ng-template #content let-modal>

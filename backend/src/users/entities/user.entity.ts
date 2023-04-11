@@ -5,15 +5,9 @@ import {
   ManyToMany,
   JoinTable,
 } from 'typeorm';
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsNumberString,
-  IsString,
-  MinLength,
-} from 'class-validator';
-import { classToPlain, Exclude } from 'class-transformer';
-import { Hub } from 'src/hub/entities/hub.entity';
+import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { Exclude } from 'class-transformer';
+import { Hub } from '../../hub/entities/hub.entity';
 
 export enum UserType {
   Admin = 1,

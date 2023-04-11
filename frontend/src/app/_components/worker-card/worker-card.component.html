@@ -1,0 +1,24 @@
+<li class="list-group-item">
+      <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+            <div class="input-group">
+                  <span class="input-group-text" id="basic-addon1">Worker name</span>
+                  <input [(ngModel)]="worker.name" type="text" class="form-control" placeholder="Give me a name"
+                        aria-label="worker name" aria-describedby="basic-addon1">
+            </div>
+            <button (click)="this.changeName()" type="button" class="btn btn-success">Save</button>
+            <button (click)="this.deleteWorker(content)" type="button" class="btn btn-danger">Delete</button>
+      </div>
+      <a class="text-center d-block" [routerLink]="['worker',worker.id]">See actions for this worker</a> 
+      <!-- TODO LINK -->
+</li>
+<!-- Modal content -->
+<ng-template #content let-modal>
+      <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Are you sure you want to delete this worker?</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+      <div class="modal-footer">
+            <button type="button" class="btn btn-success" (click)="modal.close('no')">No</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('delete')">Delete</button>
+      </div>
+</ng-template>

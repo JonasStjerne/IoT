@@ -12,11 +12,9 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ActionService } from './action.service';
 import { CreateActionDto } from './dto/create-action.dto';
 import { UpdateActionDto } from './dto/update-action.dto';
-import { Auth } from 'src/auth/_decorators/auth.decorator';
-import { AuthUser } from 'src/auth/_decorators/user.decorator';
-import { User } from 'src/users/entities/user.entity';
-import { Worker } from 'src/worker/entities/worker.entity';
-import { Action } from './entities/action.entity';
+import { Auth } from '../auth/_decorators/auth.decorator';
+import { AuthUser } from '../auth/_decorators/user.decorator';
+import { User } from '../users/entities/user.entity';
 
 @ApiTags('Action')
 @Controller('action')
@@ -35,8 +33,9 @@ export class ActionController {
   }
 
   @Get()
-  findAll() {
-    return this.actionService.findAll();
+  @ApiOperation({ summary: 'Return all actions connected to a worker' })
+  async findAll(@Param('id') id: string) {
+    return await this.actionService.findAll(id);
   }
 
   @Get(':id')
@@ -65,5 +64,16 @@ export class ActionController {
     @Param('id') actionId: string,
   ) {
     return await this.actionService.remove(userId, actionId);
+  }
+
+  @Post('instant-action')
+  @Auth()
+  @ApiOperation({ summary: 'Send a instant action to a worker' })
+  async sendInstantAction(
+    @AuthUser('id') userId: User['id'],
+    @Query('workerId') workerId: string,
+  ) {
+    await this.actionService.sendInstantAction(userId, workerId);
+    return;
   }
 }

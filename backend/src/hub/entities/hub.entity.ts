@@ -1,8 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Exclude, Type } from 'class-transformer';
+import { Exclude } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
-import { User } from 'src/users/entities/user.entity';
-import { Worker } from 'src/worker/entities/worker.entity';
+import { User } from '../../users/entities/user.entity';
+import { Worker } from '../../worker/entities/worker.entity';
 import {
   Column,
   Entity,
@@ -43,12 +42,11 @@ export class Hub {
   state: HubState;
 
   @ManyToMany(() => User, (user) => user.hubs)
-  users: User[];
+  users: Promise<User[]>;
 
   @OneToMany(() => Worker, (worker) => worker.hub, {
     eager: true,
-    onDelete: 'CASCADE',
+    cascade: true,
   })
   workers: Worker[];
-
 }

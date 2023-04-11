@@ -5,6 +5,7 @@ import { Hub } from './hub';
 export interface Worker {
   action: 'press';
   actions: Array<Action>;
+  batteryLevel: number;
   hub: Hub;
   id: string;
   name: string;

@@ -1,6 +1,7 @@
+import { Transform } from 'class-transformer';
+import { IsDate, IsNotEmpty, MinDate } from 'class-validator';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Worker } from 'src/worker/entities/worker.entity';
-import { IsNotEmpty } from 'class-validator';
+import { Worker } from '../../worker/entities/worker.entity';
 
 export enum ActionRepeat {
   ONCE = 'once',
@@ -25,6 +26,9 @@ export class Action {
   repeat: ActionRepeat;
 
   @IsNotEmpty()
+  @Transform(({ value }) => new Date(value))
+  @IsDate()
+  @MinDate(new Date())
   @Column()
   executeDateTime: Date;
 
@@ -36,5 +40,5 @@ export class Action {
   isComplete: boolean;
 
   @ManyToOne(() => Worker, (worker) => worker.actions)
-  worker: Worker;
+  worker: Promise<Worker>;
 }

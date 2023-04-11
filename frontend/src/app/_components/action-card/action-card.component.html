@@ -1,0 +1,45 @@
+<li class="list-group-item">
+    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+          <div class="input-group" >
+
+            <div  class="list-group list-group-horizontal">
+                <span class="input-group-text" id="basic-addon1">id</span>
+                <input [(ngModel)]="action.id" type="text" readonly class="form-control" placeholder="id"
+                      aria-label="action id" aria-describedby="basic-addon1">
+          </div>
+          <div  class="list-group list-group-horizontal">
+
+                      <span class="input-group-text" id="basic-addon1">executeDateTime</span>
+                <input [(ngModel)]="action.executeDateTime" type="datetime-local" class="form-control" placeholder="Give me a date"
+                      aria-label="action executeDateTime" aria-describedby="basic-addon1">
+          </div>
+          <div  class="list-group list-group-horizontal">
+                      <span class="input-group-text" id="basic-addon1">durationSeconds</span>
+                <input [(ngModel)]="action.durationSeconds" type="text" class="form-control" placeholder="Give me a duration"
+                      aria-label="action durationSeconds" aria-describedby="basic-addon1">
+       </div>
+       <div  class="list-group list-group-horizontal">
+                      <span class="input-group-text" id="basic-addon1">repeat</span>
+                      <select [(ngModel)]="action.repeat" class="form-control">
+                        <option *ngFor="let r of repeats" [ngValue]="r.id">{{r.name}}</option>
+                     </select>
+      </div>
+                      
+          </div>
+         
+          <button (click)="this.changeName()" type="button" class="btn btn-success">Save</button>
+          <button (click)="this.deleteAction(content)" type="button" class="btn btn-danger">Delete</button>
+      
+    </div>
+</li>
+<!-- Modal content -->
+<ng-template #content let-modal>
+    <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Are you sure you want to delete this action?</h4>
+          <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-footer">
+          <button type="button" class="btn btn-success" (click)="modal.close('no')">No</button>
+          <button type="button" class="btn btn-danger" (click)="modal.close('delete')">Delete</button>
+    </div>
+</ng-template>
