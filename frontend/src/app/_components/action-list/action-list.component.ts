@@ -21,8 +21,8 @@ export class ActionListComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.workerId = this.route.snapshot.paramMap.get('id');
-    
+    this.workerId = this.route.snapshot.paramMap.get('workerId');
+
     if (this.workerId) {
       this.actionApiService.actionControllerFindAll({ id: this.workerId}).subscribe({
         next: (res) => {
