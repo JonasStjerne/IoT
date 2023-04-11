@@ -25,6 +25,7 @@ const socket = socketConnection(
 
 //When connected to backend
 socket.on("connect", () => {
+  console.log("Connected to backend");
   //Initiate the bluetooth (auto connects to workers)
   const BluetoothService = new bluetoothService(
     [ACTION_SERVICE_UUID, BATTERY_SERVICE_UUID],
