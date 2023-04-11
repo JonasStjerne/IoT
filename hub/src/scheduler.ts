@@ -81,7 +81,7 @@ export default class scheduler {
     }
     console.log(
       "Scheduled action for time: ",
-      job!.nextInvocation().toDateString()
+      job!.nextInvocation().toDateString
     );
     const workerSchedule = this.schedulContainer[workerId];
     if (workerSchedule) {
