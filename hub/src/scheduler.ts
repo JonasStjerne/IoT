@@ -25,7 +25,9 @@ export default class scheduler {
     //If the worker does, cancel the schedueld actions before scheduling the new ones
     if (workerSchedule) {
       workerSchedule.forEach((job) => {
-        job.cancel();
+        if (job) {
+          job.cancel();
+        }
       });
       delete this.schedulContainer[workerId];
     }
