@@ -283,8 +283,7 @@ export class ActionApiService extends BaseService {
     context?: HttpContext
     body: UpdateActionDto
   }
-): Observable<StrictHttpResponse<{
-}>> {
+): Observable<StrictHttpResponse<void>> {
 
     const rb = new RequestBuilder(this.rootUrl, ActionApiService.ActionControllerUpdatePath, 'patch');
     if (params) {
@@ -293,14 +292,13 @@ export class ActionApiService extends BaseService {
     }
 
     return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
+      responseType: 'text',
+      accept: '*/*',
       context: params?.context
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<{
-        }>;
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
       })
     );
   }
@@ -320,13 +318,10 @@ export class ActionApiService extends BaseService {
     context?: HttpContext
     body: UpdateActionDto
   }
-): Observable<{
-}> {
+): Observable<void> {
 
     return this.actionControllerUpdate$Response(params).pipe(
-      map((r: StrictHttpResponse<{
-}>) => r.body as {
-})
+      map((r: StrictHttpResponse<void>) => r.body as void)
     );
   }
 
