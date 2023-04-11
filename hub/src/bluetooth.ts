@@ -14,6 +14,7 @@ export default class bluetoothService {
     this.batteryChaUUID = batteryChaUUID;
     noble.on("stateChange", async (state) => {
       if (state === "poweredOn") {
+        console.log("State: ", state);
         console.log("Started scanning for service ", serviceUUIDs);
         noble.startScanning(serviceUUIDs, true);
       }
