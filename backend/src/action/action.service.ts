@@ -80,7 +80,7 @@ export class ActionService {
     // Remove action from database
     const deleted = await this.actionRepository.remove(action);
     if (deleted) {
-      return 'Action deleted successfully';
+      return deleted;
     } else {
       throw new NotFoundException('Something went wrong');
     }

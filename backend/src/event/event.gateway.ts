@@ -28,9 +28,7 @@ export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @UseGuards(WsGuard)
   @SubscribeMessage('serverEvent')
   async clientEvent(@Request() req: any, @MessageBody() text: string) {
-    // console.log('serverEvent: ', req.hub);
     const result = await this.eventService.getHubData(req.hub.id);
-    // console.log('result: ', result);
     return;
   }
 

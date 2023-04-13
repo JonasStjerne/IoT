@@ -223,7 +223,7 @@ export class ActionApiService extends BaseService {
     id: string;
     context?: HttpContext
   }
-): Observable<StrictHttpResponse<string>> {
+): Observable<StrictHttpResponse<Action>> {
 
     const rb = new RequestBuilder(this.rootUrl, ActionApiService.ActionControllerRemovePath, 'delete');
     if (params) {
@@ -237,7 +237,7 @@ export class ActionApiService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
+        return r as StrictHttpResponse<Action>;
       })
     );
   }
@@ -256,10 +256,10 @@ export class ActionApiService extends BaseService {
     id: string;
     context?: HttpContext
   }
-): Observable<string> {
+): Observable<Action> {
 
     return this.actionControllerRemove$Response(params).pipe(
-      map((r: StrictHttpResponse<string>) => r.body as string)
+      map((r: StrictHttpResponse<Action>) => r.body as Action)
     );
   }
 

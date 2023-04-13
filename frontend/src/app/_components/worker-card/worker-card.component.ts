@@ -7,26 +7,28 @@ import { WorkerApiService } from 'src/app/_api/services';
 @Component({
   selector: 'app-worker-card',
   templateUrl: './worker-card.component.html',
-  styleUrls: ['./worker-card.component.css']
+  styleUrls: ['./worker-card.component.css'],
 })
 export class WorkerCardComponent implements OnInit {
-  @Input() worker!: Worker; 
-  @Input() hubId!:Hub['id'];
+  @Input() worker!: Worker;
+  @Input() hubId!: Hub['id'];
   constructor(
     private workerApiService: WorkerApiService,
     private toastService: ToastrService,
     private modalService: NgbModal
   ) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   changeName() {
     this.workerApiService
-      .workerControllerRename({ hubId : this.hubId, id: this.worker.id, body: { name: this.worker.name } })
+      .workerControllerRename({
+        hubId: this.hubId,
+        id: this.worker.id,
+        body: { name: this.worker.name },
+      })
       .subscribe((res) => {
         this.toastService.success('Worker name changed');
-        console.log(res);
       });
   }
   deleteWorker(content: TemplateRef<any>) {
@@ -45,13 +47,4 @@ export class WorkerCardComponent implements OnInit {
       }
     );
   }
-
 }
-
-
-
-
-
-
-  
-
