@@ -4,16 +4,15 @@ import {
   Delete,
   ForbiddenException,
   Get,
+  NotFoundException,
   Param,
   Patch,
-  Post,
   Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../auth/_decorators/auth.decorator';
 import { AuthUser } from '../auth/_decorators/user.decorator';
 import { User } from '../users/entities/user.entity';
-import { CreateWorkerDto } from './dto/create-worker.dto';
 import { UpdateWorkerDto } from './dto/update-worker.dto';
 import { WorkerService } from './worker.service';
 
@@ -22,15 +21,20 @@ import { WorkerService } from './worker.service';
 export class WorkerController {
   constructor(private readonly workerService: WorkerService) {}
 
-  @Post()
-  create(@Body() createWorkerDto: CreateWorkerDto) {
-    return this.workerService.create(createWorkerDto);
-  }
+  // @Post()
+  // create(@Body() createWorkerDto: CreateWorkerDto) {
+  //   return this.workerService.create(createWorkerDto);
+  // }
 
   @Get()
   @ApiOperation({ summary: 'Return all worker connected to a hub' })
-  async findAll(@Param('id') id: string) {
-    return await this.workerService.findAll(id);
+  @Auth()
+  async findAll(@AuthUser() user: User, @Param('id') id: string) {
+    const workersDb = user.hubs.find((hub) => hub.id == id)?.workers;
+    if (!workersDb) {
+      throw new NotFoundException('Hub not found');
+    }
+    return workersDb;
   }
 
   @Get(':id')
