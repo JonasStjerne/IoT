@@ -20,10 +20,10 @@ export class WorkerService {
     return await this.workerRepository.save(newWorker);
   }
 
-  async findAll(hubId: Hub['id']) {
-    const hubDb = await this.hubsRepository.findOneBy({ id: hubId });
-    return hubDb.workers;
-  }
+  // async findAll(hubId: Hub['id']) {
+  //   const hubDb = await this.hubsRepository.findOneBy({ id: hubId });
+  //   return hubDb.workers;
+  // }
 
   async findOneBy(userId: string, workerId: string) {
     const userDb = await this.usersRepository.findOneByOrFail({ id: userId });

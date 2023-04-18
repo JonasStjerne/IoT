@@ -23,10 +23,13 @@ export class ActionSubscriber implements EntitySubscriberInterface<Action> {
   listenTo() {
     return Action;
   }
+  // afterTransactionCommit(event: TransactionCommitEvent) {
+  //   console.log(`AFTER ACTION INSERTED: `, event);
+  // }
 
-  async afterInsert(event: InsertEvent<Action>) {
+  afterInsert(event: InsertEvent<Action>) {
     console.log(`AFTER ACTION INSERTED: `, event.entity);
-    await this.eventService.pushNewDataToClient(event.entity);
+    this.eventService.pushNewDataToClient(event.entity);
   }
 
   async afterUpdate(event: UpdateEvent<Action>) {
@@ -36,6 +39,6 @@ export class ActionSubscriber implements EntitySubscriberInterface<Action> {
 
   async beforeRemove(event: RemoveEvent<Action>) {
     console.log(`BEFORE ACTION REMOVE: `, event.entity);
-    await this.eventService.pushNewDataToClient(event.entity);
+    await this.eventService.pushNewDataToClient(event.entity!);
   }
 }

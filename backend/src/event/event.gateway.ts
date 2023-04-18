@@ -41,7 +41,7 @@ export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
       return;
     }
     console.log('Hub authenticated');
-    await this.eventService.hubConnected(hub.id, socket);
+    await this.eventService.hubConnected(hub, socket);
   }
 
   @SubscribeMessage('workerConnect')
@@ -50,8 +50,7 @@ export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @AuthHub() hub: Hub,
     @MessageBody() workerId: string,
   ) {
-    // const workerData = await this.hubsService.getWorkersOfHub(hub.id);
-    const worker = await this.hubsService.setWorkerOfHub(hub.id, workerId);
+    const worker = await this.hubsService.setWorkerOfHub(hub, workerId);
 
     return client.emit('workerData', worker);
   }
@@ -62,7 +61,7 @@ export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @AuthHub() hub: Hub,
     @MessageBody() workerId: string,
   ) {
-    await this.hubsService.deleteRelationToWorker(hub.id, workerId);
+    await this.hubsService.deleteRelationToWorker(hub, workerId);
   }
 
   @SubscribeMessage('batteryData')
@@ -71,7 +70,7 @@ export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @AuthHub() hub: Hub,
     @MessageBody() batteryLevelDto: BatteryLevelDto,
   ) {
-    await this.hubsService.updateWorkerBatteryLevel(hub.id, batteryLevelDto);
+    await this.hubsService.updateWorkerBatteryLevel(hub, batteryLevelDto);
   }
 
   async handleDisconnect(socket: Socket) {
@@ -79,6 +78,6 @@ export class EventGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (!hub) {
       return;
     }
-    this.eventService.hubDisconnected(hub.id, socket);
+    this.eventService.hubDisconnected(hub, socket);
   }
 }

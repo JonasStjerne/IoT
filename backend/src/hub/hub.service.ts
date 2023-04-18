@@ -11,7 +11,7 @@ import { Worker } from '../worker/entities/worker.entity';
 import { WorkerService } from '../worker/worker.service';
 import { CreateHubDto } from './dto/create-hub.dto';
 import { RegisterHubDto } from './dto/register-hub.dto';
-import { UpdateHubDto } from './dto/update-hub.dto';
+import { RenameHubDto } from './dto/update-hub.dto';
 import { Hub, HubState } from './entities/hub.entity';
 
 @Injectable()
@@ -48,29 +48,22 @@ export class HubService {
     return this.hubsRepository.save(newHub);
   }
 
-  async findAll(userId: User['id']) {
-    const userDb = await this.usersRepository.findOneBy({ id: userId });
-    return userDb.hubs;
+  async findAll(user: User) {
+    return user.hubs;
   }
 
-  async findOneBy(userId: User['id'], hubId: Hub['id']) {
-    const userDb = await this.usersRepository.findOneBy({ id: userId });
-    const hubDb = userDb.hubs.find((hub) => hub.id == hubId);
+  async findOneBy(user: User, hubId: Hub['id']) {
+    const hubDb = user.hubs.find((hub) => hub.id == hubId);
     if (hubDb) {
       return hubDb;
     }
     return null;
   }
 
-  async update(
-    userId: User['id'],
-    hubId: Hub['id'],
-    updateHubDto: UpdateHubDto,
-  ) {
-    const userDb = await this.usersRepository.findOneByOrFail({ id: userId });
-    const hubDb = userDb.hubs.find((hub) => hub.id == hubId);
+  async update(user: User, hubId: Hub['id'], renameHubDto: RenameHubDto) {
+    const hubDb = user.hubs.find((hub) => hub.id == hubId);
     if (hubDb) {
-      hubDb.name = updateHubDto.name;
+      hubDb.name = renameHubDto.name;
       return await this.hubsRepository.save(hubDb);
     }
     return null;
@@ -102,32 +95,24 @@ export class HubService {
     return;
   }
 
-  async getWorkersOfHub(hubId: string) {
-    const hubDb = await this.hubsRepository.findOneBy({ id: hubId });
-    return hubDb.workers;
-  }
-
-  async setWorkerOfHub(hubId: string, workerId: Worker['id']) {
+  async setWorkerOfHub(hub: Hub, workerId: Worker['id']) {
     let worker = await this.workerService.findOneById(workerId);
     if (!worker) {
       worker = await this.workerService.create({ id: workerId });
     }
-    const hubDb = await this.hubsRepository.findOneBy({ id: hubId });
-    hubDb.workers.push(worker);
-    await this.hubsRepository.save(hubDb);
+    hub.workers.push(worker);
+    await this.hubsRepository.save(hub);
     return worker;
   }
 
-  async setState(hubId: Hub['id'], state: HubState) {
-    const hubDb = await this.hubsRepository.findOneByOrFail({ id: hubId });
-    hubDb.state = state;
-    return await this.hubsRepository.save(hubDb);
+  async setState(hub: Hub, state: HubState) {
+    hub.state = state;
+    return await this.hubsRepository.save(hub);
   }
 
-  async setSocketId(hubId: Hub['id'], socketId: string | null) {
-    const hubDb = await this.hubsRepository.findOneByOrFail({ id: hubId });
-    hubDb.socketId = socketId;
-    return await this.hubsRepository.save(hubDb);
+  async setSocketId(hub: Hub, socketId: string | null) {
+    hub.socketId = socketId;
+    return await this.hubsRepository.save(hub);
   }
 
   async getHubExtendedData(hubId: Hub['id']) {
@@ -144,33 +129,25 @@ export class HubService {
     return result.users;
   }
 
-  async deleteRelationToWorker(hubId: Hub['id'], workerConnectDto: string) {
+  async deleteRelationToWorker(hub: Hub, workerConnectDto: string) {
     console.log('The id of the disconnected worker is ', workerConnectDto);
-    const hubDb = await this.hubsRepository.findOneBy({ id: hubId });
-    hubDb.workers = hubDb.workers.filter(
-      (worker) => worker.id != workerConnectDto,
-    );
-    return await this.hubsRepository.save(hubDb);
+    hub.workers = hub.workers.filter((worker) => worker.id != workerConnectDto);
+    return await this.hubsRepository.save(hub);
   }
 
-  async deleteRealtionToAllWorkers(hubId: Hub['id']) {
-    const hubDb = await this.hubsRepository.findOneBy({ id: hubId });
-    hubDb.workers = [];
-    await this.hubsRepository.save(hubDb);
+  async deleteRealtionToAllWorkers(hub: Hub) {
+    hub.workers = [];
+    await this.hubsRepository.save(hub);
   }
 
-  async updateWorkerBatteryLevel(
-    hubId: Hub['id'],
-    batteryLevelDto: BatteryLevelDto,
-  ) {
-    const hubDb = await this.hubsRepository.findOneBy({ id: hubId });
-    hubDb.workers.forEach(async (worker) => {
+  async updateWorkerBatteryLevel(hub: Hub, batteryLevelDto: BatteryLevelDto) {
+    hub.workers.forEach(async (worker) => {
       const workerBatteryLevelFromDto = batteryLevelDto[worker.id];
       if (workerBatteryLevelFromDto) {
         worker.batteryLevel = workerBatteryLevelFromDto;
       }
     });
-    return await this.hubsRepository.save(hubDb);
+    return await this.hubsRepository.save(hub);
   }
 
   async getHubByWorkerId(workerId: Worker['id']) {

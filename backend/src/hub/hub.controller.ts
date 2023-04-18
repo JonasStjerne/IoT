@@ -15,7 +15,7 @@ import { AuthUser } from '../auth/_decorators/user.decorator';
 import { User, UserType } from '../users/entities/user.entity';
 import { CreateHubDto } from './dto/create-hub.dto';
 import { RegisterHubDto } from './dto/register-hub.dto';
-import { UpdateHubDto } from './dto/update-hub.dto';
+import { RenameHubDto } from './dto/update-hub.dto';
 import { HubService } from './hub.service';
 
 @ApiTags('Hub')
@@ -52,18 +52,15 @@ export class HubController {
   @Get()
   @ApiOperation({ summary: 'Return all hubs connected to user' })
   @Auth()
-  async findAll(@AuthUser('id') userId: User['id']) {
-    return await this.hubService.findAll(userId);
+  async findAll(@AuthUser() user: User) {
+    return await this.hubService.findAll(user);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Return hub of user' })
   @Auth()
-  async findOneBy(
-    @AuthUser('id') userId: User['id'],
-    @Param('id') hubId: string,
-  ) {
-    const hub = await this.hubService.findOneBy(userId, hubId);
+  async findOneBy(@AuthUser() user: User, @Param('id') hubId: string) {
+    const hub = await this.hubService.findOneBy(user, hubId);
     if (hub) {
       return hub;
     }
@@ -76,11 +73,11 @@ export class HubController {
   @ApiOperation({ summary: 'Update hub of user' })
   @Auth()
   async Rename(
-    @AuthUser('id') userId: User['id'],
+    @AuthUser() user: User,
     @Param('id') hubId: string,
-    @Body() updateHubDto: UpdateHubDto,
+    @Body() renameHubDto: RenameHubDto,
   ) {
-    const hubUpdate = await this.hubService.update(userId, hubId, updateHubDto);
+    const hubUpdate = await this.hubService.update(user, hubId, renameHubDto);
     if (hubUpdate) {
       return hubUpdate;
     }

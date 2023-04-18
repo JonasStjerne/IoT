@@ -59,19 +59,13 @@ export class ActionController {
   @Auth()
   @ApiOperation({ summary: 'Find an action' })
   findOneBy(@AuthUser() user: User, @Param('id') actionId: string) {
-    const hubDb = user.hubs.find((hub) =>
-      hub.workers.find((worker) =>
-        worker.actions.find((action) => action.id == actionId),
-      ),
-    );
-    if (!hubDb) {
+    const action = this.actionService.findActionOfUser(user, actionId);
+    if (!action) {
       throw new UnauthorizedException(
         'You are not authorized to access this action',
       );
     }
-    return hubDb.workers.find((worker) =>
-      worker.actions.find((action) => action.id == actionId),
-    );
+    return action;
   }
 
   @Patch(':id')

@@ -1,11 +1,9 @@
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
-import * as Honeybadger from '@honeybadger-io/js';
-import { CustomLogger } from './_middlewares/customLogger.middleware';
 import { NotFoundInterceptor } from './_interceptors/not-found.interceptor';
+import { AppModule } from './app.module';
 
 import * as fs from 'fs';
 
@@ -55,6 +53,8 @@ async function bootstrap() {
   // Honeybadger.configure({ apiKey: process.env.HONEYBADGER_API_KEY });
 
   //Listen on port 3000
-  await app.listen(parseInt(process.env.BACKEND_PORT) || 3000);
+  await app.listen(
+    process.env.BACKEND_PORT ? parseInt(process.env.BACKEND_PORT) : 3000,
+  );
 }
 bootstrap();

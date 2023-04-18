@@ -21,9 +21,15 @@ export class ActionService {
   ) {}
 
   async create(user: User, workerId: string, createActionDto: CreateActionDto) {
-    const hubDb = user.hubs.find((hub) =>
-      hub.workers.find((worker) => worker.id == workerId),
+    const worker = await this.workerRepository.findOneByOrFail({
+      id: workerId,
+    });
+
+    //Find hub of user that own the worker
+    const hubDb = user.hubs.find((userHub) =>
+      userHub.workers.find((userWorker) => userWorker.id == worker.id),
     );
+    //If the hub was not found, the user is not authorized to create actions for this worker
     if (!hubDb) {
       throw new UnauthorizedException(
         'You are not authorized to create actions for this worker',
@@ -32,10 +38,9 @@ export class ActionService {
 
     // Create new action
     const newAction = this.actionRepository.create(createActionDto);
-    newAction.worker = Promise.resolve(hubDb.workers[workerId]);
-    this.actionRepository.save(newAction);
+    newAction.worker = Promise.resolve(worker);
 
-    return newAction;
+    return await this.actionRepository.save(newAction);
   }
 
   async findOneBy(actionId: string) {

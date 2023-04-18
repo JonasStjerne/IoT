@@ -1,16 +1,16 @@
-import { Module, CacheModule, CacheInterceptor } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppService } from './app.service';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { mysqlConfigService } from './config/mysql/configuration';
-import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ActionModule } from './action/action.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { mysqlConfigService } from './config/mysql/configuration';
+import { EventModule } from './event/event.module';
 import { HubModule } from './hub/hub.module';
 import { WorkerModule } from './worker/worker.module';
-import { ActionModule } from './action/action.module';
-import { EventModule } from './event/event.module';
 
 @Module({
   imports: [
@@ -27,8 +27,8 @@ import { EventModule } from './event/event.module';
 
     //Setup Ratelimiting
     ThrottlerModule.forRoot({
-      ttl: parseInt(process.env.RATE_LIMIT_TTL),
-      limit: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS),
+      ttl: parseInt(process.env.RATE_LIMIT_TTL!),
+      limit: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS!),
     }),
 
     //Components

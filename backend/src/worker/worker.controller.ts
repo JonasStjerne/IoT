@@ -30,10 +30,11 @@ export class WorkerController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Return all worker connected to a hub' })
+  @ApiOperation({ summary: 'Return all workers connected to a hub' })
   @Auth()
-  async findAll(@AuthUser() user: User, @Param('id') id: string) {
+  async findAll(@AuthUser() user: User, @Query('id') id: string) {
     const workersDb = user.hubs.find((hub) => hub.id == id)?.workers;
+    console.log(user.hubs[0].workers);
     if (!workersDb) {
       throw new NotFoundException('Hub not found');
     }

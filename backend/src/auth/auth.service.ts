@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 import { Hub } from '../hub/entities/hub.entity';
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
-import { AuthUser, IAuthHub, IJwtPayload } from './auth.model';
+import { AuthUser, IJwtPayload } from './auth.model';
 
 @Injectable()
 export class AuthService {
@@ -49,8 +49,7 @@ export class AuthService {
   async validateHub(id: Hub['id'], secret: Hub['secret']) {
     const hubDb = await this.hubsRepository.findOneBy({ id });
     if (hubDb && hubDb.secret == secret) {
-      const { secret, workers, users, ...rest } = hubDb;
-      return rest as IAuthHub;
+      return hubDb;
     }
     return null;
   }
