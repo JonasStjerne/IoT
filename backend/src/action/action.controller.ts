@@ -52,7 +52,7 @@ export class ActionController {
       );
     }
 
-    return actions;
+    return actions as Action[];
   }
 
   @Get(':id')

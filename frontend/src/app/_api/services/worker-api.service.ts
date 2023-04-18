@@ -30,7 +30,7 @@ export class WorkerApiService extends BaseService {
   static readonly WorkerControllerFindAllPath = '/worker';
 
   /**
-   * Return all worker connected to a hub.
+   * Return all workers connected to a hub.
    *
    *
    *
@@ -47,7 +47,7 @@ export class WorkerApiService extends BaseService {
 
     const rb = new RequestBuilder(this.rootUrl, WorkerApiService.WorkerControllerFindAllPath, 'get');
     if (params) {
-      rb.path('id', params.id, {});
+      rb.query('id', params.id, {});
     }
 
     return this.http.request(rb.build({
@@ -63,7 +63,7 @@ export class WorkerApiService extends BaseService {
   }
 
   /**
-   * Return all worker connected to a hub.
+   * Return all workers connected to a hub.
    *
    *
    *

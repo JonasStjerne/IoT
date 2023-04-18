@@ -12,7 +12,7 @@ import { map, filter } from 'rxjs/operators';
 import { CreateHubDto } from '../models/create-hub-dto';
 import { Hub } from '../models/hub';
 import { RegisterHubDto } from '../models/register-hub-dto';
-import { UpdateHubDto } from '../models/update-hub-dto';
+import { RenameHubDto } from '../models/rename-hub-dto';
 
 @Injectable({
   providedIn: 'root',
@@ -276,7 +276,7 @@ export class HubApiService extends BaseService {
   hubControllerRename$Response(params: {
     id: string;
     context?: HttpContext
-    body: UpdateHubDto
+    body: RenameHubDto
   }
 ): Observable<StrictHttpResponse<Hub>> {
 
@@ -311,7 +311,7 @@ export class HubApiService extends BaseService {
   hubControllerRename(params: {
     id: string;
     context?: HttpContext
-    body: UpdateHubDto
+    body: RenameHubDto
   }
 ): Observable<Hub> {
 

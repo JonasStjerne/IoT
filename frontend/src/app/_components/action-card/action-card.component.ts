@@ -1,4 +1,10 @@
-import { Component, Input, TemplateRef } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  TemplateRef,
+} from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { Action, Worker } from 'src/app/_api/models';
@@ -12,6 +18,7 @@ import { ActionApiService } from 'src/app/_api/services';
 export class ActionCardComponent {
   @Input() action!: Action;
   @Input() workerId!: Worker['id'];
+  @Output() actionDeleted = new EventEmitter<string>();
 
   repeats = [
     { id: 'once', name: 'Once' },
@@ -48,7 +55,10 @@ export class ActionCardComponent {
         if (result === 'delete') {
           this.actionApiService
             .actionControllerRemove({ id: this.action.id })
-            .subscribe((res) => this.toastService.success('Action deleted'));
+            .subscribe((res) => {
+              this.actionDeleted.emit(res.id);
+              this.toastService.success('Action deleted');
+            });
         }
       },
       (reason) => {

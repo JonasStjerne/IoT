@@ -32,4 +32,8 @@ export class ActionListComponent implements OnInit {
         });
     }
   }
+
+  removeAction(id: string) {
+    this.actions = this.actions.filter((action) => action.id !== id);
+  }
 }

@@ -21,7 +21,10 @@ export class HubCardComponent implements OnInit {
 
   changeName() {
     this.hubApiService
-      .hubControllerRename({ id: this.hub.id, body: { name: this.hub.name } })
+      .hubControllerRename({
+        id: this.hub.id,
+        body: { name: this.hub.name ?? '' },
+      })
       .subscribe((res) => {
         this.toastService.success('Hub name changed');
         console.log(res);

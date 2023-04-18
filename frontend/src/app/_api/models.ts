@@ -7,7 +7,7 @@ export { Worker } from './models/worker';
 export { Hub } from './models/hub';
 export { CreateHubDto } from './models/create-hub-dto';
 export { RegisterHubDto } from './models/register-hub-dto';
-export { UpdateHubDto } from './models/update-hub-dto';
+export { RenameHubDto } from './models/rename-hub-dto';
 export { CreateWorkerDto } from './models/create-worker-dto';
 export { UpdateWorkerDto } from './models/update-worker-dto';
 export { CreateActionDto } from './models/create-action-dto';
