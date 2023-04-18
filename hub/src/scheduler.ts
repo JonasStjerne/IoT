@@ -1,12 +1,15 @@
 import schedule = require("node-schedule");
+import { ActionRepeat, IActionDto } from "./models/action.dto";
 import { IWorkerDto } from "./models/worker.dto";
-import { IActionDto, ActionRepeat } from "./models/action.dto";
 
 export default class scheduler {
   private callback;
-  private schedulContainer: { [workerId: IWorkerDto["id"]]: schedule.Job[] } = {};
+  private schedulContainer: { [workerId: IWorkerDto["id"]]: schedule.Job[] } =
+    {};
 
-  constructor(callback: (workerId: IWorkerDto["id"]) => Promise<void> | undefined) {
+  constructor(
+    callback: (workerId: IWorkerDto["id"]) => Promise<void> | undefined
+  ) {
     this.callback = callback;
   }
   scheduleActions(workerDto: IWorkerDto) {
@@ -37,8 +40,9 @@ export default class scheduler {
           console.error("Action in the past, not scheduling");
           return;
         }
-        job = schedule.scheduleJob({ ...action.executeDateTime, tz: "Europe/Copenhagen" }, () =>
-          this.callback(workerId)
+        job = schedule.scheduleJob(
+          { ...action.executeDateTime, tz: "Europe/Copenhagen" },
+          () => this.callback(workerId)
         );
         break;
       case ActionRepeat.DAILY:
@@ -78,7 +82,7 @@ export default class scheduler {
     console.log("Scheduled action for time: ", job!.nextInvocation());
     const workerSchedule = this.schedulContainer[workerId];
     if (workerSchedule) {
-      this.schedulContainer[workerId] = [...this.schedulContainer[workerId], job!];
+      this.schedulContainer[workerId].push(job!);
     } else {
       this.schedulContainer[workerId] = [job!];
     }
