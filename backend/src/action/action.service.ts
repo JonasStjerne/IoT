@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { EventService } from '../event/event.service';
@@ -16,51 +20,34 @@ export class ActionService {
     private eventService: EventService,
   ) {}
 
-  async create(
-    userId: string,
-    workerId: string,
-    createActionDto: CreateActionDto,
-  ) {
-    const worker = await this.workerRepository.findOneByOrFail({
-      id: workerId,
-    });
-
-    // TODO: check that worker belongs to user
+  async create(user: User, workerId: string, createActionDto: CreateActionDto) {
+    const hubDb = user.hubs.find((hub) =>
+      hub.workers.find((worker) => worker.id == workerId),
+    );
+    if (!hubDb) {
+      throw new UnauthorizedException(
+        'You are not authorized to create actions for this worker',
+      );
+    }
 
     // Create new action
     const newAction = this.actionRepository.create(createActionDto);
-    newAction.worker = Promise.resolve(worker);
+    newAction.worker = Promise.resolve(hubDb.workers[workerId]);
     this.actionRepository.save(newAction);
 
     return newAction;
-  }
-
-  async findAll(workerId: Worker['id']) {
-    const workerDb = await this.workerRepository.findOneBy({ id: workerId });
-    return workerDb.actions;
   }
 
   async findOneBy(actionId: string) {
     return await this.actionRepository.findOneByOrFail({ id: actionId });
   }
 
-  async update(
-    userId: string,
-    actionId: string,
-    updateActionDto: UpdateActionDto,
-  ) {
-    // Find
-    const action = await this.actionRepository.findOneByOrFail({
-      id: actionId,
-    });
-
-    // TODO: Check that action belongs to user
-    /*
-    const owner = action.worker.hub.users.find((user) => user.id == userId);
-    if (! owner) {
-        throw new NotFoundException('Action not found');
+  async update(user: User, actionId: string, updateActionDto: UpdateActionDto) {
+    const action = this.findActionOfUser(user, actionId);
+    if (!action) {
+      throw new UnauthorizedException('Action not found or not authorized');
     }
-    */
+
     return await this.actionRepository.save({
       id: action.id,
       isComplete: action.isComplete,
@@ -69,14 +56,11 @@ export class ActionService {
     });
   }
 
-  async remove(userId: string, actionId: string) {
-    // TODO: check that action belongs to user
-
-    // Find action with ID
-    const action = await this.actionRepository.findOneByOrFail({
-      id: actionId,
-    });
-
+  async remove(user: User, actionId: string) {
+    const action = this.findActionOfUser(user, actionId);
+    if (!action) {
+      throw new UnauthorizedException('Action not found or not authorized');
+    }
     // Remove action from database
     const deleted = await this.actionRepository.remove(action);
     if (deleted) {
@@ -89,5 +73,18 @@ export class ActionService {
   async sendInstantAction(userId: User['id'], workerId: Worker['id']) {
     await this.eventService.instantActionToClient(userId, workerId);
     return;
+  }
+
+  findActionOfUser(user: User, actionId: string) {
+    for (const hub of user.hubs) {
+      for (const worker of hub.workers) {
+        for (const action of worker.actions) {
+          if (action.id == actionId) {
+            return action;
+          }
+        }
+      }
+    }
+    return null;
   }
 }

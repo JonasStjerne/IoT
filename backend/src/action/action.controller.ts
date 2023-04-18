@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../auth/_decorators/auth.decorator';
@@ -15,6 +16,7 @@ import { User } from '../users/entities/user.entity';
 import { ActionService } from './action.service';
 import { CreateActionDto } from './dto/create-action.dto';
 import { UpdateActionDto } from './dto/update-action.dto';
+import { Action } from './entities/action.entity';
 
 @ApiTags('Action')
 @Controller('action')
@@ -25,46 +27,69 @@ export class ActionController {
   @Auth()
   @ApiOperation({ summary: 'Create new action for worker' })
   create(
-    @AuthUser('id') userId: User['id'],
+    @AuthUser() user: User,
     @Query('workerId') workerId: string,
     @Body() createActionDto: CreateActionDto,
   ) {
-    return this.actionService.create(userId, workerId, createActionDto);
+    return this.actionService.create(user, workerId, createActionDto);
   }
 
   @Get()
+  @Auth()
   @ApiOperation({ summary: 'Return all actions connected to a worker' })
-  async findAll(@Query('workerId') id: string) {
-    console.log('id is:', id);
-    return await this.actionService.findAll(id);
+  async findAll(@AuthUser() user: User, @Query('workerId') id: string) {
+    let actions: Action[] | null = null;
+    user.hubs.forEach((hub) => {
+      const workerDb = hub.workers.find((worker) => worker.id == id);
+      if (workerDb) {
+        actions = workerDb.actions;
+      }
+    });
+
+    if (!actions) {
+      throw new UnauthorizedException(
+        "You are not authorized to access this worker's actions",
+      );
+    }
+
+    return actions;
   }
 
   @Get(':id')
   @Auth()
   @ApiOperation({ summary: 'Find an action' })
-  findOneBy(@Param('id') actionId: string) {
-    return this.actionService.findOneBy(actionId);
+  findOneBy(@AuthUser() user: User, @Param('id') actionId: string) {
+    const hubDb = user.hubs.find((hub) =>
+      hub.workers.find((worker) =>
+        worker.actions.find((action) => action.id == actionId),
+      ),
+    );
+    if (!hubDb) {
+      throw new UnauthorizedException(
+        'You are not authorized to access this action',
+      );
+    }
+    return hubDb.workers.find((worker) =>
+      worker.actions.find((action) => action.id == actionId),
+    );
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update action' })
   @Auth()
   async update(
-    @AuthUser('id') userId: User['id'],
+    @AuthUser() user: User,
     @Param('id') actionId: string,
     @Body() updateActionDto: UpdateActionDto,
   ) {
-    return await this.actionService.update(userId, actionId, updateActionDto);
+    return await this.actionService.update(user, actionId, updateActionDto);
   }
 
   @Delete(':id')
   @Auth()
   @ApiOperation({ summary: 'Delete an action' })
-  async remove(
-    @AuthUser('id') userId: User['id'],
-    @Param('id') actionId: string,
-  ) {
-    return await this.actionService.remove(userId, actionId);
+  async remove(@AuthUser() user: User, @Param('id') actionId: string) {
+    return await this.actionService.remove(user, actionId);
   }
 
   @Post('instant-action')
