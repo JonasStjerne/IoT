@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UsersService } from '../../users/users.service';
-import { AuthUser, IJwtPayload } from '../auth.model';
+import { IJwtPayload } from '../auth.model';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -19,10 +19,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       return null;
     }
-    return {
-      id: payload.sub,
-      username: payload.username,
-      userType: payload.userType,
-    } as AuthUser;
+    return user;
   }
 }
