@@ -7,12 +7,14 @@ import {
   NotFoundException,
   Param,
   Patch,
+  Post,
   Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../auth/_decorators/auth.decorator';
 import { AuthUser } from '../auth/_decorators/user.decorator';
-import { User } from '../users/entities/user.entity';
+import { User, UserType } from '../users/entities/user.entity';
+import { CreateWorkerDto } from './dto/create-worker.dto';
 import { UpdateWorkerDto } from './dto/update-worker.dto';
 import { WorkerService } from './worker.service';
 
@@ -21,10 +23,11 @@ import { WorkerService } from './worker.service';
 export class WorkerController {
   constructor(private readonly workerService: WorkerService) {}
 
-  // @Post()
-  // create(@Body() createWorkerDto: CreateWorkerDto) {
-  //   return this.workerService.create(createWorkerDto);
-  // }
+  @Auth(UserType.Admin)
+  @Post()
+  create(@Body() createWorkerDto: CreateWorkerDto) {
+    return this.workerService.create(createWorkerDto);
+  }
 
   @Get()
   @ApiOperation({ summary: 'Return all worker connected to a hub' })
@@ -73,6 +76,7 @@ export class WorkerController {
     );
   }
 
+  @Auth(UserType.Admin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.workerService.remove(+id);
