@@ -3,9 +3,9 @@
       <p class="text-center">This hub don't have any workers yet.</p>
 </div>
 <ng-template #workerList>
-      <div class="card mx-auto" style="max-width: 25rem;">
-            <ul class="list-group list-group-flush">
+      <div class="mx-auto" style="max-width: 25rem;">
+            <ul class="list-group list-group-flush" style="gap: 2rem;">
                   <app-worker-card [worker]="worker" [hubId]="hubId!" *ngFor="let worker of workers"></app-worker-card>
             </ul>
       </div>
-</ng-template> 
+</ng-template>

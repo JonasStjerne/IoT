@@ -4,8 +4,8 @@
       <a [routerLink]="['add-hub']" class="d-block text-center"><button class="btn btn-primary">Add hub</button></a>
 </div>
 <ng-template #hubList>
-      <div class="card mx-auto" style="max-width: 25rem;">
-            <ul class="list-group list-group-flush">
+      <div class="mx-auto" style="max-width: 25rem;">
+            <ul class="list-group list-group-flush" style="gap: 2rem;">
                   <app-hub-card [hub]="hub" *ngFor="let hub of hubs"></app-hub-card>
             </ul>
       </div>
