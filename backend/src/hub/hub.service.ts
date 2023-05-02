@@ -110,7 +110,7 @@ export class HubService {
     return await this.hubsRepository.save(hub);
   }
 
-  async setSocketId(hub: Hub, socketId: string | null) {
+  async setSocketId(hub: Hub, socketId: string | undefined) {
     hub.socketId = socketId;
     return await this.hubsRepository.save(hub);
   }

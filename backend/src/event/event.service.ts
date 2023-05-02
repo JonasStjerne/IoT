@@ -40,7 +40,7 @@ export class EventService {
   async hubDisconnected(hub: Hub, socket: Socket) {
     await Promise.all([
       this.hubService.setState(hub, HubState.OFFLINE),
-      this.hubService.setSocketId(hub, null),
+      this.hubService.setSocketId(hub, undefined),
       this.hubService.deleteRealtionToAllWorkers(hub),
     ]);
     this.wsClients.delete(socket.id);

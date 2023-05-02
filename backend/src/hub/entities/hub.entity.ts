@@ -1,7 +1,5 @@
 import { Exclude } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
-import { User } from '../../users/entities/user.entity';
-import { Worker } from '../../worker/entities/worker.entity';
 import {
   Column,
   Entity,
@@ -10,6 +8,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { User } from '../../users/entities/user.entity';
+import { Worker } from '../../worker/entities/worker.entity';
 
 export enum HubState {
   ONLINE = 'ONLINE',
@@ -29,10 +29,10 @@ export class Hub {
   secret: string;
 
   @Column({ nullable: true })
-  name: string | null;
+  name?: string;
 
   @Column({ nullable: true })
-  socketId: string | null;
+  socketId?: string;
 
   @Column({
     type: 'enum',
