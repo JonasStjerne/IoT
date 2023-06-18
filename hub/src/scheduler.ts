@@ -34,7 +34,6 @@ export default class scheduler {
 	private scheduleAction(workerId: IWorkerDto["id"], action: IActionDto) {
 		let job: schedule.Job;
 		const actionDate = new Date(action.executeDateTime);
-		console.log(actionDate);
 		switch (action.repeat) {
 			case ActionRepeat.ONCE:
 				//If event in the past dont schedule
@@ -88,7 +87,10 @@ export default class scheduler {
 				);
 				break;
 		}
-		console.log("Scheduled action for time: ", job!.nextInvocation());
+		console.log(
+			"Scheduled action for time: ",
+			job!.nextInvocation().toLocaleDateString()
+		);
 		const workerSchedule = this.schedulContainer[workerId];
 		if (workerSchedule) {
 			this.schedulContainer[workerId].push(job!);

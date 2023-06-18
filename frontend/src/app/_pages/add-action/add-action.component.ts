@@ -6,57 +6,63 @@ import { ActionApiService } from 'src/app/_api/services';
 @Component({
   selector: 'app-add-action',
   templateUrl: './add-action.component.html',
-  styleUrls: ['./add-action.component.css']
+  styleUrls: ['./add-action.component.css'],
 })
 export class AddActionComponent implements OnInit {
-  repeat : string = 'once';
+  repeat: string = 'once';
   executeDateTime = '';
   durationSeconds = 0;
   workerId: string | null = null;
   hubId: string | null = null;
 
   repeats = [
-    {id: 'once', name: "Once"},
-    {id: 'daily', name: "Daily"},
-    {id: 'weekly', name: "Weekly"},
-    {id: 'monthly', name: "Monthly"},
-    {id: 'yearly', name: "Yearly"}
- ];
+    { id: 'once', name: 'Once' },
+    { id: 'daily', name: 'Daily' },
+    { id: 'weekly', name: 'Weekly' },
+    { id: 'monthly', name: 'Monthly' },
+    { id: 'yearly', name: 'Yearly' },
+  ];
 
   constructor(
     private actionApiService: ActionApiService,
     private toastService: ToastrService,
     private route: ActivatedRoute,
     private router: Router
-  ) { }
-  
+  ) {}
 
   ngOnInit(): void {
     this.workerId = this.route.snapshot.paramMap.get('workerId');
     this.hubId = this.route.snapshot.paramMap.get('id');
   }
-  
 
-  toRepeatEnum(s : string) : 'once' | 'daily' | 'weekly' | 'monthly' | 'yearly' {
+  toRepeatEnum(s: string): 'once' | 'daily' | 'weekly' | 'monthly' | 'yearly' {
     switch (s) {
-      case "once":
-        return "once";
-      case "daily":
-        return "daily";
-      case "weekly":
-            return 'weekly';
-      case "monthly":
-              return 'monthly';
-              case "yearly":
-                return 'yearly';
-        default:
+      case 'once':
+        return 'once';
+      case 'daily':
+        return 'daily';
+      case 'weekly':
+        return 'weekly';
+      case 'monthly':
+        return 'monthly';
+      case 'yearly':
+        return 'yearly';
+      default:
         return 'once';
     }
   }
 
   addAction() {
+    const dateToUTC = new Date(this.executeDateTime);
     this.actionApiService
-      .actionControllerCreate({ workerId: this.workerId!, body: {repeat: this.toRepeatEnum(this.repeat), executeDateTime: this.executeDateTime , durationSeconds: this.durationSeconds} })
+      .actionControllerCreate({
+        workerId: this.workerId!,
+        body: {
+          repeat: this.toRepeatEnum(this.repeat),
+          executeDateTime: dateToUTC.toUTCString(),
+          durationSeconds: this.durationSeconds,
+        },
+      })
       .subscribe({
         next: (res) => {
           this.toastService.success('Action created successfully');
@@ -64,10 +70,4 @@ export class AddActionComponent implements OnInit {
         },
       });
   }
-
 }
-
-
-
-
-
